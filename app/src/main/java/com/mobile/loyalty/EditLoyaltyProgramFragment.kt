@@ -24,6 +24,9 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
 
 
     private var loyaltyProgram: TheaterChain? = null
+    lateinit var data: List<Triple<String, RequiredField, String>>
+    lateinit var theaterChain: TheaterChain
+    lateinit var oldCardNumber: String
 
     @Inject
     lateinit var presenter: EditLoyaltyProgramPresenter
@@ -43,6 +46,8 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
             presenter.onViewCreated(it)
         }
         editLoyaltyNumber.setOnClickListener { showUpdateLoyaltyFields() }
+
+
     }
 
 
@@ -50,20 +55,8 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
         selectedloyaltyProgram.text = loyaltyProgram?.chainName
         val cardNumber = SpannableStringBuilder(loyaltyProgram?.getRequiredFields().toString())
         loyaltyCardNumber.text = cardNumber
+        oldCardNumber = cardNumber.toString()
     }
-
-    override fun updateLoyaltyProgramInfo() {
-
-    }
-
-    override fun hideProgress() {
-        loyaltyProgress.visibility = View.GONE
-    }
-
-    override fun showProgress() {
-        loyaltyProgress.visibility = View.VISIBLE
-    }
-
 
     override fun showUpdateLoyaltyFields() {
         editLoyaltyNumber.visibility = View.GONE
@@ -77,71 +70,100 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
         val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(loyaltyCardNumber, InputMethodManager.SHOW_FORCED)
 
-        loyaltyProgram?.let {
+
+        loyaltyProgram?.let { theaterChain ->
+            this.theaterChain = theaterChain
             updateLoyaltyButton.setOnClickListener { v ->
-                val newNumber = loyaltyCardNumber.text
-                val fieldNameToValue = mutableMapOf<String, Pair<RequiredField, String>>()
-                val type = loyaltyProgram?.requiredFields ?: return@setOnClickListener
-                val name = loyaltyProgram?.chainName.toString()
+                mapData(theaterChain, true)
+                presenter.userUpdatedLoyaltyCard(theaterChain, data = data)
+            }
+            deleteLoyalty.setOnClickListener {
+                mapData(theaterChain, false)
+                showAlert(null, resources.getString(R.string.loyalty_delete_program), true)
+
+            }
+        }
+    }
+
+    fun mapData(theaterChain: TheaterChain, update: Boolean) {
+        val fieldNameToValue = mutableMapOf<String, Pair<RequiredField, String>>()
+
+        val newNumber = loyaltyCardNumber.text
+        val type = theaterChain.requiredFields ?: return
+        val name = theaterChain.chainName.toString()
+
+        when (update) {
+            true -> {
                 fieldNameToValue[name] = Pair(type, newNumber.toString())
-                val data = fieldNameToValue.map {
+                data = fieldNameToValue.map {
                     Triple(it.key, it.value.first, it.value.second)
                 }
-                presenter.userUpdatedLoyaltyCard(it, data)
+            }
+            false -> {
+                fieldNameToValue[name] = Pair(type, oldCardNumber)
+                data = fieldNameToValue.map {
+                    Triple(it.key, it.value.first, it.value.second)
+                }
             }
         }
 
+    }
 
-        deleteLoyalty.setOnClickListener {
-            AlertDialog
-                    .Builder(context, R.style.CUSTOM_ALERT)
-                    .setMessage(getString(R.string.loyalty_program_delete))
-                    .setPositiveButton("Ok") { _, _ ->
-                        presenter.deleteLoyaltyProgram()
-                    }
-                    .setNegativeButton("Cancel") {_, _ ->
 
-                    }
-                    .setCancelable(false)
-                    .show()
+    override fun updateFailure(failure: String) {
+        showAlert(failure, null, false)
+    }
+
+    fun showAlert(failureString: String? = null, loyaltyDelete: String? = null, delete: Boolean) {
+        val displayString: String?
+
+        if (failureString != null) {
+            displayString = failureString
+        } else {
+            displayString = loyaltyDelete
         }
-    }
-
-
-    override fun updateFailure(failure: String?) {
-        failure ?: return
-        showAlert(failure)
-    }
-
-    override fun updateFailure(failure: Int) {
-
-    }
-
-    fun showAlert(failure: String) {
-        val failure = failure
         AlertDialog
                 .Builder(context, R.style.CUSTOM_ALERT)
-                .setMessage(failure)
+                .setMessage(displayString)
                 .setPositiveButton("Ok") { _, _ ->
-
+                    if (delete) {
+                        presenter.deleteLoyaltyProgram(theaterChain, data)
+                    }
                 }
                 .setCancelable(false)
                 .show()
 
     }
 
-
-    override fun updateSuccessful() {
+    override fun updateSuccessful(delete: Boolean) {
         activity?.let {
-            Toast.makeText(it, "Loyalty number updated successfully", Toast.LENGTH_SHORT).show()
-            it.onBackPressed()
+            if (delete) {
+                Toast.makeText(it, "Loyalty number removed successfully", Toast.LENGTH_LONG).show()
+                it.onBackPressed()
+            } else {
+                Toast.makeText(it, "Loyalty number updated successfully", Toast.LENGTH_LONG).show()
+                it.onBackPressed()
+            }
+
         }
+
+
     }
+
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
+
+    override fun hideProgress() {
+        loyaltyProgress.visibility = View.GONE
+    }
+
+    override fun showProgress() {
+        loyaltyProgress.visibility = View.VISIBLE
+    }
+
 
     companion object {
         @JvmStatic

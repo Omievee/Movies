@@ -3,7 +3,6 @@ package com.mobile.loyalty
 import com.mobile.ApiError
 import com.mobile.network.Api
 import com.mobile.network.RestClient
-import com.moviepass.R
 import io.reactivex.disposables.Disposable
 
 class EditLoyaltyProgramPresenter(val view: EditLoyalProgramView, api: Api) {
@@ -31,7 +30,6 @@ class EditLoyaltyProgramPresenter(val view: EditLoyalProgramView, api: Api) {
         RestClient.getAuthenticated()
                 .theaterChainSignIn(
                         theaterChain.chainNameKey,
-                        //TODO: TEST UPDATE LOYALTY
                         loyaltyDataMap
                 )
                 .doAfterTerminate {
@@ -44,17 +42,41 @@ class EditLoyaltyProgramPresenter(val view: EditLoyalProgramView, api: Api) {
                     }
                 }
                 .subscribe({ _ ->
-                    view.updateSuccessful()
+                    view.updateSuccessful(false)
                 }) { error ->
                     (error as? ApiError)?.let {
                         view.updateFailure(it.error.message)
-                    } ?: view.updateFailure(R.string.generic_error)
+                    }
 
                 }
     }
 
-    fun deleteLoyaltyProgram() {
-//        view.showProgress()
-        //TODO: DELETE LOYALTY
+    fun deleteLoyaltyProgram(theaterchain: TheaterChain, data: List<Triple<String, RequiredField, String>>) {
+        view.showProgress()
+        val mappedData =
+                data
+                        .associateTo(
+                                mutableMapOf()) {
+                            it.first to it.third
+                        }
+
+        RestClient.getAuthenticated()
+                .theaterChainRemove(
+                        theaterchain.chainNameKey,
+                        mappedData
+                )
+                .doAfterTerminate { view.hideProgress() }
+                .map {
+                    theaterchain.isUserRegistered = false
+                }
+                .subscribe({ _ ->
+                    view.updateSuccessful(true)
+                }) { error ->
+                    (error as? ApiError)?.let {
+                        view.updateFailure(it.error.message)
+                    }
+                }
+
+
     }
 }

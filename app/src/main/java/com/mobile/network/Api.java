@@ -21,7 +21,6 @@ import com.mobile.requests.TicketInfoRequest;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.reservation.CurrentReservationV2;
-import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
@@ -29,12 +28,10 @@ import com.mobile.responses.ChangeEmailResponse;
 import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.HistoryResponse;
-import com.mobile.responses.CurrentMoviesResponse;
-import com.mobile.responses.TheatersResponse;
-import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.PlanResponse;
 import com.mobile.responses.ReferAFriendResponse;
 import com.mobile.responses.ReservationResponse;
+import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.ScreeningsResponseV2;
 import com.mobile.responses.SeatingsInfoResponse;
 import com.mobile.responses.SignUpResponse;
@@ -201,4 +198,7 @@ public interface Api {
 
     @POST("/rest/v1/loyalty/{chain}/signIn")
     Single<Map<String, Object>> theaterChainSignIn(@Path("chain") String chain, @Body Map<String, String> chainData);
+
+    @POST("/rest/v1/loyalty/{chain}/remove")
+    Single<Map<String, Object>> theaterChainRemove(@Path("chain") String chain, @Body Map<String, String> chainData);
 }
