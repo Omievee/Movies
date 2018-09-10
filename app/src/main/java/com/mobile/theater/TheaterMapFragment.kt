@@ -176,6 +176,8 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
                     payload
                 }
                 .subscribe({ theaters ->
+                    activity?: return@subscribe
+                    mapSearchBox.clear()
                     panCameraTo(theaters)
                 }, {})
     }

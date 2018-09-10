@@ -26,7 +26,7 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_theaters2.*
 import javax.inject.Inject
 
-class TheatersFragmentV2 : LocationRequiredFragment(), TheatersFragmentView, Primary {
+class TheatersFragment : LocationRequiredFragment(), TheatersFragmentView, Primary {
 
     override fun presenter(): LocationRequiredPresenter {
         return presenter
@@ -127,6 +127,11 @@ class TheatersFragmentV2 : LocationRequiredFragment(), TheatersFragmentView, Pri
             showProgress()
         }
         presenter.onCreate()
+    }
+
+    override fun clearSearch() {
+        activity?:return
+        mapSearchBox.clear()
     }
 
     override fun onAttach(context: Context?) {

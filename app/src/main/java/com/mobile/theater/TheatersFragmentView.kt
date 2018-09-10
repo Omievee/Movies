@@ -13,5 +13,6 @@ interface TheatersFragmentView : LocationRequiredView {
     fun hideNoTheatersFound()
     fun scrollToTop()
     fun showNoLocationFound()
+    fun clearSearch()
 
 }
