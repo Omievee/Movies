@@ -13,14 +13,14 @@ class RestrictionsData(
 
     val overHardCap: Boolean
         get() {
-            return type == RestrictionsCheckType.CAP && attributes?.soft != true
+            return type == RestrictionsCheckType.CAP && attributes?.soft == false
         }
 }
 
 class RestrictionsAttributes(
         val peakMessage: String? = null,
         val peakAmount: Int = 0,
-        val soft: Boolean = true,
+        val soft: Boolean? = null,
         val title: String? = null,
         val message: String? = null,
         val discount: Int = 0,
