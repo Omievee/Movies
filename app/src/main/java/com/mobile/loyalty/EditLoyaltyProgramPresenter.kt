@@ -3,15 +3,13 @@ package com.mobile.loyalty
 import com.mobile.ApiError
 import com.mobile.network.Api
 import com.mobile.network.RestClient
-import io.reactivex.disposables.Disposable
 
 class EditLoyaltyProgramPresenter(val view: EditLoyalProgramView, api: Api) {
 
-    var theaterChainSubscription: Disposable? = null
     var registeredTheaterChains: List<TheaterChain>? = null
     var allTheaterChains: List<TheaterChain>? = null
-
-    fun onViewCreated(theaterChain: TheaterChain) {
+    var newList: List<TheaterChain>? = null
+    fun onViewCreated() {
         retrieveLoyaltyData()
     }
 
@@ -66,9 +64,6 @@ class EditLoyaltyProgramPresenter(val view: EditLoyalProgramView, api: Api) {
                         mappedData
                 )
                 .doAfterTerminate { view.hideProgress() }
-                .map {
-                    theaterchain.isUserRegistered = false
-                }
                 .subscribe({ _ ->
                     view.updateSuccessful(true)
                 }) { error ->

@@ -23,6 +23,7 @@ private const val SELECTED_THEATER_CHAIN = "theaterChain"
 class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
 
 
+
     private var loyaltyProgram: TheaterChain? = null
     lateinit var data: List<Triple<String, RequiredField, String>>
     lateinit var theaterChain: TheaterChain
@@ -42,9 +43,7 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loyaltyProgram?.let {
-            presenter.onViewCreated(it)
-        }
+        presenter.onViewCreated()
         editLoyaltyNumber.setOnClickListener { showUpdateLoyaltyFields() }
 
 
@@ -90,7 +89,8 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
 
         val newNumber = loyaltyCardNumber.text
         val type = theaterChain.requiredFields ?: return
-        val name = theaterChain.chainName.toString()
+        val cardNumber = "cardNumber"
+        val name = theaterChain.chainName ?: return
 
         when (update) {
             true -> {
@@ -100,13 +100,12 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
                 }
             }
             false -> {
-                fieldNameToValue[name] = Pair(type, oldCardNumber)
+                fieldNameToValue[cardNumber] = Pair(type, oldCardNumber)
                 data = fieldNameToValue.map {
                     Triple(it.key, it.value.first, it.value.second)
                 }
             }
         }
-
     }
 
 
@@ -135,21 +134,6 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
 
     }
 
-    override fun updateSuccessful(delete: Boolean) {
-        activity?.let {
-            if (delete) {
-                Toast.makeText(it, "Loyalty number removed successfully", Toast.LENGTH_LONG).show()
-                it.onBackPressed()
-            } else {
-                Toast.makeText(it, "Loyalty number updated successfully", Toast.LENGTH_LONG).show()
-                it.onBackPressed()
-            }
-
-        }
-
-
-    }
-
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -162,6 +146,21 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
 
     override fun showProgress() {
         loyaltyProgress.visibility = View.VISIBLE
+    }
+
+    override fun updateSuccessful(delete: Boolean) {
+        activity?.let {
+            if (delete) {
+                Toast.makeText(it, getString(R.string.edit_loyalty_number_delete), Toast.LENGTH_LONG).show()
+                when (parentFragment) {
+                    is LoyaltyProgramFragment -> (parentFragment as LoyaltyProgramFragment).onLoyaltyDataRemoved()
+                }
+                it.onBackPressed()
+            } else {
+                Toast.makeText(it, getString(R.string.edit_loyalty_number_update), Toast.LENGTH_LONG).show()
+                it.onBackPressed()
+            }
+        }
     }
 
 

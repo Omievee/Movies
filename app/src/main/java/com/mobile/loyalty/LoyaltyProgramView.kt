@@ -6,7 +6,7 @@ interface LoyaltyProgramView {
     fun showLoyaltyScreenFields(theaterChain: TheaterChain, triple: Map<String, String>? = null)
     fun showProgress()
     fun hideProgress()
-    fun showAddLoyaltyError(theaterChain: TheaterChain)
+    fun showAddLoyaltyError(failure: String)
     fun hideAddTheaters()
     fun showRegisteredTheaters(theaters: List<TheaterChain>)
     fun hideRegisteredTheaters()

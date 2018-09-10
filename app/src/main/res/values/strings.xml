@@ -766,6 +766,8 @@
     <string name="log_in">Log In</string>
     <string name="not_a_member_join_today">Not a member? Join today!</string>
     <string name="in_theaters">In Theaters %1$s</string>
+    <string name="edit_loyalty_number_delete">Loyalty number removed successfully</string>
+    <string name="edit_loyalty_number_update">Loyalty number updated successfully</string>
 
 
 </resources>

@@ -20,6 +20,9 @@ open class TheaterChain(@SerializedName("chain_name") var chainNameKey: String? 
     }
 
 
+
+
+
     override fun sameAs(same: TheaterChain): Boolean {
         return same.chainNameKey == same.chainNameKey
     }
@@ -37,6 +40,8 @@ open class TheaterChain(@SerializedName("chain_name") var chainNameKey: String? 
             return it
         }
     }
+
+
 }
 
 
@@ -44,4 +49,11 @@ open class TheaterChain(@SerializedName("chain_name") var chainNameKey: String? 
 data class RequiredField(
         @SerializedName("cardNumber")
         val cardNumber: String? = null
-) : Parcelable
+) : Parcelable {
+
+    val requiredFields: Map<String, RequiredField>? by lazy {
+        this.requiredFields?.mapKeys {
+            it.key.replace("value","").trim()
+        }
+    }
+}

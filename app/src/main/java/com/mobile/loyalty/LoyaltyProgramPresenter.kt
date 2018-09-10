@@ -1,5 +1,6 @@
 package com.mobile.loyalty
 
+import com.mobile.ApiError
 import com.mobile.network.RestClient
 import io.reactivex.disposables.Disposable
 
@@ -7,12 +8,12 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
 
     val state = State()
 
-    fun onResume() {
-        fetchTheaterChainsIfNecessary()
+    fun onResume(update: Boolean) {
+        fetchTheaterChainsIfNecessary(update)
     }
 
-    private fun fetchTheaterChainsIfNecessary() {
-        if (state.registeredTheaterChains != null) {
+     fun fetchTheaterChainsIfNecessary(update: Boolean) {
+        if (state.registeredTheaterChains != null && !update) {
             return
         }
         view.showProgress()
@@ -87,7 +88,6 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                     it.first to it.third
                 }
 
-
         state.lastData = loyaltyDataMap
         view.showProgress()
         RestClient.getAuthenticated()
@@ -112,9 +112,9 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                 .subscribe({ _ ->
                     view.hideLoyaltySignIn()
                     showTheaters()
-                }, { _ ->
-                    state.lastTheaterChain?.let { theaterChain ->
-                        view.showAddLoyaltyError(theaterChain)
+                }, { error ->
+                    (error as? ApiError)?.let {
+                        view.showAddLoyaltyError(it.error.message)
                     }
 
                 })
@@ -124,7 +124,6 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
         state.lastTheaterChain?.let {
             view.showLoyaltyScreenFields(it, state.lastData)
         }
-
     }
 }
 

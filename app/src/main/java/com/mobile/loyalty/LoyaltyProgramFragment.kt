@@ -18,7 +18,7 @@ import com.mobile.widgets.MaterialSpinnerSpinnerView
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fragment_loyalty_program.*
 
-class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainClickListener {
+class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainClickListener, LoyaltyInterface {
 
 
     var addLoyaltyAdapter: MaterialSpinnerAdapter<TheaterChain>? = null
@@ -38,7 +38,7 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
 
     override fun onResume() {
         super.onResume()
-        presenter?.onResume()
+        presenter?.onResume(false)
     }
 
     override fun showAddTheaters(theaterChains: List<TheaterChain>) {
@@ -67,7 +67,6 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
                     addLoyaltySpinner.text = getString(R.string.loyalty_program_add_loyalty_program)
                     addLoyaltySpinner.hint = getString(R.string.loyalty_program_add_loyalty_program)
                 }
-
             }
             addLoyaltySpinner.setAdapter(addLoyaltyAdapter)
         }
@@ -75,9 +74,7 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
 
     override fun showLoyaltyScreenFields(theaterChain: TheaterChain, triple: Map<String, String>?) {
         activity?.let { activity ->
-
             val fieldNameToValue = mutableMapOf<String, Pair<RequiredField, TextInputEditText>>()
-
             val inputEditText = TextInputEditText(ContextThemeWrapper(activity, R.style.TextInputEditText)).apply {
                 hint = theaterChain.chainName.toSentenceCase().toLowerCase()
                 inputType = InputType.TYPE_CLASS_TEXT
@@ -91,17 +88,17 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
                 addView(textInputLayout)
             }
             val type = theaterChain.requiredFields ?: return
-            fieldNameToValue.put(theaterChain.chainName.toString(), Pair(type, inputEditText))
+            val nameKey = "cardNumber"
+            fieldNameToValue[nameKey] = Pair(type, inputEditText)
             loyaltySignInCL.visibility = View.VISIBLE
             loyaltySignInTV.setOnClickListener {
                 val data = fieldNameToValue.map {
-                    Triple(it.key, it.value.first, it.value.second.text.toString())
+                    Triple(it.key, it.value.first, inputEditText.text.toString())
                 }
                 presenter?.onSignInButtonClicked(theaterChain, data)
             }
             loyaltyProgramNameTV.text = theaterChain.chainName
         }
-
     }
 
     override fun showAddAMovieTheaterLoyaltyMessage() {
@@ -129,10 +126,10 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
         }
     }
 
-    override fun showAddLoyaltyError(theaterChain: TheaterChain) {
+    override fun showAddLoyaltyError(failure: String) {
         activity?.let { activity ->
-            AlertDialog.Builder(activity)
-                    .setTitle(getString(R.string.loyalty_program_generic_error_title, theaterChain.chainName))
+            AlertDialog.Builder(activity, R.style.CUSTOM_ALERT)
+                    .setTitle(failure)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
                         presenter?.retryLoyaltyProgram()
                     }.show()
@@ -140,9 +137,12 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
     }
 
     override fun showRegisteredTheaters(theaters: List<TheaterChain>) {
-        registeredLoyaltyRV.visibility = View.VISIBLE
-        myLoyaltyPrograms.visibility = View.VISIBLE
-
+        registeredLoyaltyRV?.let {
+            it.visibility = View.VISIBLE
+        }
+        myLoyaltyPrograms?.let {
+            it.visibility = View.VISIBLE
+        }
 
         if (registerLoyaltyAdapter == null) {
             registerLoyaltyAdapter = RegisteredLoyaltyAdapter(this)
@@ -171,6 +171,10 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
         loyaltySignInCL.visibility = View.GONE
     }
 
+
+    override fun onLoyaltyDataRemoved() {
+        presenter?.fetchTheaterChainsIfNecessary(true)
+    }
 
     companion object {
         fun newInstance(): LoyaltyProgramFragment {

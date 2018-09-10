@@ -47,6 +47,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -199,6 +200,6 @@ public interface Api {
     @POST("/rest/v1/loyalty/{chain}/signIn")
     Single<Map<String, Object>> theaterChainSignIn(@Path("chain") String chain, @Body Map<String, String> chainData);
 
-    @POST("/rest/v1/loyalty/{chain}/remove")
+    @HTTP(method = "DELETE", path = "/rest/v1/loyalty/{chain}/remove", hasBody = true)
     Single<Map<String, Object>> theaterChainRemove(@Path("chain") String chain, @Body Map<String, String> chainData);
 }
