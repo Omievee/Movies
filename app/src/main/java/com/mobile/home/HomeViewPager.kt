@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.view.ViewGroup
 import com.mobile.Primary
-import com.mobile.fragments.TheatersFragmentV2
+import com.mobile.fragments.TheatersFragment
 import com.mobile.movie.MoviesFragment
 import com.mobile.profile.ProfileFragment
 import java.util.concurrent.atomic.AtomicInteger
@@ -21,7 +21,7 @@ class HomeViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         theaters = position.getAndIncrement()
         profile = position.getAndIncrement()
         map.put(movies, MoviesFragment())
-        map.put(theaters, TheatersFragmentV2())
+        map.put(theaters, TheatersFragment())
         map.put(profile, ProfileFragment())
         map
     }

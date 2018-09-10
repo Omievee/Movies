@@ -93,6 +93,7 @@ class TheatersFragmentPresenter(override val view: TheatersFragmentView, locatio
                 }
                 .subscribe({ loc ->
                     view.scrollToTop()
+                    view.clearSearch()
                     onTheaters(it.location, loc)
                 }, {
                     it.printStackTrace()

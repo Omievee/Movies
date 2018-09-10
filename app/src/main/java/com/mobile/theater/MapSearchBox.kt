@@ -10,6 +10,10 @@ import kotlinx.android.synthetic.main.layout_map_search_box.view.*
 
 class MapSearchBox(context: Context?, attrs: AttributeSet?=null) : ConstraintLayout(context, attrs) {
 
+    fun clear() {
+        text = ""
+    }
+
     var listener:MapSearchBoxListener? = null
 
     init {

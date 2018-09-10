@@ -63,7 +63,7 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [TheatersFragmentModule::class])
-    fun theatersFragment(): TheatersFragmentV2
+    fun theatersFragment(): TheatersFragment
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [ScreeningsFragmentModule::class])
