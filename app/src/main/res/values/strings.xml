@@ -482,7 +482,7 @@
     <!-- Reservation -->
     <string name="current_reservation">Current Reservation</string>
     <plurals name="reservation_code_description">
-        <item quantity="one">Use the code below to redeem your tickets</item>
+        <item quantity="one">Use the code below to redeem your ticket</item>
         <item quantity="many">Use the code below to redeem all of the tickets in this reservation.</item>
         <item quantity="other">Use the code below to redeem all of the tickets in this reservation.</item>
     </plurals>
