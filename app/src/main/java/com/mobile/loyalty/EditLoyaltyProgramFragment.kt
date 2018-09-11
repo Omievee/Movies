@@ -23,7 +23,6 @@ private const val SELECTED_THEATER_CHAIN = "theaterChain"
 class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
 
 
-
     private var loyaltyProgram: TheaterChain? = null
     lateinit var data: List<Triple<String, RequiredField, String>>
     lateinit var theaterChain: TheaterChain
@@ -73,38 +72,27 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
         loyaltyProgram?.let { theaterChain ->
             this.theaterChain = theaterChain
             updateLoyaltyButton.setOnClickListener { v ->
-                mapData(theaterChain, true)
+                mapData(theaterChain)
                 presenter.userUpdatedLoyaltyCard(theaterChain, data = data)
             }
             deleteLoyalty.setOnClickListener {
-                mapData(theaterChain, false)
+                mapData(theaterChain)
                 showAlert(null, resources.getString(R.string.loyalty_delete_program), true)
 
             }
         }
     }
 
-    fun mapData(theaterChain: TheaterChain, update: Boolean) {
+    fun mapData(theaterChain: TheaterChain) {
         val fieldNameToValue = mutableMapOf<String, Pair<RequiredField, String>>()
 
         val newNumber = loyaltyCardNumber.text
         val type = theaterChain.requiredFields ?: return
         val cardNumber = "cardNumber"
-        val name = theaterChain.chainName ?: return
 
-        when (update) {
-            true -> {
-                fieldNameToValue[name] = Pair(type, newNumber.toString())
-                data = fieldNameToValue.map {
-                    Triple(it.key, it.value.first, it.value.second)
-                }
-            }
-            false -> {
-                fieldNameToValue[cardNumber] = Pair(type, oldCardNumber)
-                data = fieldNameToValue.map {
-                    Triple(it.key, it.value.first, it.value.second)
-                }
-            }
+        fieldNameToValue[cardNumber] = Pair(type, newNumber.toString())
+        data = fieldNameToValue.map {
+            Triple(it.key, it.value.first, it.value.second)
         }
     }
 
@@ -113,14 +101,13 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
         showAlert(failure, null, false)
     }
 
-    fun showAlert(failureString: String? = null, loyaltyDelete: String? = null, delete: Boolean) {
-        val displayString: String?
-
-        if (failureString != null) {
-            displayString = failureString
+    private fun showAlert(failureString: String? = null, loyaltyDelete: String? = null, delete: Boolean) {
+        val displayString: String? = if (failureString != null) {
+            failureString
         } else {
-            displayString = loyaltyDelete
+            loyaltyDelete
         }
+
         AlertDialog
                 .Builder(context, R.style.CUSTOM_ALERT)
                 .setMessage(displayString)
@@ -129,7 +116,7 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
                         presenter.deleteLoyaltyProgram(theaterChain, data)
                     }
                 }
-                .setCancelable(false)
+                .setCancelable(true)
                 .show()
 
     }
