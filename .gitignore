@@ -35,6 +35,6 @@ Thumbs.db
 .gradle
 build/
 app/.externalNativeBuild/
-captures/
+captures
 app/prod
 app/staging
