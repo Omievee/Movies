@@ -84,14 +84,16 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
                 addView(inputEditText)
             }
             loyaltyProgramFieldsLL.apply {
-                removeAllViews()
+                removeAllViews()    
                 addView(textInputLayout)
             }
             val type = theaterChain.requiredFields ?: return
             val nameKey = "cardNumber"
             fieldNameToValue[nameKey] = Pair(type, inputEditText)
             loyaltySignInCL.visibility = View.VISIBLE
-            loyaltySignInTV.setOnClickListener {
+
+
+            loyaltySignInTV.setOnClickListener { _ ->
                 val data = fieldNameToValue.map {
                     Triple(it.key, it.value.first, inputEditText.text.toString())
                 }
@@ -115,13 +117,13 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
     }
 
     override fun showProgress() {
-        addLoyaltyProgress.let {
+        addLoyaltyProgress?.let {
             it.visibility = View.VISIBLE
         }
     }
 
     override fun hideProgress() {
-        addLoyaltyProgress.let {
+        addLoyaltyProgress?.let {
             it.visibility = View.GONE
         }
     }
@@ -151,10 +153,11 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
         registerLoyaltyAdapter?.let {
             it.data = RegisteredLoyaltyAdapter.create(it.data, theaters)
         }
+
     }
 
     override fun onLoyaltyProgramClicked(theater: TheaterChain?) {
-        val theater = theater ?: return@onLoyaltyProgramClicked
+        theater ?: return@onLoyaltyProgramClicked
         showFragment(EditLoyaltyProgramFragment.newInstance(theater))
     }
 

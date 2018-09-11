@@ -64,10 +64,8 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
         loyaltyCardNumber.isEnabled = true
         deleteInput.setOnClickListener { loyaltyCardNumber.text.clear() }
 
-
         val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(loyaltyCardNumber, InputMethodManager.SHOW_FORCED)
-
 
         loyaltyProgram?.let { theaterChain ->
             this.theaterChain = theaterChain
@@ -78,7 +76,6 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
             deleteLoyalty.setOnClickListener {
                 mapData(theaterChain)
                 showAlert(null, resources.getString(R.string.loyalty_delete_program), true)
-
             }
         }
     }

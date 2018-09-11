@@ -8,7 +8,6 @@ class EditLoyaltyProgramPresenter(val view: EditLoyalProgramView, api: Api) {
 
     var registeredTheaterChains: List<TheaterChain>? = null
     var allTheaterChains: List<TheaterChain>? = null
-    var newList: List<TheaterChain>? = null
     fun onViewCreated() {
         retrieveLoyaltyData()
     }
