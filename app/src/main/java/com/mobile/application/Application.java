@@ -29,8 +29,6 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import io.fabric.sdk.android.Fabric;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 public class Application extends android.app.Application implements HasActivityInjector {
 
@@ -83,9 +81,6 @@ public class Application extends android.app.Application implements HasActivityI
         UserPreferences.INSTANCE.load(this, gson);
         Fabric.with(this, new Crashlytics());
         Fresco.initialize(this);
-        Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
-        Realm.setDefaultConfiguration(config);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupAuthenticatedGoWatchIt(getApplicationContext());
         RestClient.setUpRegistration(getApplicationContext());

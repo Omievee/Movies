@@ -15,16 +15,14 @@ import io.reactivex.ObservableEmitter
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import io.realm.Realm
 import javax.inject.Provider
 
 class TheaterManagerImpl(
         val api: StaticApi,
-        @TheaterScope val realm: Provider<Realm>,
+        val theaterDao: Provider<TheaterDao>,
         val locationManager: LocationManager,
         val amcDmaMap: AmcDmaMap
 ) : TheaterManager {
-
 
     private val userDefinedLocation: PublishSubject<UserLocation> = PublishSubject.create()
     private var disposable: Disposable? = null
@@ -101,14 +99,11 @@ class TheaterManagerImpl(
         disposable?.dispose()
         disposable = api
                 .getAllMoviePassTheaters()
+                .compose(Schedulers.singleBackground())
                 .map { reservationHistoryResponse ->
                     reservationHistoryResponse.theaters?.let {
-                        val realm = realm.get()
-                        realm.executeTransaction { transaction ->
-                            transaction.delete(Theater::class.java)
-                            transaction.insert(it)
-                            UserPreferences.theatersLoadedToday = true
-                        }
+                        theaterDao.get().saveAll(it)
+                        UserPreferences.theatersLoadedToday = true
                         if (userLocation != null) {
                             it.sortAndFilter(userLocation, dmaMap = amcDmaMap)
                         } else {
@@ -133,16 +128,9 @@ class TheaterManagerImpl(
                 }
     }
 
-    private fun queryRealm(str: UserAddress, radius: Double = 10.0): List<Theater> {
-        val realm = realm.get()
-        val query = realm
-                .where(Theater::class.java)
+    private fun queryRealm(str: UserAddress, radius: Double = 30.0): List<Theater> {
         val box = BoundingBox(str.location, 1_609.34 * radius)
-        query.greaterThan("lat", box.southWest.lat)
-        query.greaterThan("lon", box.southWest.lon)
-        query.lessThan("lat", box.northEast.lat)
-        query.lessThan("lon", box.northEast.lon)
-        val theaters = realm.copyFromRealm(query.findAll().sortAndFilter(str.location, amcDmaMap).take(40))
+        val theaters = theaterDao.get().findAll(box.southWest.lat, box.northEast.lat, box.southWest.lon, box.northEast.lon)
         if (theaters.isEmpty() && radius < 40) {
             return queryRealm(str, radius + 10)
         } else {
@@ -150,19 +138,10 @@ class TheaterManagerImpl(
         }
     }
 
-    private fun queryRealm(userLocation: UserLocation?, box: BoundingBox?): List<Theater> {
-        val realm = realm.get()
-        val query = realm
-                .where(Theater::class.java)
-        val loc = userLocation ?: return realm.copyFromRealm(query.findAll())
-        if (box != null) {
-            query.greaterThan("lat", box.southWest.lat)
-            query.greaterThan("lon", box.southWest.lon)
-            query.lessThan("lat", box.northEast.lat)
-            query.lessThan("lon", box.northEast.lon)
-        }
-        val list = realm.copyFromRealm(query.findAll().sortAndFilter(loc, amcDmaMap).take(40))
-        return list
+    private fun queryRealm(userLocation: UserLocation?, boxArg: BoundingBox?): List<Theater> {
+        val loc = userLocation ?: return theaterDao.get().findAll()
+        val box = boxArg ?: BoundingBox(loc, 30.0 * 1_609.34)
+        return theaterDao.get().findAll(box.southWest.lat, box.northEast.lat, box.southWest.lon, box.northEast.lon).sortAndFilter(loc, amcDmaMap).take(40)
     }
 
     override fun theaterDeepLink(theaterId: Int): Observable<DeepLinkCategory> {

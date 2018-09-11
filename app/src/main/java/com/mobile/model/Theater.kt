@@ -1,14 +1,12 @@
 package com.mobile.model
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
-import io.realm.RealmModel
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-@RealmClass
+@Entity
 open class Theater(
         @PrimaryKey
         var id: Int = 0,
@@ -24,7 +22,7 @@ open class Theater(
         var ticketType: String? = null,
         var theaterChainName:String? = null,
         var moviepassId:Int = 0
-) : RealmModel, Parcelable {
+) : Parcelable {
 
     fun ticketTypeIsStandard(): Boolean {
         return ticketType?.matches("STANDARD".toRegex()) == true

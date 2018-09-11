@@ -49,7 +49,10 @@ class ProfileFragment : MPFragment(), Primary {
                 Profile.HELP -> onHelpClicked()
                 Profile.LINK -> navigateTo(Intent(Intent.ACTION_VIEW, Uri.parse(pres.link)))
                 Profile.SIGN_OUT -> onLogout()
-                Profile.CLEAR_FLAGS -> UserPreferences.clearOutEverythingButUser()
+                Profile.CLEAR_FLAGS -> {
+                    UserPreferences.clearOutEverythingButUser()
+                    context?.deleteDatabase("local_storage.db")
+                }
                 else -> {
                 }
             }

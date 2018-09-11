@@ -28,7 +28,8 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import javax.annotation.Nullable;
+
+import io.reactivex.annotations.Nullable;
 import retrofit2.CallAdapter;
 import retrofit2.HttpException;
 import retrofit2.Response;
@@ -68,7 +69,8 @@ public final class RxJava2CallAdapterFactory extends CallAdapter.Factory {
     return new RxJava2CallAdapterFactory(null, false);
   }
 
-  private final @Nullable Scheduler scheduler;
+  private final @Nullable
+  Scheduler scheduler;
   private final boolean isAsync;
   private final Gson gson = new GsonBuilder().create();
 

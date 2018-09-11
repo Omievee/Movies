@@ -13,7 +13,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'realm-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -150,6 +149,7 @@ ext {
     exoplayer_version = '2.8.4'
     support_lib_version = '27.1.1'
     firebase_version = "16.0.1"
+    arch_version = "1.1.1"
 }
 
 androidExtensions {
@@ -263,10 +263,15 @@ dependencies {
         exclude group: 'android.arch.lifecycle'
     }
     api "com.android.support:design:$support_lib_version"
-    implementation "android.arch.core:common:1.1.1"
-    implementation "android.arch.lifecycle:runtime:1.1.1"
-    implementation "android.arch.lifecycle:livedata-core:1.1.1"
-    implementation "android.arch.lifecycle:viewmodel:1.1.1"
+    implementation "android.arch.core:common:$arch_version"
+    implementation "android.arch.lifecycle:extensions:$arch_version"
+    implementation "android.arch.persistence.room:runtime:$arch_version"
+    implementation "android.arch.lifecycle:runtime:$arch_version"
+    implementation "android.arch.lifecycle:livedata-core:$arch_version"
+    implementation "android.arch.lifecycle:viewmodel:$arch_version"
+
+    kapt "android.arch.lifecycle:compiler:$arch_version"
+    kapt "android.arch.persistence.room:compiler:$arch_version"
 
     implementation('com.timehop.stickyheadersrecyclerview:library:0.4.3') {
         exclude group: "com.android.support"

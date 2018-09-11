@@ -11,7 +11,8 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import java.lang.reflect.Type;
-import javax.annotation.Nullable;
+
+import io.reactivex.annotations.Nullable;
 import retrofit2.Call;
 import retrofit2.CallAdapter;
 import retrofit2.Response;

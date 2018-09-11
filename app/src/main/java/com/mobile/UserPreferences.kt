@@ -342,6 +342,10 @@ object UserPreferences {
         sPrefs.edit().putLong(Constants.LAST_DOWNLOADED_HISTORY, currentTime).apply()
     }
 
+    fun clearHistoryLoadedDate() {
+        sPrefs.edit().remove(Constants.LAST_DOWNLOADED_HISTORY)
+    }
+
     fun clearOutEverythingButUser() {
         val keys = setOf(Constants.AAID, Constants.CARD_ACTIVATED_SCREEN, Constants.DEVICE_ANDROID_ID, Constants.DEVICE_ID, Constants.ONE_DEVICE_ID, Constants.USER_AUTH_TOKEN, Constants.USER_EMAIL, Constants.USER_ID)
         sPrefs.all
@@ -535,8 +539,12 @@ object UserPreferences {
         get() {
             return sPrefs.getInt(theatersLoadedKey, -1) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
         }
-        set(_) {
-            sPrefs.edit().putInt(theatersLoadedKey, Calendar.getInstance().get(Calendar.DAY_OF_YEAR)).apply()
+        set(type) {
+            if(type) {
+                sPrefs.edit().putInt(theatersLoadedKey, Calendar.getInstance().get(Calendar.DAY_OF_YEAR)).apply()
+            } else {
+                sPrefs.edit().remove(theatersLoadedKey).apply()
+            }
         }
 
     val historyRatingAlertId: Int
