@@ -110,7 +110,7 @@
     <string name="tutorial_header_3">Use your MoviePass Card to Purchase Your Ticket!</string>
     <string name="tutorial_body_3">You have 30 minutes to swipe your card at a kiosk, or with a ticket agent.</string>
     <string name="tutorial_header_4">Movie Sold Out? Changed Your Mind?</string>
-    <string name="tutorial_body_4">Press \"Cancel/Change Check-In,\" and pick something new.</string>
+    <string name="tutorial_body_4">Press “Cancel Check-In,” and pick something new.</string>
 
 
     <!-- SelectSeatActivity -->
