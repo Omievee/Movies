@@ -1,7 +1,9 @@
 package com.mobile
 
+import android.os.Build
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
+import com.moviepass.BuildConfig
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -14,6 +16,19 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentInjector
+    }
+
+    companion object {
+        val isEmulator: Boolean by lazy {
+            BuildConfig.DEBUG && (Build.FINGERPRINT.startsWith("generic")
+                    || Build.FINGERPRINT.startsWith("unknown")
+                    || Build.MODEL.contains("google_sdk")
+                    || Build.MODEL.contains("Emulator")
+                    || Build.MODEL.contains("Android SDK built for x86")
+                    || Build.MANUFACTURER.contains("Genymotion")
+                    || Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")
+                    || "google_sdk" == Build.PRODUCT)
+        }
     }
 
 }

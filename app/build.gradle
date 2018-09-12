@@ -38,7 +38,7 @@ android {
         buildConfigField "String", "REGISTRATION_URL", '"https://stg.moviepass.com"'
         buildConfigField "String", "DEFAULT_LOCATION", 'null'
         buildConfigField "String", "REACTIVATION_URL", '"https://stg.moviepass.com/reactivate"'
-
+        buildConfigField "com.mobile.location.UserLocation", "USER_LOCATION", 'null'
     }
 
     splits {
@@ -102,6 +102,7 @@ android {
         }
         debug {
             buildConfigField "String", "DEFAULT_LOCATION", '"arlington tx"'
+            buildConfigField "com.mobile.location.UserLocation", "USER_LOCATION", "new com.mobile.location.UserLocation(33.027907,-96.789089)"
         }
     }
 

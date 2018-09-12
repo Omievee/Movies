@@ -132,7 +132,7 @@ class TheaterManagerImpl(
                 }
     }
 
-    private fun queryRealm(str:UserAddress, radius:Double = 10.0): List<Theater> {
+    private fun queryRealm(str:UserAddress, radius:Double = 30.0): List<Theater> {
         val realm = realm.get()
         val query = realm
                 .where(Theater::class.java)

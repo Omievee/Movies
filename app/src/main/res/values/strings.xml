@@ -90,7 +90,7 @@
     <!--<string name="activity_onboarding_body_5">Its that easy! Imaging all the great movies you can see in theaters with MoviePass!</string>-->
     <string name="activity_onboarding_body_5">Use the app to check into a theater,\nthen swipe your card to get your ticket!</string>
     <string name="activity_onboarding_body_final">Look for the e-ticket icon: </string>
-    <string name="tutorial_body_final">You can reserve same-day e-tickets right on the app from any location, even before receiving your card.* </string>
+    <string name="tutorial_body_final">Go cardless by reserving same-day e-tickets right on the app.</string>
 
 
     <!--Tutorial-->
@@ -110,7 +110,7 @@
     <string name="tutorial_header_3">Use your MoviePass Card to Purchase Your Ticket!</string>
     <string name="tutorial_body_3">You have 30 minutes to swipe your card at a kiosk, or with a ticket agent.</string>
     <string name="tutorial_header_4">Movie Sold Out? Changed Your Mind?</string>
-    <string name="tutorial_body_4">Press \"Cancel/Change Check-In,\" and pick something new.</string>
+    <string name="tutorial_body_4">Press “Cancel Check-In,” and pick something new.</string>
 
 
     <!-- SelectSeatActivity -->

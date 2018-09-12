@@ -33,7 +33,7 @@
             android:layout_below="@id/tutorial_body"
             android:gravity="center_horizontal"
             android:layout_marginBottom="@dimen/margin_half"
-            android:text="*Your subscription will begin upon your first e-ticket check-in."
+            android:text=""
             android:textSize="13sp"
             android:textStyle="italic"
             android:visibility="gone" />
