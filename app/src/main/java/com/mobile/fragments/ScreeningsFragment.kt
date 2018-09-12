@@ -8,7 +8,9 @@ import android.os.Parcelable
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Pair
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.mobile.ApiError
 import com.mobile.Constants
 import com.mobile.Error
@@ -16,10 +18,14 @@ import com.mobile.UserPreferences
 import com.mobile.adapters.MissingCheckinListener
 import com.mobile.adapters.ScreeningsAdapter
 import com.mobile.adapters.ScreeningsAdapter.Companion.createData
+import com.mobile.deeplinks.DeepLinksManager
 import com.mobile.history.model.ReservationHistory
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.location.UserLocation
-import com.mobile.model.*
+import com.mobile.model.AmcDmaMap
+import com.mobile.model.Movie
+import com.mobile.model.Screening
+import com.mobile.model.Theater
 import com.mobile.peakpass.PeakPassActivity
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.reservation.Checkin
@@ -43,6 +49,9 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
 
     @Inject
     lateinit var dataMap:AmcDmaMap
+
+    @Inject
+    lateinit var deepLinksManager: DeepLinksManager
 
     val adapter: ScreeningsAdapter = ScreeningsAdapter(this, this)
 

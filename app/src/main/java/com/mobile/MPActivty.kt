@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import com.mobile.deeplinks.DeepLinksManagerImpl
 import com.moviepass.BuildConfig
+import android.util.Log
+import com.mobile.deeplinks.DeepLinksManager
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -16,15 +18,12 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
 
     @Inject
-    lateinit var deepLinkHandler: DeepLinksManagerImpl
+    lateinit var deepLinksManager: DeepLinksManager
+
+    lateinit var uri: String
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-
-
-        intent?.let {
-            val movie = it.extras?.get(Constants.APPBOY_DEEP_LINK_KEY) as Movie
-            Log.d(">>>>>>>>>", " INTENT OBJECT RECEIVED FROM NOTIFICATION>>>>> " + movie.title)
-        }
+        receiveIntent()
         return fragmentInjector
     }
 
@@ -40,5 +39,19 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
                     || "google_sdk" == Build.PRODUCT)
         }
     }
+
+    private fun receiveIntent() {
+        Log.d(">>>>","RECEIVED INTENT" + intent.getStringExtra(Constants.APPBOY_DEEP_LINK_KEY))
+
+        when (intent?.getStringExtra(Constants.APPBOY_DEEP_LINK_KEY)) {
+            null -> {}
+            else -> {
+                uri = intent?.getStringExtra(Constants.APPBOY_DEEP_LINK_KEY).toString()
+                Log.d(">>>", ">>> PASSING URI$uri")
+                deepLinksManager.determineCategory(uri)
+            }
+        }
+    }
+
 
 }

@@ -1,10 +1,9 @@
 package com.mobile.deeplinks
 
-import android.content.Intent
+import com.mobile.model.Movie
 
 interface DeepLinksManager {
 
-    fun onMovieIntent(intent: Intent)
-    fun onTheaterIntent(intent: Intent)
-
+    fun determineCategory(url: String?)
+    fun retrieveMovieObjectFromDeepLink(): Movie?
 }

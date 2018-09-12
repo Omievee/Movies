@@ -14,11 +14,11 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.mobile.adapters.SearchAdapter;
 import com.mobile.keyboard.KeyboardManager;
+import com.mobile.model.Movie;
 import com.mobile.movie.MoviesManager;
 import com.mobile.search.AfterSearchListener;
-import com.mobile.adapters.SearchAdapter;
-import com.mobile.model.Movie;
 import com.moviepass.R;
 
 import java.util.ArrayList;
@@ -28,7 +28,6 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.disposables.Disposable;
-import io.realm.RealmList;
 
 /**
  * Created by o_vicarra on 2/6/18.
@@ -112,6 +111,7 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
 
             }
         });
+
 
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override

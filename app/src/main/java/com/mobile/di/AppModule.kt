@@ -42,8 +42,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideDeepLinkManager(context: Application): DeepLinksManager {
-        return DeepLinksManagerImpl(context)
+    fun provideDeepLinkManager(context: Application, moviesManager: MoviesManager): DeepLinksManager {
+        return DeepLinksManagerImpl(context, moviesManager)
     }
 
     @Provides

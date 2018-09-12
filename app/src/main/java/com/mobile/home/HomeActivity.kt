@@ -2,15 +2,12 @@ package com.mobile.home
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AlertDialog
 import android.view.View
-import android.util.Log
-import android.view.ViewGroup
 import android.widget.Toast
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.google.android.gms.common.ConnectionResult
@@ -23,12 +20,10 @@ import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.fragments.TicketVerificationV2
-import com.mobile.fragments.*
 import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
-import com.mobile.model.Movie
 import com.mobile.model.PopInfo
 import com.mobile.reservation.CurrentReservationV2
 import com.mobile.reservation.ReservationActivity
@@ -102,7 +97,6 @@ class HomeActivity : MPActivty(), HomeActivityView {
         }
         viewPager.offscreenPageLimit = 2
         viewPager.adapter = adapter
-
 
 
         presenter.onCreate()

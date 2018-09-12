@@ -2,7 +2,6 @@ package com.mobile.movie
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.graphics.Color.*
 import android.os.Bundle
@@ -11,11 +10,12 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.*
-import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import com.mobile.Primary
 import com.mobile.activities.ActivateMoviePassCard
-import com.mobile.activities.ActivatedCardTutorialActivity
 import com.mobile.adapters.BasicDiffCallback
 import com.mobile.adapters.ItemSame
 import com.mobile.fragments.*
@@ -26,11 +26,14 @@ import com.mobile.screening.MoviePosterClickListener
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_movies_v2.*
-import kotlinx.android.synthetic.main.list_item_featured_poster.view.*
-import java.util.Collections.min
 import javax.inject.Inject
 
 class MoviesFragment : MPFragment(), MoviesView, Primary {
+    override fun showDeepLinkMovie(movie: Movie) {
+        showFragment(ScreeningsFragment.newInstance(ScreeningsData(
+                movie = movie
+        )))
+    }
 
     @Inject
     lateinit var presenter: MoviesFragmentPresenter
