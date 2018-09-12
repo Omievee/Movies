@@ -12,22 +12,21 @@ import com.mobile.utils.startIntentIfResolves
 class BroadcastReceiver : BroadcastReceiver() {
 
     lateinit var context: Context
-    lateinit var uri: String
+
 
     override fun onReceive(context: Context?, intent: Intent?) {
-
         this.context = context ?: return
 
         intent?.let {
-            uri = it.extras?.get("uri").toString()
+            val uri = it.extras?.get("uri").toString()
             val notificationOpenedAction = context.packageName + AppboyNotificationUtils.APPBOY_NOTIFICATION_OPENED_SUFFIX
             if (notificationOpenedAction == it.action) {
-                userOpenedPush(it)
+                userOpenedPush(it, uri)
             }
         }
     }
 
-    private fun userOpenedPush(intent: Intent) {
+    private fun userOpenedPush(intent: Intent, uri: String?) {
         val notificationOpenedAction = context.packageName + AppboyNotificationUtils.APPBOY_NOTIFICATION_OPENED_SUFFIX
         if (notificationOpenedAction == intent.action) {
             when (UserPreferences.userId) {

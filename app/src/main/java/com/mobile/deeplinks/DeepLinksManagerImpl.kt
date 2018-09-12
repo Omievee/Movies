@@ -2,6 +2,7 @@ package com.mobile.deeplinks
 
 import com.mobile.application.Application
 import com.mobile.model.Movie
+import com.mobile.model.Theater
 import com.mobile.movie.MoviesManager
 import io.reactivex.disposables.Disposable
 
@@ -13,23 +14,21 @@ class DeepLinksManagerImpl(val context: Application, val moviesManager: MoviesMa
     var movieObject: Movie? = null
 
     override fun determineCategory(url: String?) {
-        url ?: return
-        val type = url.split("/".toRegex())
-        when (type[4]) {
-            "movies" -> {
-                val movieID = type[5]
-                findCorrespondingMovie(Integer.valueOf(movieID))
+        val type = url?.split("/".toRegex())
+        try {
+            when (type?.get(4)) {
+                "movies" -> {
+                    val movieID = type[5]
+                    findCorrespondingMovie(Integer.valueOf(movieID))
+                }
+                "theaters" -> {
+                    val theaterID = type[5]
+                    findCorrespondingTheater(Integer.valueOf(theaterID))
+                }
             }
-            "theaters" -> {
-                val theaterID = type[5]
-                findCorrespondingTheater(Integer.valueOf(theaterID))
-            }
+        }catch (e: ArrayIndexOutOfBoundsException) {
+            e.printStackTrace()
         }
-    }
-
-
-    private fun findCorrespondingTheater(theaterId: Int) {
-        //TODO : Same for theaters...
     }
 
     private fun findCorrespondingMovie(movieId: Int) {
@@ -54,4 +53,13 @@ class DeepLinksManagerImpl(val context: Application, val moviesManager: MoviesMa
     override fun retrieveMovieObjectFromDeepLink(): Movie? {
         return this.movieObject
     }
+
+    private fun findCorrespondingTheater(theaterId: Int) {
+        //TODO : Same for theaters...
+    }
+
+    override fun retrieveTheaterObjectFromDeepLink(): Theater? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }

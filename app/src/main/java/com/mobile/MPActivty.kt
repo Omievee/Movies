@@ -1,5 +1,6 @@
 package com.mobile
 
+import android.content.Intent
 import android.os.Build
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
@@ -20,10 +21,12 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var deepLinksManager: DeepLinksManager
 
-    lateinit var uri: String
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        receiveIntent()
+        intent?.let {
+            receiveIntent(it)
+        }
+
         return fragmentInjector
     }
 
@@ -40,18 +43,8 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
         }
     }
 
-    private fun receiveIntent() {
-        Log.d(">>>>","RECEIVED INTENT" + intent.getStringExtra(Constants.APPBOY_DEEP_LINK_KEY))
-
-        when (intent?.getStringExtra(Constants.APPBOY_DEEP_LINK_KEY)) {
-            null -> {}
-            else -> {
-                uri = intent?.getStringExtra(Constants.APPBOY_DEEP_LINK_KEY).toString()
-                Log.d(">>>", ">>> PASSING URI$uri")
-                deepLinksManager.determineCategory(uri)
-            }
-        }
+    private fun receiveIntent(intent: Intent) {
+        val url = intent.getStringExtra(Constants.APPBOY_DEEP_LINK_KEY) ?: return@receiveIntent
+        deepLinksManager.determineCategory(url)
     }
-
-
 }
