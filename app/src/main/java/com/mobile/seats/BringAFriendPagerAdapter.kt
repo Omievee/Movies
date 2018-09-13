@@ -37,7 +37,7 @@ class BringAFriendPagerAdapter(val checkin:Checkin?, userSegments:List<Int>, fm:
         checkin.availability.let {
             val map = mutableMapOf<Int, Fragment>()
             var position = AtomicInteger(0)
-            when (checkin.screening.maximumGuests > 0 && checkin.softCap==false) {
+            when (checkin.showGuestFlow && checkin.softCap==false) {
                 true -> {
                     map[position.getAndIncrement()] = AddGuestsFragment()
                 }
@@ -55,7 +55,7 @@ class BringAFriendPagerAdapter(val checkin:Checkin?, userSegments:List<Int>, fm:
 
                 }
             }
-            when (checkin.screening.maximumGuests > 0) {
+            when (checkin.showGuestFlow) {
                 true -> {
                     val index = position.getAndIncrement()
                     emailIndex = index
