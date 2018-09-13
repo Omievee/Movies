@@ -2,6 +2,7 @@ package com.mobile.fragments
 
 import com.mobile.deeplinks.DeepLinksManager
 import com.mobile.home.RestrictionsManager
+import com.mobile.model.Movie
 import com.mobile.movie.MoviesManager
 import io.reactivex.disposables.Disposable
 
@@ -9,7 +10,7 @@ class MoviesFragmentPresenter(val view: MoviesView, val movieManager: MoviesMana
 
     var moviesDisposable: Disposable? = null
     var restrictionsDisposable: Disposable? = null
-    var deepLinksDisp: Disposable? = null
+    var movie: Movie? = null
 
     fun onViewCreated() {}
 
@@ -38,9 +39,10 @@ class MoviesFragmentPresenter(val view: MoviesView, val movieManager: MoviesMana
                     it.printStackTrace()
                 })
 
-        val movie = deepLinksManager.retrieveMovieObjectFromDeepLink()
+        movie = deepLinksManager.retrieveMovieObjectFromDeepLink()
         if (movie != null) {
             view.showDeepLinkMovie(movie)
+            movie=null
         }
     }
 

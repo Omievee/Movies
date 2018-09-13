@@ -14,6 +14,8 @@ interface TheaterManager {
     fun theaterLocation(): Observable<UserLocation>
 
     fun search(address:UserAddress) : Single<List<Theater>>
+
+    fun theaterFromDeepLink(theaterID: Int): Theater?
 }
 
 class NoTheatersException : Throwable()

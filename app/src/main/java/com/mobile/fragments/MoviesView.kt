@@ -8,5 +8,5 @@ interface MoviesView {
     fun showProgress()
     fun updateAdapter(t1: CurrentMoviesResponse)
     fun showSubscriptionActivationRequired()
-    fun showDeepLinkMovie(movie: Movie)
+    fun showDeepLinkMovie(movie: Movie?)
 }

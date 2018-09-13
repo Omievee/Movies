@@ -22,6 +22,7 @@ import com.mobile.session.SessionManager
 import com.mobile.session.SessionManagerImpl
 import com.mobile.session.UserManager
 import com.mobile.session.UserManagerImpl
+import com.mobile.theater.TheaterManager
 import com.mobile.theater.TheaterModule
 import com.mobile.theater.TheaterModuleUI
 import com.mobile.ticketverification.BarcodeDetectorManager
@@ -42,8 +43,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideDeepLinkManager(context: Application, moviesManager: MoviesManager): DeepLinksManager {
-        return DeepLinksManagerImpl(context, moviesManager)
+    fun provideDeepLinkManager(context: Application, moviesManager: MoviesManager, theatersManager: TheaterManager): DeepLinksManager {
+        return DeepLinksManagerImpl(context, moviesManager, theatersManager)
     }
 
     @Provides

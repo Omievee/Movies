@@ -14,7 +14,6 @@ import io.reactivex.ObservableEmitter
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import io.realm.Case
 import io.realm.Realm
 import javax.inject.Provider
 
@@ -24,6 +23,7 @@ class TheaterManagerImpl(
         val locationManager: LocationManager,
         val amcDmaMap: AmcDmaMap
         ) : TheaterManager {
+
 
     private val userDefinedLocation: PublishSubject<UserLocation> = PublishSubject.create()
     private var disposable: Disposable? = null
@@ -132,7 +132,7 @@ class TheaterManagerImpl(
                 }
     }
 
-    private fun queryRealm(str:UserAddress, radius:Double = 30.0): List<Theater> {
+    private fun queryRealm(str:UserAddress, radius:Double = 10.0): List<Theater> {
         val realm = realm.get()
         val query = realm
                 .where(Theater::class.java)
@@ -162,6 +162,21 @@ class TheaterManagerImpl(
         }
         val list = realm.copyFromRealm(query.findAll().sortAndFilter(loc, amcDmaMap).take(40))
         return list
+    }
+
+    override fun theaterFromDeepLink(theaterID: Int): Theater? {
+        val theaterObject: Theater? = null
+        val query = realm.get()
+                .where(Theater::class.java)
+                .equalTo("id", theaterID)
+                .findAll()
+        val list = realm.get().copyFromRealm(query)
+        if (list != null && list.size > 0) {
+            if (list[0].id == theaterID) {
+                list[0] = theaterObject
+            }
+        }
+        return theaterObject
     }
 }
 

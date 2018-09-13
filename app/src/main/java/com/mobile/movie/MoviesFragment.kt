@@ -29,11 +29,6 @@ import kotlinx.android.synthetic.main.fragment_movies_v2.*
 import javax.inject.Inject
 
 class MoviesFragment : MPFragment(), MoviesView, Primary {
-    override fun showDeepLinkMovie(movie: Movie) {
-        showFragment(ScreeningsFragment.newInstance(ScreeningsData(
-                movie = movie
-        )))
-    }
 
     @Inject
     lateinit var presenter: MoviesFragmentPresenter
@@ -134,6 +129,12 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         }
         adapter.data = Data(newD, DiffUtil.calculateDiff(BasicDiffCallback(old, newD)))
     }
+    override fun showDeepLinkMovie(movie: Movie?) {
+        showFragment(ScreeningsFragment.newInstance(ScreeningsData(
+                movie = movie
+        )))
+    }
+
 
     override fun onResume() {
         super.onResume()

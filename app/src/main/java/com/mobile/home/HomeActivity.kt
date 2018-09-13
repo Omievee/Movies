@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
@@ -19,12 +20,15 @@ import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
 import com.mobile.analytics.AnalyticsManager
+import com.mobile.fragments.ScreeningsData
+import com.mobile.fragments.ScreeningsFragment
 import com.mobile.fragments.TicketVerificationV2
 import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
 import com.mobile.model.PopInfo
+import com.mobile.model.Theater
 import com.mobile.reservation.CurrentReservationV2
 import com.mobile.reservation.ReservationActivity
 import com.mobile.seats.MPBottomSheetFragment
@@ -39,11 +43,14 @@ import javax.inject.Inject
 
 class HomeActivity : MPActivty(), HomeActivityView {
 
+
     @Inject
     lateinit var analyticsManager: AnalyticsManager
 
     @Inject
     lateinit var presenter: HomeActivityPresenter
+
+    var theaterObject: Theater? = null
 
     companion object {
         const val POSITION: String = "position"
@@ -98,10 +105,8 @@ class HomeActivity : MPActivty(), HomeActivityView {
         viewPager.offscreenPageLimit = 2
         viewPager.adapter = adapter
 
-
         presenter.onCreate()
     }
-
 
 
     override fun onResume() {
@@ -150,11 +155,11 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
     override fun showForceLogout(it: LogoutInfo) {
         AlertDialog.Builder(this)
-                .setMessage(it.getMessage())
+                .setMessage(it.message)
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     startActivity(Intent(this, LogInActivity::class.java));
-                    finishAffinity();
+                    finishAffinity()
                 }.show()
     }
 
@@ -200,6 +205,12 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
     override fun showHistoryRateScreen(reservationHistory: ReservationHistory) {
         showFragment(HistoryDetailsFragment.newInstance(reservationHistory, true))
+    }
+
+    override fun showTheaterFromDeepLink(theater: Theater?) {
+        Log.d(">>>>", ">>>>>>> MADE IT")
+        viewPager.setCurrentItem(1, true)
+        showFragment(ScreeningsFragment.newInstance(ScreeningsData(theaterObject)))
     }
 
     var currentItem: Int = 0

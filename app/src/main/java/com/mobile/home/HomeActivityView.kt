@@ -4,6 +4,7 @@ import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
 import com.mobile.model.PopInfo
+import com.mobile.model.Theater
 import com.mobile.reservation.CurrentReservationV2
 
 interface HomeActivityView {
@@ -17,4 +18,5 @@ interface HomeActivityView {
     fun showHistoryRateScreen(reservationHistory: ReservationHistory)
     fun hidePeakPassBadge()
     fun showOverSoftCap()
+    fun showTheaterFromDeepLink(theater: Theater?)
 }
