@@ -91,6 +91,10 @@ interface AppBindingModule {
     @ContributesAndroidInjector(modules = [TicketVerificationBottomSheetModule::class])
     fun ticketVerificationBottomSheetDialogFragment(): TicketVerificationBottomSheetDialogFragment
 
+    @FragmentScope
+    @ContributesAndroidInjector
+    fun enableLocation():EnableLocationFragment
+
     @TVScope
     @ContributesAndroidInjector()
     fun ocrCaptureFragment(): OcrCaptureFragment

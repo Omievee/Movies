@@ -1,15 +1,23 @@
 package com.mobile.fragments
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import com.mobile.Constants
+import com.mobile.location.LocationManager
 import com.moviepass.R
+import javax.inject.Inject
 
 abstract class LocationRequiredFragment : MPFragment(), LocationRequiredView {
 
-    abstract fun presenter():LocationRequiredPresenter
+    abstract fun presenter(): LocationRequiredPresenter
+
+    @Inject
+    lateinit var locationProvider: LocationManager
+
+    var showEnableLocation = false
 
     private val hasFineLocation: Boolean
         get() {
@@ -23,6 +31,10 @@ abstract class LocationRequiredFragment : MPFragment(), LocationRequiredView {
             return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         }
 
+    private val hasLocationEnabled: Boolean
+        get() {
+            return locationProvider.isLocationEnabled()
+        }
 
     override fun requestLocationPermissions() {
         val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -46,10 +58,22 @@ abstract class LocationRequiredFragment : MPFragment(), LocationRequiredView {
     }
 
     override fun showEnableLocation() {
-        EnableLocation.newInstance().show(childFragmentManager, "enable_location")
+        EnableLocationFragment.newInstance().show(childFragmentManager, "enable_location")
+        showEnableLocation = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(showEnableLocation && locationProvider.isLocationEnabled()) {
+            showEnableLocation = false
+            checkLocationPermissions()
+        }
     }
 
     override fun checkLocationPermissions() {
+        when (hasLocationEnabled) {
+            false -> return presenter().onDoesNotHaveLocationEnabled()
+        }
         when (hasFineLocation && hasCoarseLocation) {
             true -> presenter().onHasLocationPermission()
             false -> presenter().onDoesNotHaveLocationPermission()

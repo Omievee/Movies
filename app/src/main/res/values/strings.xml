@@ -768,6 +768,8 @@
     <string name="in_theaters">In Theaters %1$s</string>
     <string name="edit_loyalty_number_delete">Loyalty number removed successfully</string>
     <string name="edit_loyalty_number_update">Loyalty number updated successfully</string>
+    <string name="enable_location_description">In order for us to find theaters near you, please enable location services.</string>
+    <string name="enable_location_services">Enable location services</string>
 
     <string name="tap_to_reveal">Tap to reveal code</string>
 
