@@ -23,7 +23,7 @@ class CappedPlanView(context: Context?, attrs: AttributeSet? = null) : PeakConta
         header.text = resources.getString(R.string.movies_left_in_billing_cycle)
         amount.text = when (cap.isOverSoftCap) {
             true -> resources.getString(R.string.zero_movies)
-            false -> resources.getQuantityString(R.plurals.movie_left, cap.remaining, cap.remaining)
+            false -> resources.getQuantityString(R.plurals.movie_left, cap.remaining?:0, cap.remaining?:0)
         }
         description.text = when {
             cap.isOverHardCap -> resources.getString(R.string.over_hard_cap)
