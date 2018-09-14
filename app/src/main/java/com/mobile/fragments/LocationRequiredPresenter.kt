@@ -75,5 +75,8 @@ abstract class LocationRequiredPresenter(open val view: LocationRequiredView, va
     }
 
     abstract fun onLocation(userLocation: UserLocation)
+    fun onDeniedPermanentLocationPermission() {
+        view.showManuallyGrantPermissions()
+    }
 
 }
