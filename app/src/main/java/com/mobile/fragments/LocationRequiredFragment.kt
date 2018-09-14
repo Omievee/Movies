@@ -5,17 +5,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
-import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 import com.mobile.Constants
 import com.mobile.location.LocationManager
 import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import javax.inject.Inject
-import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-import android.support.v4.view.accessibility.AccessibilityEventCompat.setAction
-
 
 
 abstract class LocationRequiredFragment : MPFragment(), LocationRequiredView {
@@ -33,10 +28,9 @@ abstract class LocationRequiredFragment : MPFragment(), LocationRequiredView {
             return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         }
 
-    private val canRequestPermission: Boolean
+    private val shouldShowDialog: Boolean
         get() {
-            val activity = activity ?: return false
-            return !ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
+            return shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
         }
 
     private val hasCoarseLocation: Boolean
@@ -51,9 +45,6 @@ abstract class LocationRequiredFragment : MPFragment(), LocationRequiredView {
         }
 
     override fun requestLocationPermissions() {
-        if (canRequestPermission) {
-            return presenter().onDeniedPermanentLocationPermission()
-        }
         val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
         requestPermissions(permissions, Constants.REQUEST_LOCATION_FROM_THEATERS_CODE)
     }
@@ -61,8 +52,14 @@ abstract class LocationRequiredFragment : MPFragment(), LocationRequiredView {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode == Constants.REQUEST_LOCATION_FROM_THEATERS_CODE) {
-            true -> presenter().onRequestPermissionResult(hasFineLocation && hasCoarseLocation)
+            true -> {
+                if ((!hasFineLocation || !hasCoarseLocation) && !shouldShowDialog) {
+                    presenter().onDeniedPermanentLocationPermission()
+                } else
+                    presenter().onRequestPermissionResult(hasFineLocation || hasCoarseLocation)
+            }
         }
+
     }
 
     override fun showManuallyGrantPermissions() {
