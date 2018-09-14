@@ -6,8 +6,8 @@ import io.reactivex.Observable
 
 interface DeepLinksManager {
 
-    fun determineCategory(url: String?)
-    fun retrieveMovieObjectFromDeepLink(): Movie?
-    fun subScribeToTheaterDeepLink(): Observable<Theater>
-    fun retrieveTheaterFromDeepLink(): Theater?
+    fun handleCategory(url: String?)
+    fun subScribeToDeepLink(): Observable<DeepLinkCategory>
 }
+
+class DeepLinkCategory(val movie: Movie? = null, val theater: Theater? = null)

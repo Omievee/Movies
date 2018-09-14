@@ -181,7 +181,6 @@ object UserPreferences {
             val location = Location("current")
             location.latitude = latitude
             location.longitude = longitude
-
             return location
         }
 

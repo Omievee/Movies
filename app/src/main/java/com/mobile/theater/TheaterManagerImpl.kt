@@ -22,7 +22,7 @@ class TheaterManagerImpl(
         @TheaterScope val realm: Provider<Realm>,
         val locationManager: LocationManager,
         val amcDmaMap: AmcDmaMap
-        ) : TheaterManager {
+) : TheaterManager {
 
 
     private val userDefinedLocation: PublishSubject<UserLocation> = PublishSubject.create()
@@ -67,9 +67,9 @@ class TheaterManagerImpl(
             if (emitter.isDisposed) {
                 return@create
             }
-            when(theaters.isEmpty()) {
-                false-> emitter.onNext(theaters)
-                theatersEverLoaded->emitter.onNext(theaters)
+            when (theaters.isEmpty()) {
+                false -> emitter.onNext(theaters)
+                theatersEverLoaded -> emitter.onNext(theaters)
             }
             if (!theatersEverLoaded) {
                 getTheatersFromApi(userLocation, box, emitter)
@@ -83,13 +83,13 @@ class TheaterManagerImpl(
         return obs.compose(Schedulers.observableDefault())
     }
 
-    override fun search(address:UserAddress): Single<List<Theater>> {
-        val single:Single<List<Theater>> = Single.create { it->
+    override fun search(address: UserAddress): Single<List<Theater>> {
+        val single: Single<List<Theater>> = Single.create { it ->
             val theaters = queryRealm(address)
-            if(it.isDisposed) {
+            if (it.isDisposed) {
                 return@create
             }
-            if(!it.isDisposed) {
+            if (!it.isDisposed) {
                 it.onSuccess(theaters)
             }
         }
@@ -132,29 +132,29 @@ class TheaterManagerImpl(
                 }
     }
 
-    private fun queryRealm(str:UserAddress, radius:Double = 10.0): List<Theater> {
+    private fun queryRealm(str: UserAddress, radius: Double = 10.0): List<Theater> {
         val realm = realm.get()
         val query = realm
                 .where(Theater::class.java)
-        val box = BoundingBox(str.location,1_609.34*radius)
+        val box = BoundingBox(str.location, 1_609.34 * radius)
         query.greaterThan("lat", box.southWest.lat)
         query.greaterThan("lon", box.southWest.lon)
         query.lessThan("lat", box.northEast.lat)
         query.lessThan("lon", box.northEast.lon)
-        val theaters = realm.copyFromRealm(query.findAll().sortAndFilter(str.location,amcDmaMap).take(40))
-        if(theaters.isEmpty() && radius < 40) {
-            return queryRealm(str, radius+10)
+        val theaters = realm.copyFromRealm(query.findAll().sortAndFilter(str.location, amcDmaMap).take(40))
+        if (theaters.isEmpty() && radius < 40) {
+            return queryRealm(str, radius + 10)
         } else {
             return theaters
         }
     }
 
-    private fun queryRealm(userLocation: UserLocation?, box:BoundingBox?): List<Theater> {
+    private fun queryRealm(userLocation: UserLocation?, box: BoundingBox?): List<Theater> {
         val realm = realm.get()
         val query = realm
                 .where(Theater::class.java)
         val loc = userLocation ?: return query.findAll()
-        if(box!=null) {
+        if (box != null) {
             query.greaterThan("lat", box.southWest.lat)
             query.greaterThan("lon", box.southWest.lon)
             query.lessThan("lat", box.northEast.lat)
@@ -184,10 +184,11 @@ fun List<Theater>.sortAndFilter(userLocation: UserLocation, dmaMap: AmcDmaMap): 
     return sortedWith(compareBy {
         UserLocation.haversine(it.lat, it.lon, userLocation.lat, userLocation.lon)
     }).take(40)
-            .sortedWith(compareBy({ !it.ticketTypeIsSelectSeating() }, { !it.ticketTypeIsETicket()
+            .sortedWith(compareBy({ !it.ticketTypeIsSelectSeating() }, {
+                !it.ticketTypeIsETicket()
             },
-            {
-                dmaMap.shouldMoveToBottom(it)
-            }
+                    {
+                        dmaMap.shouldMoveToBottom(it)
+                    }
             )).toMutableList()
 }

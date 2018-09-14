@@ -1,7 +1,6 @@
 package com.mobile.deeplinks
 
 import com.mobile.application.Application
-import com.mobile.model.Movie
 import com.mobile.model.Theater
 import com.mobile.movie.MoviesManager
 import com.mobile.rx.Schedulers
@@ -13,65 +12,69 @@ import io.reactivex.subjects.BehaviorSubject
 class DeepLinksManagerImpl(val context: Application, val moviesManager: MoviesManager, val theatersManager: TheaterManager) : DeepLinksManager {
 
 
-    lateinit var moviesList: List<Movie>
     var moviesSub: Disposable? = null
-    var movieObject: Movie? = null
-    var theaterObject: Theater? = null
-    private val subject: BehaviorSubject<Theater> = BehaviorSubject.create()
+    var theaterSub: Disposable? = null
+    val subject: BehaviorSubject<DeepLinkCategory> = BehaviorSubject.create()
+    var theatersList: List<Theater>? = null
 
-    override fun determineCategory(url: String?) {
-        val type = url?.split("/".toRegex())
+    override fun handleCategory(url: String?) {
+        println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>handeling...")
+        val movieOrTheaterId = url?.split("/")?.last()?.toString() ?: ""
         try {
+            val type = url?.split("/".toRegex())
+            println(">>>>>>>>>>>>>>>>>>>>>>> TYPE" + type?.get(4))
             when (type?.get(4)) {
                 "movies" -> {
-                    val movieID = type[5]
-                    findCorrespondingMovie(Integer.valueOf(movieID))
+                    println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>movies type")
+                    findCorrespondingMovie(Integer.valueOf(movieOrTheaterId))
                 }
                 "theaters" -> {
-                    val theaterID = type[5]
-                    findCorrespondingTheater(Integer.valueOf(theaterID))
+                    findCorrespondingTheater(Integer.valueOf(movieOrTheaterId))
                 }
             }
         } catch (e: ArrayIndexOutOfBoundsException) {
-
+            e.printStackTrace()
         }
     }
 
-    private fun findCorrespondingMovie(movieId: Int) {
-        moviesSub?.dispose()
-        moviesSub = moviesManager
-                .getAllMovies()
-                .map { m ->
-                    moviesList = m
+    private fun findCorrespondingTheater(theaterId: Int) {
+        theaterSub?.dispose()
+
+        theaterSub = theatersManager
+                .theaters(theaterId)
+                .map { t ->
+                    theatersList = t
                 }
-                .subscribe({ _ ->
-                    for (i in 0 until moviesList.size) {
-                        if (moviesList[i].id == movieId) {
-                            movieObject = moviesList[i]
-                        }
-                    }
+                .subscribe({
+                    //    subject.onNext(DeepLinkCategory(null, ))
                 }, {
                     it.printStackTrace()
                 })
     }
 
-    override fun retrieveMovieObjectFromDeepLink(): Movie? {
-        return this.movieObject
+    private fun findCorrespondingMovie(movieId: Int) {
+        println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>movies search")
+        moviesSub?.dispose()
+        moviesSub = moviesManager
+                .getAllMovies()
+                .map { m ->
+                    m.find {
+
+                        it.id == movieId
+                    }
+                }
+                .subscribe({
+                    println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>movies found" + it?.title)
+                    subject.onNext(DeepLinkCategory(it, null))
+                    println(subject.value)
+                }, {
+                    it.printStackTrace()
+                })
     }
 
-    private fun findCorrespondingTheater(theaterId: Int) {
-        val theater = theatersManager.theaterFromDeepLink(theaterId)
-        theaterObject = theater
-    }
-
-    override fun subScribeToTheaterDeepLink(): Observable<Theater> {
+    override fun subScribeToDeepLink(): Observable<DeepLinkCategory> {
+        println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>movies subscribe")
         return subject.compose(Schedulers.observableDefault())
     }
-
-    override fun retrieveTheaterFromDeepLink(): Theater? {
-        return this.theaterObject
-    }
-
-
-
 }
+

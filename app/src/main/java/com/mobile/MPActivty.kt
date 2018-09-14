@@ -44,6 +44,7 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
 
     private fun receiveIntent(intent: Intent) {
         val url = intent.getStringExtra(Constants.APPBOY_DEEP_LINK_KEY) ?: return
-        deepLinksManager.determineCategory(url)
+        println("made it to intent")
+        deepLinksManager.handleCategory(url)
     }
 }

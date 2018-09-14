@@ -9,13 +9,12 @@ import io.reactivex.Single
 
 interface TheaterManager {
 
-    fun theaters(userLocation: UserLocation?=null,box: BoundingBox?=null): Observable<List<Theater>>
+    fun theaters(theaterId: Int? = null, userLocation: UserLocation? = null, box: BoundingBox? = null): Observable<List<Theater>>
 
     fun theaterLocation(): Observable<UserLocation>
 
-    fun search(address:UserAddress) : Single<List<Theater>>
+    fun search(address: UserAddress): Single<List<Theater>>
 
-    fun theaterFromDeepLink(theaterID: Int): Theater?
 }
 
 class NoTheatersException : Throwable()

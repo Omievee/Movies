@@ -33,6 +33,8 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
     @Inject
     lateinit var presenter: MoviesFragmentPresenter
 
+
+
     val movieClickListener: MoviePosterClickListener = object : MoviePosterClickListener {
         override fun onMoviePosterClick(movie: Movie) {
             showFragment(ScreeningsFragment.newInstance(ScreeningsData(
@@ -138,6 +140,8 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
 
     override fun onResume() {
         super.onResume()
+
+
         presenter.onResume()
     }
 

@@ -57,24 +57,16 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         }
         setProfileTabBadge()
         subscribeToBadgeChange()
-        subscribeToDeepLink()
-        Log.d(">>>>", "RESUME" )
-    }
 
-    fun subscribeToDeepLink() {
-        Log.d(">>>>", "THEATER IS>>>>" + theater)
         deepLInksDisposable?.dispose()
         deepLInksDisposable = deepLinksManager
-                .subScribeToTheaterDeepLink()
+                .subScribeToDeepLink()
                 .map {
-                    theater = deepLinksManager.retrieveTheaterFromDeepLink()
+                    Log.d(">>>>", ">>THEATER??? " + it.theater?.name)
                 }
                 .subscribe {
-                    if (theater != null) {
-                        view.showTheaterFromDeepLink(theater)
-                    }
+
                 }
-        theater = null
     }
 
 

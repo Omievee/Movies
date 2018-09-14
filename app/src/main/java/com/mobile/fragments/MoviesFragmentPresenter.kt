@@ -11,8 +11,12 @@ class MoviesFragmentPresenter(val view: MoviesView, val movieManager: MoviesMana
     var moviesDisposable: Disposable? = null
     var restrictionsDisposable: Disposable? = null
     var movie: Movie? = null
+    var deeplinksDisposable: Disposable? = null
 
-    fun onViewCreated() {}
+    fun onViewCreated() {
+        determineMovieFromDeepLink()
+    }
+
 
     fun onResume() {
         moviesDisposable?.dispose()
@@ -38,20 +42,34 @@ class MoviesFragmentPresenter(val view: MoviesView, val movieManager: MoviesMana
                 }, {
                     it.printStackTrace()
                 })
-
-        movie = deepLinksManager.retrieveMovieObjectFromDeepLink()
-        if (movie != null) {
-            view.showDeepLinkMovie(movie)
-            movie=null
-        }
     }
 
     fun onDestroy() {
         moviesDisposable?.dispose()
         restrictionsDisposable?.dispose()
+        deeplinksDisposable?.dispose()
     }
 
     fun onRefresh() {
         onResume()
     }
+
+    private fun determineMovieFromDeepLink() {
+        deeplinksDisposable?.dispose()
+        deeplinksDisposable = deepLinksManager
+                .subScribeToDeepLink()
+                .doFinally { movie = null }
+                .map {
+                    movie = it.movie
+                }
+                .subscribe({
+                    if (movie != null) {
+                        view.showDeepLinkMovie(movie)
+                    }
+                }, {
+                    it.printStackTrace()
+                })
+
+    }
+
 }

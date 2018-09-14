@@ -3,7 +3,10 @@ package com.mobile.fragments
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.location.*
 import com.mobile.model.Theater
-import com.mobile.theater.*
+import com.mobile.theater.TheaterManager
+import com.mobile.theater.TheaterUIManager
+import com.mobile.theater.TheatersFragmentView
+import com.mobile.theater.TheatersPayload
 import io.reactivex.disposables.Disposable
 
 class TheatersFragmentPresenter(override val view: TheatersFragmentView, locationManager: LocationManager, val theaterManager: TheaterManager, val theaterUIManager: TheaterUIManager, val geocoder: Geocoder, val analyticsManager: AnalyticsManager) : LocationRequiredPresenter(view, locationManager) {
@@ -52,7 +55,7 @@ class TheatersFragmentPresenter(override val view: TheatersFragmentView, locatio
     private fun fetchNearbyTheaters(loc: UserLocation) {
         view.showProgress()
         theaterSub = theaterManager
-                .theaters(loc)
+                .theaters(null, loc)
                 .doAfterTerminate { view.hideProgress() }
                 .subscribe({ theaters ->
                     onTheaters(loc, theaters)
