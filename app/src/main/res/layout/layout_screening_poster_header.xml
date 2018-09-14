@@ -8,6 +8,7 @@
 
     <ImageView
         android:id="@+id/backButton"
+        android:layout_marginTop="@dimen/status_bar_height"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         style="@style/BackButton" />
