@@ -1,8 +1,8 @@
 package com.mobile.history
 
 import com.mobile.UserPreferences
-import com.mobile.UserPreferences.saveHistoryLoadedDate
 import com.mobile.UserPreferences.historyLoadedDate
+import com.mobile.UserPreferences.saveHistoryLoadedDate
 import com.mobile.history.model.ReservationHistory
 import com.mobile.network.Api
 import com.mobile.responses.HistoryResponse
@@ -24,8 +24,8 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
     init {
         sessionManager.loggedOut()
                 .subscribe {
-                    realmHistory.get().executeTransaction {
-                        it.deleteAll()
+                    realmHistory.get().executeTransaction { movie ->
+                        movie.deleteAll()
                     }
                 }
     }
@@ -146,6 +146,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                 .map {
                     if (it.userRating != null) {
                         throw IllegalArgumentException("Last movie has been rated")
+
                     }
                     it
                 }.singleOrError()

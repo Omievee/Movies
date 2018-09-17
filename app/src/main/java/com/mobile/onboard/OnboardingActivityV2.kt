@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.view.WindowManager
 import android.webkit.WebViewFragment
+import com.facebook.login.Login
 
 import com.mobile.MPActivty
 import com.mobile.activities.LogInActivity
@@ -91,7 +92,6 @@ fun updateIndicators(position: Int) {
 //                    if (i == position) R.drawable.indicator_selected_no_stroke else R.drawable.indicator_unselected_no_stroke
 //            )
 //        }
-
 }
 
 

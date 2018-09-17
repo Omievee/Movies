@@ -1,23 +1,27 @@
 package com.mobile.loyalty
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.mobile.adapters.ItemSame
-import com.mobile.utils.text.*
+import com.mobile.utils.text.toSentenceCase
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 open class TheaterChain(@SerializedName("chain_name") var chainNameKey: String? = null,
                         @SerializedName("is_user_registered") var isUserRegistered: Boolean = false,
-                        private @SerializedName("required_fields") var _requiredFields: Map<String, RequiredField>? = emptyMap()
-) : ItemSame<TheaterChain> {
+                        @SerializedName("required_fields") var requiredFields: RequiredField? = null
+
+
+) : ItemSame<TheaterChain>, Parcelable {
+
 
     val chainName: String? by lazy {
         this.chainNameKey.toSentenceCase()
     }
 
-    val requiredFields: Map<String, RequiredField>? by lazy {
-        this._requiredFields?.mapKeys {
-            it.key.replace("value","").trim()
-        }
-    }
+
+
+
 
     override fun sameAs(same: TheaterChain): Boolean {
         return same.chainNameKey == same.chainNameKey
@@ -28,13 +32,28 @@ open class TheaterChain(@SerializedName("chain_name") var chainNameKey: String? 
     }
 
     override fun toString(): String {
-        return chainName?:""
+        return chainName ?: ""
     }
+
+    fun getRequiredFields(): String? {
+        requiredFields?.cardNumber.let {
+            return it
+        }
+    }
+
+
 }
 
-enum class RequiredField {
-    @SerializedName("INT", alternate = ["Int", "Integer", "int", "integer", "Number", "NUMBER"])
-    FI_INT,
-    @SerializedName("STRING", alternate = ["String", "Str", "str"])
-    FI_STRING
+
+@Parcelize
+data class RequiredField(
+        @SerializedName("cardNumber")
+        val cardNumber: String? = null
+) : Parcelable {
+
+    val requiredFields: Map<String, RequiredField>? by lazy {
+        this.requiredFields?.mapKeys {
+            it.key.replace("value","").trim()
+        }
+    }
 }

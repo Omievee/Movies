@@ -11,7 +11,6 @@ import android.content.Intent
 class BroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-
     }
 
 }

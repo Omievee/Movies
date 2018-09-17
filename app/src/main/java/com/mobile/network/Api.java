@@ -21,7 +21,6 @@ import com.mobile.requests.TicketInfoRequest;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.reservation.CurrentReservationV2;
-import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
@@ -29,12 +28,10 @@ import com.mobile.responses.ChangeEmailResponse;
 import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.HistoryResponse;
-import com.mobile.responses.CurrentMoviesResponse;
-import com.mobile.responses.TheatersResponse;
-import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.PlanResponse;
 import com.mobile.responses.ReferAFriendResponse;
 import com.mobile.responses.ReservationResponse;
+import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.ScreeningsResponseV2;
 import com.mobile.responses.SeatingsInfoResponse;
 import com.mobile.responses.SignUpResponse;
@@ -50,6 +47,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -201,4 +199,7 @@ public interface Api {
 
     @POST("/rest/v1/loyalty/{chain}/signIn")
     Single<Map<String, Object>> theaterChainSignIn(@Path("chain") String chain, @Body Map<String, String> chainData);
+
+    @HTTP(method = "DELETE", path = "/rest/v1/loyalty/{chain}/remove", hasBody = true)
+    Single<Map<String, Object>> theaterChainRemove(@Path("chain") String chain, @Body Map<String, String> chainData);
 }

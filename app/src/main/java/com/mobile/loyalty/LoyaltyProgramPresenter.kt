@@ -1,19 +1,19 @@
 package com.mobile.loyalty
 
+import com.mobile.ApiError
 import com.mobile.network.RestClient
-import com.mobile.rx.Schedulers
 import io.reactivex.disposables.Disposable
 
 class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationModel, val view: LoyaltyProgramView) {
 
     val state = State()
 
-    fun onResume() {
-        fetchTheaterChainsIfNecessary()
+    fun onResume(update: Boolean) {
+        fetchTheaterChainsIfNecessary(update)
     }
 
-    private fun fetchTheaterChainsIfNecessary() {
-        if (state.registeredTheaterChains != null) {
+     fun fetchTheaterChainsIfNecessary(update: Boolean) {
+        if (state.registeredTheaterChains != null && !update) {
             return
         }
         view.showProgress()
@@ -23,13 +23,18 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                 .doAfterTerminate { view.hideProgress() }
                 .map {
                     state.allTheaterChains = it
-                    state.registeredTheaterChains = it.filter { it.isUserRegistered }
+                    state.registeredTheaterChains = it.filter {
+                        it.isUserRegistered
+                    }
                     val unregistered = state.allTheaterChains?.filter {
                         !it.isUserRegistered
+
                     }?.toMutableList()
+
                     unregistered?.add(0, TheaterChain(loyaltyPresentationModel.addLoyaltyProgram))
                     state.unregisteredTheaterChains = unregistered
                     it
+
                 }
                 .subscribe({ _ ->
                     state.error = null
@@ -74,13 +79,15 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
         view.showSpinnerText(loyaltyPresentationModel.addLoyaltyProgram)
     }
 
+
     fun onSignInButtonClicked(theaterChain: TheaterChain, data: List<Triple<String, RequiredField, String>>) {
         state.lastTheaterChain = theaterChain
         val loyaltyDataMap = data
                 .associateTo(
-                        mutableMapOf(), {
+                        mutableMapOf()) {
                     it.first to it.third
-                })
+                }
+
         state.lastData = loyaltyDataMap
         view.showProgress()
         RestClient.getAuthenticated()
@@ -105,9 +112,9 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                 .subscribe({ _ ->
                     view.hideLoyaltySignIn()
                     showTheaters()
-                }, { _ ->
-                    state.lastTheaterChain?.let { theaterChain ->
-                        view.showAddLoyaltyError(theaterChain)
+                }, { error ->
+                    (error as? ApiError)?.let {
+                        view.showAddLoyaltyError(it.error.message)
                     }
 
                 })
@@ -117,7 +124,6 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
         state.lastTheaterChain?.let {
             view.showLoyaltyScreenFields(it, state.lastData)
         }
-
     }
 }
 

@@ -1,17 +1,14 @@
 package com.mobile.theater
 
 import android.support.v7.util.DiffUtil
-import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.RecyclerView
-import com.mobile.model.Theater
 import android.view.ViewGroup
-import android.widget.TextView
 import com.mobile.adapters.BaseViewHolder
 import com.mobile.adapters.BasicDiffCallback
 import com.mobile.adapters.ItemSame
-import com.mobile.listeners.TheatersClickListener
 import com.mobile.location.UserLocation
 import com.mobile.model.AmcDmaMap
+import com.mobile.model.Theater
 import com.mobile.utils.text.toFixed
 import com.mobile.utils.text.toMiles
 import com.moviepass.R
