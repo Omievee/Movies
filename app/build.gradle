@@ -140,6 +140,7 @@ ext {
     dagger_version = '2.16'
     play_services_version = '15.0.1'
     retrofit_version = '2.3.0'
+    exoplayer_version = '2.8.4'
     support_lib_version = '27.1.1'
     firebase_version = "16.0.1"
 }
@@ -270,9 +271,9 @@ dependencies {
     implementation 'jp.wasabeef:blurry:2.1.1'
 
     //EZXOPLAYER
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.7.1'
-    implementation 'com.google.android.exoplayer:exoplayer-dash:2.7.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.1'
+    implementation "com.google.android.exoplayer:exoplayer-core:$exoplayer_version"
+    implementation "com.google.android.exoplayer:exoplayer-dash:$exoplayer_version"
+    implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayer_version"
 
     implementation 'com.loopj.android:android-async-http:1.4.9'
 
