@@ -3,6 +3,7 @@ package com.mobile
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import com.appboy.push.AppboyNotificationUtils
 import com.mobile.activities.LogInActivity
 import com.mobile.home.HomeActivity
@@ -36,8 +37,7 @@ class BroadcastReceiver : BroadcastReceiver() {
                     context.startIntentIfResolves(receivedIntent)
                 }
                 else -> {
-                    val receivedIntent = Intent(context, HomeActivity::class.java)
-                    receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, uri)
+                    val receivedIntent = HomeActivity.newIntent(context, uri?.let { Uri.parse(it) })
                     context.startIntentIfResolves(receivedIntent)
                 }
             }

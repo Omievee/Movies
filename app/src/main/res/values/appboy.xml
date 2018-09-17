@@ -16,6 +16,6 @@
     <drawable name="com_appboy_push_large_notification_icon">@drawable/ic_stat_icon_m</drawable>
     <integer name="com_appboy_default_notification_accent_color">0xFFf33e3e</integer>
     <!--DEEP LINKS-->
-    <bool name="com_appboy_handle_push_deep_links_automatically">true</bool>
+    <bool name="com_appboy_handle_push_deep_links_automatically">false</bool>
 
 </resources>

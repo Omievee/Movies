@@ -2,6 +2,8 @@ package com.mobile
 
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import com.mobile.deeplinks.DeepLinksManager
@@ -21,10 +23,19 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
 
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        intent?.let {
-            receiveIntent(it)
-        }
         return fragmentInjector
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        val intent = intent?:return
+        receiveIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val intent = intent ?: return
+        receiveIntent(intent)
     }
 
     companion object {
@@ -40,8 +51,8 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
         }
     }
 
-    public fun receiveIntent(intent: Intent) {
-        val url = intent.getStringExtra(Constants.APPBOY_DEEP_LINK_KEY) ?: return
-        deepLinksManager.handleCategory(url)
+    fun receiveIntent(intent: Intent) {
+        val url = intent.data?:return
+        deepLinksManager.handleCategory(url.toString())
     }
 }

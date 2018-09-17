@@ -58,7 +58,15 @@ class HomeActivity : MPActivty(), HomeActivityView, ReceiveDeepLinkTheater {
         const val POSITION: String = "position"
 
         fun newIntent(context: Context, position: Int): Intent {
-            return Intent(context, HomeActivity::class.java).putExtra(POSITION, position)
+            return Intent(context, HomeActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    .putExtra(POSITION, position)
+        }
+
+        fun newIntent(context: Context, uri:Uri?): Intent {
+            return Intent(context, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP).apply {
+                data = uri
+            }
         }
     }
 
