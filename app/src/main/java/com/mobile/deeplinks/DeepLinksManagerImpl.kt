@@ -15,17 +15,14 @@ class DeepLinksManagerImpl(val context: Application, val moviesManager: MoviesMa
     var moviesSub: Disposable? = null
     var theaterSub: Disposable? = null
     val subject: BehaviorSubject<DeepLinkCategory> = BehaviorSubject.create()
-    var theatersList: List<Theater>? = null
+    var theater: Theater? = null
 
     override fun handleCategory(url: String?) {
-        println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>handeling...")
         val movieOrTheaterId = url?.split("/")?.last()?.toString() ?: ""
         try {
             val type = url?.split("/".toRegex())
-            println(">>>>>>>>>>>>>>>>>>>>>>> TYPE" + type?.get(4))
             when (type?.get(4)) {
                 "movies" -> {
-                    println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>movies type")
                     findCorrespondingMovie(Integer.valueOf(movieOrTheaterId))
                 }
                 "theaters" -> {
@@ -39,41 +36,37 @@ class DeepLinksManagerImpl(val context: Application, val moviesManager: MoviesMa
 
     private fun findCorrespondingTheater(theaterId: Int) {
         theaterSub?.dispose()
-
         theaterSub = theatersManager
-                .theaters(theaterId)
-                .map { t ->
-                    theatersList = t
+                .theaterDeepLink(theaterId)
+                .doFinally { theater = null }
+                .map {
+                    theater = it.theater
                 }
                 .subscribe({
-                    //    subject.onNext(DeepLinkCategory(null, ))
+                    subject.onNext(DeepLinkCategory(null, theater))
                 }, {
                     it.printStackTrace()
                 })
     }
 
+
     private fun findCorrespondingMovie(movieId: Int) {
-        println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>movies search")
         moviesSub?.dispose()
         moviesSub = moviesManager
                 .getAllMovies()
                 .map { m ->
                     m.find {
-
                         it.id == movieId
                     }
                 }
                 .subscribe({
-                    println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>movies found" + it?.title)
                     subject.onNext(DeepLinkCategory(it, null))
-                    println(subject.value)
                 }, {
                     it.printStackTrace()
                 })
     }
 
     override fun subScribeToDeepLink(): Observable<DeepLinkCategory> {
-        println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>movies subscribe")
         return subject.compose(Schedulers.observableDefault())
     }
 }

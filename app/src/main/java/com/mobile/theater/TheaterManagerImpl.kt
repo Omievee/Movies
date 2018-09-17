@@ -1,6 +1,7 @@
 package com.mobile.theater
 
 import com.mobile.UserPreferences
+import com.mobile.deeplinks.DeepLinkCategory
 import com.mobile.location.BoundingBox
 import com.mobile.location.LocationManager
 import com.mobile.location.UserAddress
@@ -78,7 +79,6 @@ class TheaterManagerImpl(
                     emitter.onComplete()
                 }
             }
-
         }
         return obs.compose(Schedulers.observableDefault())
     }
@@ -96,7 +96,8 @@ class TheaterManagerImpl(
         return single.compose(Schedulers.singleDefault())
     }
 
-    private fun getTheatersFromApi(userLocation: UserLocation?, box:BoundingBox?, emitter: ObservableEmitter<List<Theater>>) {
+
+    private fun getTheatersFromApi(userLocation: UserLocation?, box: BoundingBox?, emitter: ObservableEmitter<List<Theater>>) {
         disposable?.dispose()
         disposable = api
                 .getAllMoviePassTheaters()
@@ -164,20 +165,18 @@ class TheaterManagerImpl(
         return list
     }
 
-    override fun theaterFromDeepLink(theaterID: Int): Theater? {
-        val theaterObject: Theater? = null
-        val query = realm.get()
-                .where(Theater::class.java)
-                .equalTo("id", theaterID)
-                .findAll()
-        val list = realm.get().copyFromRealm(query)
-        if (list != null && list.size > 0) {
-            if (list[0].id == theaterID) {
-                list[0] = theaterObject
+    override fun theaterDeepLink(theaterId: Int): Observable<DeepLinkCategory> {
+        val obs: Observable<DeepLinkCategory> = Observable.create { emitter ->
+            val realm = realm.get()
+            val query = realm.where(Theater::class.java).equalTo("id", theaterId).findAll()
+            val list = realm.copyFromRealm(query)
+            if (list.isNotEmpty()) {
+                emitter.onNext(DeepLinkCategory(null, list[0]))
             }
         }
-        return theaterObject
+        return obs.compose(Schedulers.observableDefault())
     }
+
 }
 
 fun List<Theater>.sortAndFilter(userLocation: UserLocation, dmaMap: AmcDmaMap): List<Theater> {

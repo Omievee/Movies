@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
@@ -20,8 +19,8 @@ import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
 import com.mobile.analytics.AnalyticsManager
-import com.mobile.fragments.ScreeningsData
-import com.mobile.fragments.ScreeningsFragment
+import com.mobile.deeplinks.ReceiveDeepLinkTheater
+import com.mobile.fragments.TheatersFragment
 import com.mobile.fragments.TicketVerificationV2
 import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.model.ReservationHistory
@@ -41,7 +40,10 @@ import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
 
-class HomeActivity : MPActivty(), HomeActivityView {
+class HomeActivity : MPActivty(), HomeActivityView, ReceiveDeepLinkTheater {
+    override fun onTheaterFromDeepLink(theater: Theater?) {
+
+    }
 
 
     @Inject
@@ -50,7 +52,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
     @Inject
     lateinit var presenter: HomeActivityPresenter
 
-    var theaterObject: Theater? = null
+    var theatersFragment: TheatersFragment? = null
 
     companion object {
         const val POSITION: String = "position"
@@ -104,6 +106,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
         }
         viewPager.offscreenPageLimit = 2
         viewPager.adapter = adapter
+
 
         presenter.onCreate()
     }
@@ -207,11 +210,12 @@ class HomeActivity : MPActivty(), HomeActivityView {
         showFragment(HistoryDetailsFragment.newInstance(reservationHistory, true))
     }
 
-    override fun showTheaterFromDeepLink(theater: Theater?) {
-        Log.d(">>>>", ">>>>>>> MADE IT")
+    override fun changeBottomNavPosition(theater: Theater) {
         viewPager.setCurrentItem(1, true)
-        showFragment(ScreeningsFragment.newInstance(ScreeningsData(theaterObject)))
+        bottomSheetNav.currentItem = 1
+        TheatersFragment().clickLocation.onTheaterClicked(theater)
     }
+
 
     var currentItem: Int = 0
         set(value) {

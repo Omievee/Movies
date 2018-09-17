@@ -1,6 +1,7 @@
 package com.mobile.fragments
 
 import com.mobile.analytics.AnalyticsManager
+import com.mobile.deeplinks.DeepLinksManager
 import com.mobile.location.*
 import com.mobile.model.Theater
 import com.mobile.theater.TheaterManager
@@ -9,12 +10,14 @@ import com.mobile.theater.TheatersFragmentView
 import com.mobile.theater.TheatersPayload
 import io.reactivex.disposables.Disposable
 
-class TheatersFragmentPresenter(override val view: TheatersFragmentView, locationManager: LocationManager, val theaterManager: TheaterManager, val theaterUIManager: TheaterUIManager, val geocoder: Geocoder, val analyticsManager: AnalyticsManager) : LocationRequiredPresenter(view, locationManager) {
+class TheatersFragmentPresenter(override val view: TheatersFragmentView, locationManager: LocationManager, val theaterManager: TheaterManager, val theaterUIManager: TheaterUIManager, val geocoder: Geocoder, val analyticsManager: AnalyticsManager, val deepLinksManager: DeepLinksManager) : LocationRequiredPresenter(view, locationManager) {
 
     var theaterSub: Disposable? = null
     var searchSub: Disposable? = null
     var geocodeSub: Disposable? = null
     var theaterUISub: Disposable? = null
+    var deepLInksDisposable: Disposable? = null
+    var theater: Theater? = null
 
     public override fun onDestroy() {
         super.onDestroy()
@@ -22,6 +25,7 @@ class TheatersFragmentPresenter(override val view: TheatersFragmentView, locatio
         theaterSub?.dispose()
         theaterUISub?.dispose()
         theaterUIManager.cleanup()
+        deepLInksDisposable?.dispose()
     }
 
     fun onCreate() {
@@ -47,6 +51,8 @@ class TheatersFragmentPresenter(override val view: TheatersFragmentView, locatio
 
     }
 
+
+
     override fun onLocation(it: UserLocation) {
         location = it
         fetchNearbyTheaters(it)
@@ -55,7 +61,7 @@ class TheatersFragmentPresenter(override val view: TheatersFragmentView, locatio
     private fun fetchNearbyTheaters(loc: UserLocation) {
         view.showProgress()
         theaterSub = theaterManager
-                .theaters(null, loc)
+                .theaters(loc)
                 .doAfterTerminate { view.hideProgress() }
                 .subscribe({ theaters ->
                     onTheaters(loc, theaters)

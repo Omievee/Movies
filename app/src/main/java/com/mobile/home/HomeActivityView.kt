@@ -18,5 +18,5 @@ interface HomeActivityView {
     fun showHistoryRateScreen(reservationHistory: ReservationHistory)
     fun hidePeakPassBadge()
     fun showOverSoftCap()
-    fun showTheaterFromDeepLink(theater: Theater?)
+    fun changeBottomNavPosition(theater:Theater)
 }

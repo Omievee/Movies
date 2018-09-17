@@ -342,7 +342,7 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
     private fun fetchTheatersForLocation(userLocation: UserLocation, box: BoundingBox) {
         theaterSub?.dispose()
         theaterSub = theaterManager
-                .theaters(null, userLocation, box)
+                .theaters(userLocation, box)
                 .map {
                     val location = it.centerPoint() ?: userLocation
                     theaterUIManager.mappedTheaters(TheatersPayload(location, it))

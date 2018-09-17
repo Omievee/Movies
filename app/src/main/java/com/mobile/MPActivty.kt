@@ -4,10 +4,8 @@ import android.content.Intent
 import android.os.Build
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
-import com.mobile.deeplinks.DeepLinksManagerImpl
-import com.moviepass.BuildConfig
-import android.util.Log
 import com.mobile.deeplinks.DeepLinksManager
+import com.moviepass.BuildConfig
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
@@ -42,9 +40,8 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
         }
     }
 
-    private fun receiveIntent(intent: Intent) {
+    public fun receiveIntent(intent: Intent) {
         val url = intent.getStringExtra(Constants.APPBOY_DEEP_LINK_KEY) ?: return
-        println("made it to intent")
         deepLinksManager.handleCategory(url)
     }
 }

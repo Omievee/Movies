@@ -1,7 +1,6 @@
 package com.mobile.home
 
 import android.os.Build
-import android.util.Log
 import com.mobile.ApiError
 import com.mobile.Change
 import com.mobile.UserPreferences
@@ -23,7 +22,14 @@ import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 
-class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microApi: MicroApi, val sessionManager: SessionManager, val restrictionManager: RestrictionsManager, val historyManager: HistoryManager, val analyticsManager: AnalyticsManager, val deepLinksManager: DeepLinksManager) {
+class HomeActivityPresenter(val view: HomeActivityView,
+                            val api: Api,
+                            val microApi: MicroApi,
+                            val sessionManager: SessionManager,
+                            val restrictionManager: RestrictionsManager,
+                            val historyManager: HistoryManager,
+                            val analyticsManager: AnalyticsManager,
+                            val deepLinksManager: DeepLinksManager) {
 
     var androidIdDisposable: Disposable? = null
     var restrictionsDisposable: Disposable? = null
@@ -47,7 +53,9 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         latestMovieWithoutRating()
         val user = sessionManager.getUser() ?: return
         analyticsManager.onBrazeDataSetUp(user)
+        theaterObjectFromDeepLink()
     }
+
 
     fun onResume() {
         if (UserPreferences.oneDeviceId == null) {
@@ -57,16 +65,23 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         }
         setProfileTabBadge()
         subscribeToBadgeChange()
+    }
 
+    private fun theaterObjectFromDeepLink() {
         deepLInksDisposable?.dispose()
         deepLInksDisposable = deepLinksManager
                 .subScribeToDeepLink()
                 .map {
-                    Log.d(">>>>", ">>THEATER??? " + it.theater?.name)
+                    it.let {
+                        theater = it.theater
+                    }
                 }
-                .subscribe {
-
-                }
+                .subscribe({
+                    theater?.let { t -> view.changeBottomNavPosition(t) }
+                }, {
+                    it.printStackTrace()
+                })
+        theater = null
     }
 
 

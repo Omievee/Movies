@@ -57,11 +57,11 @@ class TheatersFragment : LocationRequiredFragment(), TheatersFragmentView, Prima
                 userLocation = location,
                 theaters = theaters,
                 dataMap = dataMap
-                )
+        )
     }
 
     override fun scrollToTop() {
-        activity?:return
+        activity ?: return
         recyclerView.scrollToPosition(0)
     }
 
@@ -130,7 +130,7 @@ class TheatersFragment : LocationRequiredFragment(), TheatersFragmentView, Prima
     }
 
     override fun clearSearch() {
-        activity?:return
+        activity ?: return
         mapSearchBox.clear()
     }
 
@@ -165,30 +165,30 @@ class TheatersFragment : LocationRequiredFragment(), TheatersFragmentView, Prima
     }
 
     override fun showNoTheatersFound() {
-        activity?:return
+        activity ?: return
         errorView.show(ApiError(error = Error(message = resources.getString(R.string.no_theaters_found))))
         recyclerView.visibility = View.GONE
     }
 
     override fun hideNoTheatersFound() {
-        activity?:return
+        activity ?: return
         errorView.hide()
         recyclerView.visibility = View.VISIBLE
     }
 
     override fun showNoLocationFound() {
-        activity?:return
+        activity ?: return
         errorView.show(ApiError(error = Error(message = resources.getString(R.string.no_theaters_found))))
         recyclerView.visibility = View.GONE
     }
 
     override fun showProgress() {
-        activity?:return
+        activity ?: return
         progress.visibility = View.VISIBLE
     }
 
     override fun hideProgress() {
-        activity?:return
+        activity ?: return
         progress.visibility = View.GONE
     }
 
@@ -197,3 +197,6 @@ class TheatersFragment : LocationRequiredFragment(), TheatersFragmentView, Prima
         presenter.onDestroy()
     }
 }
+
+
+

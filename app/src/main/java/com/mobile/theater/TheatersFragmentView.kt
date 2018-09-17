@@ -1,6 +1,5 @@
 package com.mobile.theater
 
-import com.mobile.fragments.LocationRequiredPresenter
 import com.mobile.fragments.LocationRequiredView
 import com.mobile.location.UserLocation
 import com.mobile.model.Theater

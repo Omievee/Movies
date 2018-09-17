@@ -1,6 +1,7 @@
 package com.mobile.theater;
 
 import com.mobile.analytics.AnalyticsManager;
+import com.mobile.deeplinks.DeepLinksManager;
 import com.mobile.di.FragmentScope;
 import com.mobile.fragments.TheatersFragmentPresenter;
 import com.mobile.fragments.TheatersFragment;
@@ -15,7 +16,7 @@ public abstract class TheatersFragmentModule {
 
     @Provides
     @FragmentScope
-    static TheatersFragmentPresenter providePresenter(TheatersFragment fragment, LocationManager locationManager, TheaterManager manager, TheaterUIManager uiManager, Geocoder geocoder, AnalyticsManager analyticsManager) {
-        return new TheatersFragmentPresenter(fragment, locationManager, manager, uiManager, geocoder, analyticsManager);
+    static TheatersFragmentPresenter providePresenter(TheatersFragment fragment, LocationManager locationManager, TheaterManager manager, TheaterUIManager uiManager, Geocoder geocoder, AnalyticsManager analyticsManager, DeepLinksManager deepLinksManager) {
+        return new TheatersFragmentPresenter(fragment, locationManager, manager, uiManager, geocoder, analyticsManager, deepLinksManager);
     }
 }
