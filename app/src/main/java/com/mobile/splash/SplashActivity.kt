@@ -9,8 +9,8 @@ import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.mobile.UserPreferences
 import com.mobile.activities.LogInActivity
-import com.mobile.onboard.OnboardingActivityV2
 import com.mobile.home.HomeActivity
+import com.mobile.onboard.OnboardingActivityV2
 import com.mobile.responses.SubscriptionStatus.*
 import com.moviepass.R
 import dagger.android.AndroidInjection

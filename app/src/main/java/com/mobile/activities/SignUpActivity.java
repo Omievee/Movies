@@ -121,6 +121,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         price = null;
         mPlan = null;
 
+
+
         logo = findViewById(R.id.logo);
         frame = findViewById(R.id.frame_layout);
 

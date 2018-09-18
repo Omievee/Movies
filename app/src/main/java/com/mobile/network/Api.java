@@ -66,8 +66,9 @@ public interface Api {
     Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
 
     /* ForgotPassword */
-    Call<Object> forgotPassword(@Path("emailAddress") String email);
     @GET("/rest/v1/password_reset/{emailAddress}")
+    Call<Object> forgotPassword(@Path("emailAddress") String email);
+
 
     /* FB Login */
     @POST("/rest/v1/auth/fb_login")
@@ -84,10 +85,6 @@ public interface Api {
      */
     @POST("rest/v1/emailChange")
     Call<ChangeEmailResponse> changeEmail(@Body ChangeEmailRequest request);
-
-    /* Activate MP Card */
-    @POST("/rest/v1/cards/activate")
-    Call<CardActivationResponse> activateCard(@Body CardActivationRequest request);
 
     /* Activate MP Card */
     @POST("/rest/v1/cards/activate")

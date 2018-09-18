@@ -1,24 +1,31 @@
 package com.mobile.fragments
 
 import com.mobile.analytics.AnalyticsManager
+import com.mobile.deeplinks.DeepLinksManager
 import com.mobile.location.*
 import com.mobile.model.Theater
-import com.mobile.theater.*
+import com.mobile.theater.TheaterManager
+import com.mobile.theater.TheaterUIManager
+import com.mobile.theater.TheatersFragmentView
+import com.mobile.theater.TheatersPayload
 import io.reactivex.disposables.Disposable
 
-class TheatersFragmentPresenter(override val view: TheatersFragmentView, locationManager: LocationManager, val theaterManager: TheaterManager, val theaterUIManager: TheaterUIManager, val geocoder: Geocoder, val analyticsManager: AnalyticsManager) : LocationRequiredPresenter(view, locationManager) {
+class TheatersFragmentPresenter(override val view: TheatersFragmentView, locationManager: LocationManager, val theaterManager: TheaterManager, val theaterUIManager: TheaterUIManager, val geocoder: Geocoder, val analyticsManager: AnalyticsManager, val deepLinksManager: DeepLinksManager) : LocationRequiredPresenter(view, locationManager) {
 
     var theaterSub: Disposable? = null
     var searchSub: Disposable? = null
     var geocodeSub: Disposable? = null
     var theaterUISub: Disposable? = null
+    var deepLInksDisposable: Disposable? = null
+    var theater: Theater? = null
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
         locationSub?.dispose()
         theaterSub?.dispose()
         theaterUISub?.dispose()
         theaterUIManager.cleanup()
+        deepLInksDisposable?.dispose()
     }
 
     fun onCreate() {
@@ -41,7 +48,13 @@ class TheatersFragmentPresenter(override val view: TheatersFragmentView, locatio
                 }, {
 
                 })
-
+        deepLInksDisposable = deepLinksManager
+                .subScribeToDeepLink()
+                .filter { it.movie==null && it.theater!=null }
+                .subscribe {
+                    it.theater?: return@subscribe
+                    view.showTheater(it.theater)
+                }
     }
 
     override fun onLocation(it: UserLocation) {

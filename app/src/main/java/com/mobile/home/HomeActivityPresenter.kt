@@ -5,10 +5,13 @@ import com.mobile.ApiError
 import com.mobile.Change
 import com.mobile.UserPreferences
 import com.mobile.analytics.AnalyticsManager
+import com.mobile.deeplinks.DeepLinksManager
 import com.mobile.history.HistoryManager
 import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
+import com.mobile.model.Movie
 import com.mobile.model.PopInfo
+import com.mobile.model.Theater
 import com.mobile.network.Api
 import com.mobile.network.MicroApi
 import com.mobile.reservation.CurrentReservationV2
@@ -20,7 +23,14 @@ import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 
-class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microApi: MicroApi, val sessionManager: SessionManager, val restrictionManager: RestrictionsManager, val historyManager: HistoryManager, val analyticsManager: AnalyticsManager) {
+class HomeActivityPresenter(val view: HomeActivityView,
+                            val api: Api,
+                            val microApi: MicroApi,
+                            val sessionManager: SessionManager,
+                            val restrictionManager: RestrictionsManager,
+                            val historyManager: HistoryManager,
+                            val analyticsManager: AnalyticsManager,
+                            val deepLinksManager: DeepLinksManager) {
 
     var androidIdDisposable: Disposable? = null
     var restrictionsDisposable: Disposable? = null
@@ -29,9 +39,12 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     var lastRestrictionRequest: Long = 0
     var currentReservation: CurrentReservationV2? = null
     var changesDisposable: Disposable? = null
+    var deepLInksDisposable: Disposable? = null
     var historyDispose: Disposable? = null
     var didShowOverSoftCap: Boolean = false
     var didShowAlert: Boolean = false
+    var theater: Theater? = null
+    var movie: Movie? = null
 
     fun onDeviceId(deviceId: String?) {
         this.deviceId = deviceId
@@ -42,7 +55,9 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         latestMovieWithoutRating()
         val user = sessionManager.getUser() ?: return
         analyticsManager.onBrazeDataSetUp(user)
+        listenForDeepLink()
     }
+
 
     fun onResume() {
         if (UserPreferences.oneDeviceId == null) {
@@ -61,6 +76,25 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                 .subscribe {
                     setProfileTabBadge()
                 }
+    }
+
+    private fun listenForDeepLink() {
+        deepLInksDisposable?.dispose()
+        deepLInksDisposable = deepLinksManager
+                .subScribeToDeepLink()
+                .map {
+                    movie = it.movie
+                    theater = it.theater
+                }.subscribe({
+                    if (theater != null) {
+                        view.updateBottomNavForTheaters()
+                    } else if (movie != null) {
+                        view.updateBottomNavForMovies()
+                    }
+
+                }, {
+                    it.printStackTrace()
+                })
     }
 
     private fun setProfileTabBadge() {

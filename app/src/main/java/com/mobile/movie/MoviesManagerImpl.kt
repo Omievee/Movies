@@ -1,13 +1,11 @@
 package com.mobile.movie
 
 import android.content.Context
-import android.icu.util.Output
 import com.google.gson.Gson
 import com.mobile.UserPreferences
 import com.mobile.application.Application
 import com.mobile.model.Movie
 import com.mobile.network.StaticApi
-import com.mobile.responses.AllMoviesResponse
 import com.mobile.responses.CurrentMoviesResponse
 import com.mobile.rx.Schedulers
 import io.reactivex.Single
@@ -88,7 +86,7 @@ class MoviesManagerImpl(val application: Application, val gson: Gson, val api: S
     }
 
     override fun getCurrentMovies(): Single<CurrentMoviesResponse> {
-        return getCurrentMoviesInternal();
+        return getCurrentMoviesInternal()
     }
 
 }

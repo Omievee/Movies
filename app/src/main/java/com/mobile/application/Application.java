@@ -76,7 +76,6 @@ public class Application extends android.app.Application implements HasActivityI
         if (BuildConfig.DEBUG) {
             AppboyLogger.setLogLevel(Log.VERBOSE);
         }
-
         inject();
         UserPreferences.INSTANCE.load(this, gson);
         Fabric.with(this, new Crashlytics());
@@ -90,6 +89,8 @@ public class Application extends android.app.Application implements HasActivityI
         RestClient.setupMicroService(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
+
+
 
 
         registerActivityLifecycleCallbacks(new ActivigtyCallbacks() {
@@ -116,7 +117,7 @@ public class Application extends android.app.Application implements HasActivityI
                     "moviepass.helpshift.com",
                     "moviepass_platform_20170512180003329-05097f788df2b3a",
                     installConfig);
-            if(UserPreferences.INSTANCE.getUserId()!=0) {
+            if (UserPreferences.INSTANCE.getUserId() != 0) {
                 Core.login(HelpshiftHelper.Companion.getHelpshiftUser());
             }
         } catch (InstallException e) {

@@ -2,7 +2,6 @@ package com.mobile.home
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -20,6 +19,7 @@ import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
 import com.mobile.analytics.AnalyticsManager
+import com.mobile.fragments.TheatersFragment
 import com.mobile.fragments.TicketVerificationV2
 import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.model.ReservationHistory
@@ -46,11 +46,21 @@ class HomeActivity : MPActivty(), HomeActivityView {
     @Inject
     lateinit var presenter: HomeActivityPresenter
 
+    var theatersFragment: TheatersFragment? = null
+
     companion object {
         const val POSITION: String = "position"
 
         fun newIntent(context: Context, position: Int): Intent {
-            return Intent(context, HomeActivity::class.java).putExtra(POSITION, position)
+            return Intent(context, HomeActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    .putExtra(POSITION, position)
+        }
+
+        fun newIntent(context: Context, uri: Uri?): Intent {
+            return Intent(context, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP).apply {
+                data = uri
+            }
         }
     }
 
@@ -75,7 +85,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
         )
         bottomSheetNav.accentColor = ContextCompat.getColor(this, R.color.red)
         bottomSheetNav.inactiveColor = ContextCompat.getColor(this, R.color.white_ish)
-        bottomSheetNav.setColoredModeColors(ResourcesCompat.getColor(resources,R.color.red,theme), ResourcesCompat.getColor(resources,R.color.white_ish,theme))
+        bottomSheetNav.setColoredModeColors(ResourcesCompat.getColor(resources, R.color.red, theme), ResourcesCompat.getColor(resources, R.color.white_ish, theme))
         bottomSheetNav.isForceTint = true
         bottomSheetNav.setNotificationBackgroundColorResource(R.color.red)
         tabs.forEach {
@@ -99,8 +109,10 @@ class HomeActivity : MPActivty(), HomeActivityView {
         viewPager.offscreenPageLimit = 2
         viewPager.adapter = adapter
 
+
         presenter.onCreate()
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -148,11 +160,11 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
     override fun showForceLogout(it: LogoutInfo) {
         AlertDialog.Builder(this)
-                .setMessage(it.getMessage())
+                .setMessage(it.message)
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     startActivity(Intent(this, LogInActivity::class.java));
-                    finishAffinity();
+                    finishAffinity()
                 }.show()
     }
 
@@ -199,6 +211,23 @@ class HomeActivity : MPActivty(), HomeActivityView {
     override fun showHistoryRateScreen(reservationHistory: ReservationHistory) {
         showFragment(HistoryDetailsFragment.newInstance(reservationHistory, true))
     }
+
+
+    override fun updateBottomNavForMovies() {
+        if (viewPager.currentItem != adapter?.movies) {
+            adapter?.movies?.let { viewPager.setCurrentItem(it, true) }
+            adapter?.movies?.let { bottomSheetNav.currentItem = it }
+        }
+
+    }
+
+    override fun updateBottomNavForTheaters() {
+        if (viewPager.currentItem != adapter?.theaters) {
+            adapter?.theaters?.let { viewPager.setCurrentItem(it, true) }
+            adapter?.theaters?.let { bottomSheetNav.currentItem = it }
+        }
+    }
+
 
     var currentItem: Int = 0
         set(value) {

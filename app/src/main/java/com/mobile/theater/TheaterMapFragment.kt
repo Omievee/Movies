@@ -8,14 +8,17 @@ import android.support.transition.TransitionManager
 import android.support.transition.TransitionSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.MeasureSpec.*
+import android.view.View.MeasureSpec.UNSPECIFIED
+import android.view.View.MeasureSpec.makeMeasureSpec
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.clustering.ClusterManager
-import com.mobile.UserPreferences
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.fragments.MPFragment
 import com.mobile.fragments.ScreeningsData
@@ -87,7 +90,7 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
     var theaterSub: Disposable? = null
     var geocodeSub: Disposable? = null
     var searchSub: Disposable? = null
-    var listSearchSub:Disposable? = null
+    var listSearchSub: Disposable? = null
     var theatersFetchedInitially = false
 
     @Inject
@@ -103,7 +106,7 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
     lateinit var keyboardManager: KeyboardManager
 
     @Inject
-    lateinit var analyticsManager:AnalyticsManager
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_theater_map, container, false)
@@ -145,12 +148,12 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
         listSearchSub?.dispose()
         listSearchSub = theaterUIManager
                 .listTheaters()
-                .subscribe {  }
+                .subscribe { }
     }
 
     private fun panCameraTo(it: TheatersPayload) {
-        var zoom = map?.cameraPosition?.zoom?:10f
-        if(it.theaters.isEmpty()) {
+        var zoom = map?.cameraPosition?.zoom ?: 10f
+        if (it.theaters.isEmpty()) {
             zoom = zoom.minus(2)
         }
         map?.animateCamera(CameraUpdateFactory.newLatLngZoom(it.location.toLatLng(), zoom))
@@ -176,7 +179,7 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
                     payload
                 }
                 .subscribe({ theaters ->
-                    activity?: return@subscribe
+                    activity ?: return@subscribe
                     mapSearchBox.clear()
                     panCameraTo(theaters)
                 }, {})
@@ -304,9 +307,9 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
         }
         clusterManager?.cluster()
         val location = theaterUIManager.listTheatersLocation()
-        when(location) {
-            null-> fetchUsersLocation()
-            else-> moveAndFetch(location)
+        when (location) {
+            null -> fetchUsersLocation()
+            else -> moveAndFetch(location)
         }
     }
 
@@ -327,7 +330,7 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
                 })
     }
 
-    private fun moveAndFetch(it:UserLocation) {
+    private fun moveAndFetch(it: UserLocation) {
         moveCamera(it)
         fetchTheaters()
     }

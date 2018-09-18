@@ -246,8 +246,10 @@
             </intent-filter>
         </receiver>
 
-        <!--CUSTOM RECIEVER DEEP LINKS -->
-        <receiver android:name="com.mobile.BroadcastReceiver">
+        <!--CUSTOM RECEIVER DEEP LINKS -->
+        <receiver
+            android:name="com.mobile.BroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <!-- Replace YOUR-APPLICATION-PACKAGE-NAME with the package name of your app -->
                 <action android:name="com.moviepass.mobile.intent.APPBOY_PUSH_RECEIVED" />

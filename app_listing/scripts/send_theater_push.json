@@ -1,0 +1,15 @@
+{
+  "api_key": "3762e71a-7f1c-40bc-998b-3ca2365457ea",
+  "external_user_ids": [
+    "3119118"
+  ],
+  "messages": {
+    "android_push": {
+      "alert": "Cinepolis Chelsea",
+      "custom_uri": "https://www.moviepass.com/go/theaters/7613",
+      "extra": {
+        "YOUR_KEY1": "YOUR_VALUE1"
+      }
+    }
+  }
+}

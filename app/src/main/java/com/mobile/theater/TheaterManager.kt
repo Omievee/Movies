@@ -1,5 +1,6 @@
 package com.mobile.theater
 
+import com.mobile.deeplinks.DeepLinkCategory
 import com.mobile.location.BoundingBox
 import com.mobile.location.UserAddress
 import com.mobile.location.UserLocation
@@ -9,11 +10,14 @@ import io.reactivex.Single
 
 interface TheaterManager {
 
-    fun theaters(userLocation: UserLocation?=null,box: BoundingBox?=null): Observable<List<Theater>>
+    fun theaters(userLocation: UserLocation? = null, box: BoundingBox? = null): Observable<List<Theater>>
 
     fun theaterLocation(): Observable<UserLocation>
 
-    fun search(address:UserAddress) : Single<List<Theater>>
+    fun search(address: UserAddress): Single<List<Theater>>
+
+    fun theaterDeepLink(theaterId:Int): Observable<DeepLinkCategory>
+
 }
 
 class NoTheatersException : Throwable()

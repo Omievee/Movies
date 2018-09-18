@@ -4,9 +4,10 @@ import com.google.gson.Gson
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.analytics.AnalyticsManagerImpl
 import com.mobile.application.Application
+import com.mobile.deeplinks.DeepLinksManager
+import com.mobile.deeplinks.DeepLinksManagerImpl
 import com.mobile.gowatchit.GoWatchItManager
 import com.mobile.gowatchit.GoWatchItModule
-import com.mobile.history.HistoryManager
 import com.mobile.history.HistoryModule
 import com.mobile.home.RestrictionsManager
 import com.mobile.keyboard.KeyboardManager
@@ -21,6 +22,7 @@ import com.mobile.session.SessionManager
 import com.mobile.session.SessionManagerImpl
 import com.mobile.session.UserManager
 import com.mobile.session.UserManagerImpl
+import com.mobile.theater.TheaterManager
 import com.mobile.theater.TheaterModule
 import com.mobile.theater.TheaterModuleUI
 import com.mobile.ticketverification.BarcodeDetectorManager
@@ -37,6 +39,12 @@ class AppModule {
     @Singleton
     fun provideAnalyticsManager(context: Application, goWatchItManager: GoWatchItManager): AnalyticsManager {
         return AnalyticsManagerImpl(context, goWatchItManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeepLinkManager(context: Application, moviesManager: MoviesManager, theatersManager: TheaterManager): DeepLinksManager {
+        return DeepLinksManagerImpl(context, moviesManager, theatersManager)
     }
 
     @Provides

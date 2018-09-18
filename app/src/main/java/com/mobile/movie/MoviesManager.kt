@@ -8,5 +8,4 @@ interface MoviesManager {
 
     fun getAllMovies():Single<List<Movie>>
     fun getCurrentMovies():Single<CurrentMoviesResponse>
-
 }
