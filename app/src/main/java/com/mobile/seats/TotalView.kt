@@ -45,10 +45,6 @@ class TotalView(context: Context, attr: AttributeSet? = null) : ConstraintLayout
                 infoIcon.visibility = View.GONE
                 total.toCurrency()
             }
-            linkText.visibility = when {
-                payload.checkin?.softCap==true || payload.totalGuestTickets>0 -> View.VISIBLE
-                else -> View.GONE
-            }
             val totalVal = SpannableString(str).apply {
                 setSpan(TextAppearanceSpan(context, R.style.MPText_Bold), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }

@@ -2,6 +2,7 @@ package com.mobile.seats
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.widget.TextViewCompat
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
@@ -10,8 +11,6 @@ import android.view.ViewGroup
 import com.mobile.ApiError
 import com.mobile.UserPreferences
 import com.mobile.analytics.AnalyticsManager
-import com.mobile.billing.MissingBillingFragment
-import com.mobile.fragments.MPFragment
 import com.mobile.model.GuestTicket
 import com.mobile.model.GuestTicketType
 import com.mobile.model.ProviderInfo
@@ -19,7 +18,6 @@ import com.mobile.model.TicketType
 import com.mobile.network.Api
 import com.mobile.network.RestClient
 import com.mobile.requests.TicketInfoRequest
-import com.mobile.rx.PendingChargesError
 import com.mobile.utils.showBottomFragment
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
@@ -27,7 +25,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_confirm_details.*
 import javax.inject.Inject
 
-class ConfirmDetailsFragment : MPFragment(), BottomLinkListener {
+class ConfirmDetailsFragment : Fragment() {
 
     @Inject
     lateinit var locationManager: com.mobile.location.LocationManager
@@ -57,10 +55,6 @@ class ConfirmDetailsFragment : MPFragment(), BottomLinkListener {
         listener = null
     }
 
-    override fun onLink(link: ErrorLink) {
-        showFragment(MissingBillingFragment())
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_confirm_details, container, false)
     }
@@ -80,8 +74,12 @@ class ConfirmDetailsFragment : MPFragment(), BottomLinkListener {
         subscribe()
     }
 
-    val missingBillingFragmentListener = View.OnClickListener {
-        showFragment(MissingBillingFragment())
+    val freeClickListener = View.OnClickListener {
+        showBottomFragment(SheetData(
+                error = getString(R.string.free_guest_convenience),
+                title = getString(R.string.free_guest_policy),
+                description = getString(R.string.free_guest_policy_description)
+        ))
     }
 
     private fun subscribe() {
@@ -123,7 +121,7 @@ class ConfirmDetailsFragment : MPFragment(), BottomLinkListener {
                         }
                     }
                     moviePosterHeader.bind(it)
-                    guestTicketContainer.bind(it, missingBillingFragmentListener)
+                    guestTicketContainer.bind(it, freeClickListener)
 
                     getTickets.setOnClickListener {
                         val checkin = payload?.checkin ?: return@setOnClickListener
@@ -162,17 +160,6 @@ class ConfirmDetailsFragment : MPFragment(), BottomLinkListener {
                     reserveTickets()
                 }.setNegativeButton(R.string.cancel, null).show()
 
-    }
-
-    private fun showErrorSheet(error: PendingChargesError) {
-        MPBottomSheetFragment.newInstance(SheetData(
-                title = resources.getString(R.string.update_payment_method),
-                description = error.error.message,
-                error = null,
-                bottomErrorLink = ErrorLink(title = resources.getString(R.string.update_payment_information),
-                        iconRes = R.drawable.arrowforward)
-        )
-        ).show(childFragmentManager, "bottom_sheet")
     }
 
     private fun reserveTickets() {
@@ -267,26 +254,21 @@ class ConfirmDetailsFragment : MPFragment(), BottomLinkListener {
                 }
                 ) { error ->
                     analyticsManager.onCheckinFailed(checkIn)
-                    when(error) {
-                        is PendingChargesError-> {
-                            showErrorSheet(error)
-                        }
-                        is ApiError-> {
-                            val context = context ?: return@subscribe
-                            AlertDialog.Builder(context).setTitle(error.error.title)
-                                    .setMessage(error.error.message)
-                                    .setPositiveButton(android.R.string.ok) { _, _ ->
-                                        when (error.httpErrorCode) {
-                                            409 -> {
-                                                listener?.navigateToSeats(error.error.unavailablePositions
-                                                        ?: emptyList())
-                                            }
-                                            else -> {
-                                            }
+                    if (error is ApiError) {
+                        val context = context ?: return@subscribe
+                        AlertDialog.Builder(context).setTitle(error.error.title)
+                                .setMessage(error.error.message)
+                                .setPositiveButton(android.R.string.ok) { _, _ ->
+                                    when (error.httpErrorCode) {
+                                        409 -> {
+                                            listener?.navigateToSeats(error.error.unavailablePositions
+                                                    ?: emptyList())
+                                        }
+                                        else -> {
                                         }
                                     }
-                                    .show()
-                        }
+                                }
+                                .show()
                     }
                     analyticsManager.onCheckinFailed(checkIn)
                 }

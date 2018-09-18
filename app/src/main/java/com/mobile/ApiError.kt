@@ -1,5 +1,5 @@
 package com.mobile
 
-open class ApiError(
+class ApiError(
         val error: Error=Error(),
         val httpErrorCode:Int=-1) : Throwable()

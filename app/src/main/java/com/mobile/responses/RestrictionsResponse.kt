@@ -2,7 +2,6 @@ package com.mobile.responses
 
 import com.google.gson.annotations.SerializedName
 import com.mobile.model.*
-import com.mobile.requests.PendingCharges
 
 
 class RestrictionsResponse(
@@ -22,6 +21,5 @@ class RestrictionsResponse(
         var subscriptionActivationRequired:Boolean = false,
         var canReactivate: CanReactivate? = null,
         var userSegments:List<Int> = emptyList(),
-        var peakPassInfo:PeakPassInfo = PeakPassInfo(),
-        val pendingChargesRestriction:PendingCharges?=null
+        var peakPassInfo:PeakPassInfo = PeakPassInfo()
 )
