@@ -19,7 +19,7 @@ class TheatersFragmentPresenter(override val view: TheatersFragmentView, locatio
     var deepLInksDisposable: Disposable? = null
     var theater: Theater? = null
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         super.onDestroy()
         locationSub?.dispose()
         theaterSub?.dispose()
@@ -48,10 +48,14 @@ class TheatersFragmentPresenter(override val view: TheatersFragmentView, locatio
                 }, {
 
                 })
-
+        deepLInksDisposable = deepLinksManager
+                .subScribeToDeepLink()
+                .filter { it.movie==null && it.theater!=null }
+                .subscribe {
+                    val theater = it.theater?: return@subscribe
+                    view.showTheater(it.theater)
+                }
     }
-
-
 
     override fun onLocation(it: UserLocation) {
         location = it

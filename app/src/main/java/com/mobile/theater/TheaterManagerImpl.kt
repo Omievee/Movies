@@ -154,7 +154,7 @@ class TheaterManagerImpl(
         val realm = realm.get()
         val query = realm
                 .where(Theater::class.java)
-        val loc = userLocation ?: return query.findAll()
+        val loc = userLocation ?: return realm.copyFromRealm(query.findAll())
         if (box != null) {
             query.greaterThan("lat", box.southWest.lat)
             query.greaterThan("lon", box.southWest.lon)
@@ -166,17 +166,13 @@ class TheaterManagerImpl(
     }
 
     override fun theaterDeepLink(theaterId: Int): Observable<DeepLinkCategory> {
-        val obs: Observable<DeepLinkCategory> = Observable.create { emitter ->
-            val realm = realm.get()
-            val query = realm.where(Theater::class.java).equalTo("id", theaterId).findAll()
-            val list = realm.copyFromRealm(query)
-            if (list.isNotEmpty()) {
-                emitter.onNext(DeepLinkCategory(null, list[0]))
-            }
-        }
-        return obs.compose(Schedulers.observableDefault())
+        return theaters()
+                .map { theaterList ->
+                    theaterList.first { it.tribuneTheaterId == theaterId }
+                }.map {
+                    DeepLinkCategory(theater = it)
+                }
     }
-
 }
 
 fun List<Theater>.sortAndFilter(userLocation: UserLocation, dmaMap: AmcDmaMap): List<Theater> {

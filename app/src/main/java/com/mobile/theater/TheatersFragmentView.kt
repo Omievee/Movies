@@ -13,5 +13,6 @@ interface TheatersFragmentView : LocationRequiredView {
     fun scrollToTop()
     fun showNoLocationFound()
     fun clearSearch()
+    abstract fun showTheater(theater: Theater)
 
 }

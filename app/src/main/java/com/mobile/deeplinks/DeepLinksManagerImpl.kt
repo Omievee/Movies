@@ -38,10 +38,11 @@ class DeepLinksManagerImpl(val context: Application, val moviesManager: MoviesMa
         theaterSub?.dispose()
         theaterSub = theatersManager
                 .theaterDeepLink(theaterId)
-                .doFinally { theater = null }
+                .compose(Schedulers.observableDefault())
                 .map {
                     theater = it.theater
                 }
+                .doFinally { theater = null }
                 .subscribe({
                     subject.onNext(DeepLinkCategory(null, theater))
                 }, {

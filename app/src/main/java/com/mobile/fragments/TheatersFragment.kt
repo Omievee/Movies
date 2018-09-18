@@ -1,5 +1,7 @@
 package com.mobile.fragments
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
 import android.content.Context
 import android.os.Bundle
 import android.support.transition.AutoTransition
@@ -58,6 +60,14 @@ class TheatersFragment : LocationRequiredFragment(), TheatersFragmentView, Prima
                 theaters = theaters,
                 dataMap = dataMap
         )
+    }
+
+    override fun showTheater(theater: Theater) {
+        val lifecycle = lifecycle?:return
+        if(!lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+            return
+        }
+        showFragment(ScreeningsFragment.newInstance(ScreeningsData(theater = theater)))
     }
 
     override fun scrollToTop() {
