@@ -14,12 +14,13 @@ class RestrictionsResponse(
         var popInfo: PopInfo? = null,
         var hasActiveCard: Boolean = false,
         @SerializedName("capInfo")
-        var cappedPlan:CappedPlan? = CappedPlan(),
+        var cappedPlan: CappedPlan? = CappedPlan(),
         var alert: Alert? = null,
         var logoutInfo: LogoutInfo? = null,
-        var blockRepeatShowings:Boolean = true,
-        var subscriptionActivationRequired:Boolean = false,
+        var blockRepeatShowings: Boolean = true,
+        var subscriptionActivationRequired: Boolean = false,
         var canReactivate: CanReactivate? = null,
-        var userSegments:List<Int> = emptyList(),
-        var peakPassInfo:PeakPassInfo = PeakPassInfo()
+        var userSegments: List<Int> = emptyList(),
+        var peakPassInfo: PeakPassInfo = PeakPassInfo(),
+        var userUuid: String? = null
 )

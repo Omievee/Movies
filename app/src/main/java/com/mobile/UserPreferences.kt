@@ -56,6 +56,7 @@ object UserPreferences {
             return field
         }
 
+
     var showPeakPassBottomSheet: Boolean
         get() {
             return !showPeakPassOnboard && hasNewPeakPass
@@ -270,10 +271,10 @@ object UserPreferences {
     }
 
     fun clearOutEverythingButUser() {
-        val keys = setOf(Constants.AAID,Constants.CARD_ACTIVATED_SCREEN,Constants.DEVICE_ANDROID_ID, Constants.DEVICE_ID, Constants.ONE_DEVICE_ID, Constants.USER_AUTH_TOKEN, Constants.USER_EMAIL, Constants.USER_ID)
+        val keys = setOf(Constants.AAID, Constants.CARD_ACTIVATED_SCREEN, Constants.DEVICE_ANDROID_ID, Constants.DEVICE_ID, Constants.ONE_DEVICE_ID, Constants.USER_AUTH_TOKEN, Constants.USER_EMAIL, Constants.USER_ID)
         sPrefs.all
-                .forEach { e->
-                    if(keys.none { it.startsWith(e.key) }) {
+                .forEach { e ->
+                    if (keys.none { it.startsWith(e.key) }) {
                         sPrefs.edit().remove(e.key).apply()
                     }
                 }
@@ -322,6 +323,8 @@ object UserPreferences {
         editor.putBoolean(Constants.CARD_ACTIVATED_SCREEN, cardScreen)
         editor.apply()
     }
+
+
 
     fun verifyAndroidIDFirstRun(isAndroidIDVerified: Boolean) {
         val edit = sPrefs.edit()
@@ -487,15 +490,15 @@ object UserPreferences {
         }
 
     var currentMoviesLoaded: Calendar
-    get() {
-        return Calendar.getInstance()
-                .apply {
-                    timeInMillis = sPrefs.getLong(Constants.MOVIES_LOADED_DATE, 0)
-                }
-    }
-    set(value) {
-        sPrefs.edit().putLong(Constants.MOVIES_LOADED_DATE, value.timeInMillis).apply()
-    }
+        get() {
+            return Calendar.getInstance()
+                    .apply {
+                        timeInMillis = sPrefs.getLong(Constants.MOVIES_LOADED_DATE, 0)
+                    }
+        }
+        set(value) {
+            sPrefs.edit().putLong(Constants.MOVIES_LOADED_DATE, value.timeInMillis).apply()
+        }
 
 
     fun setUserDismissedHistoryRateScreen(historyRatingID: Int) {
