@@ -1,0 +1,1 @@
+curl -X POST -H "Content-Type: application/json" -d @send_theater_push.json https://rest.iad-03.braze.com/messages/send
