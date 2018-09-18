@@ -9,6 +9,7 @@ import com.mobile.deeplinks.DeepLinksManager
 import com.mobile.history.HistoryManager
 import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
+import com.mobile.model.Movie
 import com.mobile.model.PopInfo
 import com.mobile.model.Theater
 import com.mobile.network.Api
@@ -43,6 +44,7 @@ class HomeActivityPresenter(val view: HomeActivityView,
     var didShowOverSoftCap: Boolean = false
     var didShowAlert: Boolean = false
     var theater: Theater? = null
+    var movie: Movie? = null
 
     fun onDeviceId(deviceId: String?) {
         this.deviceId = deviceId
@@ -53,7 +55,7 @@ class HomeActivityPresenter(val view: HomeActivityView,
         latestMovieWithoutRating()
         val user = sessionManager.getUser() ?: return
         analyticsManager.onBrazeDataSetUp(user)
-        theaterObjectFromDeepLink()
+        listenForDeepLink()
     }
 
 
@@ -67,24 +69,6 @@ class HomeActivityPresenter(val view: HomeActivityView,
         subscribeToBadgeChange()
     }
 
-    private fun theaterObjectFromDeepLink() {
-        deepLInksDisposable?.dispose()
-        deepLInksDisposable = deepLinksManager
-                .subScribeToDeepLink()
-                .map {
-                    it.let {
-                        theater = it.theater
-                    }
-                }
-                .subscribe({
-                    theater?.let { t -> view.changeBottomNavPosition(t) }
-                }, {
-                    it.printStackTrace()
-                })
-        theater = null
-    }
-
-
     private fun subscribeToBadgeChange() {
         changesDisposable?.dispose()
         changesDisposable = UserPreferences.changes()
@@ -92,6 +76,25 @@ class HomeActivityPresenter(val view: HomeActivityView,
                 .subscribe {
                     setProfileTabBadge()
                 }
+    }
+
+    private fun listenForDeepLink() {
+        deepLInksDisposable?.dispose()
+        deepLInksDisposable = deepLinksManager
+                .subScribeToDeepLink()
+                .map {
+                    movie = it.movie
+                    theater = it.theater
+                }.subscribe({
+                    if (theater != null) {
+                        view.updateBottomNavForTheaters()
+                    } else if (movie != null) {
+                        view.updateBottomNavForMovies()
+                    }
+
+                }, {
+                    it.printStackTrace()
+                })
     }
 
     private fun setProfileTabBadge() {

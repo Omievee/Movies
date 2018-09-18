@@ -52,7 +52,7 @@ class TheatersFragmentPresenter(override val view: TheatersFragmentView, locatio
                 .subScribeToDeepLink()
                 .filter { it.movie==null && it.theater!=null }
                 .subscribe {
-                    val theater = it.theater?: return@subscribe
+                    it.theater?: return@subscribe
                     view.showTheater(it.theater)
                 }
     }

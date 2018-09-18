@@ -168,7 +168,7 @@ class TheaterManagerImpl(
     override fun theaterDeepLink(theaterId: Int): Observable<DeepLinkCategory> {
         return theaters()
                 .map { theaterList ->
-                    theaterList.first { it.tribuneTheaterId == theaterId }
+                    theaterList.first { it.id == theaterId }
                 }.map {
                     DeepLinkCategory(theater = it)
                 }

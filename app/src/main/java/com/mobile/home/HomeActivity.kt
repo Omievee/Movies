@@ -19,7 +19,6 @@ import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
 import com.mobile.analytics.AnalyticsManager
-import com.mobile.deeplinks.ReceiveDeepLinkTheater
 import com.mobile.fragments.TheatersFragment
 import com.mobile.fragments.TicketVerificationV2
 import com.mobile.history.HistoryDetailsFragment
@@ -27,7 +26,6 @@ import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
 import com.mobile.model.PopInfo
-import com.mobile.model.Theater
 import com.mobile.reservation.CurrentReservationV2
 import com.mobile.reservation.ReservationActivity
 import com.mobile.seats.MPBottomSheetFragment
@@ -40,11 +38,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
 
-class HomeActivity : MPActivty(), HomeActivityView, ReceiveDeepLinkTheater {
-    override fun onTheaterFromDeepLink(theater: Theater?) {
-
-    }
-
+class HomeActivity : MPActivty(), HomeActivityView {
 
     @Inject
     lateinit var analyticsManager: AnalyticsManager
@@ -63,7 +57,7 @@ class HomeActivity : MPActivty(), HomeActivityView, ReceiveDeepLinkTheater {
                     .putExtra(POSITION, position)
         }
 
-        fun newIntent(context: Context, uri:Uri?): Intent {
+        fun newIntent(context: Context, uri: Uri?): Intent {
             return Intent(context, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP).apply {
                 data = uri
             }
@@ -218,10 +212,20 @@ class HomeActivity : MPActivty(), HomeActivityView, ReceiveDeepLinkTheater {
         showFragment(HistoryDetailsFragment.newInstance(reservationHistory, true))
     }
 
-    override fun changeBottomNavPosition(theater: Theater) {
-        viewPager.setCurrentItem(1, true)
-        bottomSheetNav.currentItem = 1
-        TheatersFragment().clickLocation.onTheaterClicked(theater)
+
+    override fun updateBottomNavForMovies() {
+        if (viewPager.currentItem != adapter?.movies) {
+            adapter?.movies?.let { viewPager.setCurrentItem(it, true) }
+            adapter?.movies?.let { bottomSheetNav.currentItem = it }
+        }
+
+    }
+
+    override fun updateBottomNavForTheaters() {
+        if (viewPager.currentItem != adapter?.theaters) {
+            adapter?.theaters?.let { viewPager.setCurrentItem(it, true) }
+            adapter?.theaters?.let { bottomSheetNav.currentItem = it }
+        }
     }
 
 
