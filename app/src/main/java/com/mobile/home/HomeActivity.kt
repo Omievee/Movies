@@ -18,6 +18,7 @@ import com.mobile.MPActivty
 import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
+import com.mobile.billing.MissingBillingFragment
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.fragments.TheatersFragment
 import com.mobile.fragments.TicketVerificationV2
@@ -26,8 +27,12 @@ import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
 import com.mobile.model.PopInfo
+import com.mobile.profile.ProfileFragment
+import com.mobile.requests.PendingCharges
 import com.mobile.reservation.CurrentReservationV2
 import com.mobile.reservation.ReservationActivity
+import com.mobile.seats.BottomLinkListener
+import com.mobile.seats.ErrorLink
 import com.mobile.seats.MPBottomSheetFragment
 import com.mobile.seats.SheetData
 import com.mobile.utils.onBackExtension
@@ -38,7 +43,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
 
-class HomeActivity : MPActivty(), HomeActivityView {
+class HomeActivity : MPActivty(), HomeActivityView, BottomLinkListener {
 
     @Inject
     lateinit var analyticsManager: AnalyticsManager
@@ -109,10 +114,12 @@ class HomeActivity : MPActivty(), HomeActivityView {
         viewPager.offscreenPageLimit = 2
         viewPager.adapter = adapter
 
-
         presenter.onCreate()
     }
 
+    override fun onLink(link: ErrorLink) {
+        showFragment(MissingBillingFragment())
+    }
 
     override fun onResume() {
         super.onResume()
@@ -123,6 +130,16 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
     override fun showPeakPassBadge() {
         bottomSheetNav.setNotification(" ", 2)
+    }
+
+    override fun showPendingRestrictions(pendingCharges: PendingCharges) {
+        MPBottomSheetFragment.newInstance(SheetData(
+                title = resources.getString(R.string.update_payment_method),
+                description = pendingCharges.message?:"",
+                bottomErrorLink = ErrorLink(title = resources.getString(R.string.update_payment_information),
+                        iconRes = R.drawable.arrowforward)
+        )
+        ).show(supportFragmentManager, "bottom_sheet")
     }
 
     override fun showOverSoftCap() {
@@ -160,11 +177,11 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
     override fun showForceLogout(it: LogoutInfo) {
         AlertDialog.Builder(this)
-                .setMessage(it.message)
+                .setMessage(it.getMessage())
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     startActivity(Intent(this, LogInActivity::class.java));
-                    finishAffinity()
+                    finishAffinity();
                 }.show()
     }
 
