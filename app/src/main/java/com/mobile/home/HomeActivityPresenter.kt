@@ -149,20 +149,12 @@ class HomeActivityPresenter(val view: HomeActivityView,
                     determineActivationScreen(it)
                     determineForceLogout(it)
                     UserPreferences.restrictions = it
-                    determinePendingRestrictions(it)
                     determineOverSoftCap(it)
                     determineTicketVerification(it)
                     determineAlertScreen(it.alert)
                 }, {
                     it.printStackTrace()
                 })
-    }
-
-    private fun determinePendingRestrictions(it: RestrictionsResponse) {
-        val pendingCharges = it.pendingChargesRestriction
-        when(pendingCharges?.hasPendingCharges) {
-            true-> view.showPendingRestrictions(pendingCharges)
-        }
     }
 
     private fun determineOverSoftCap(it: RestrictionsResponse) {

@@ -544,6 +544,7 @@
         <item name="android:minHeight">@dimen/action_bar_size</item>
         <item name="android:paddingStart">@dimen/margin_standard_and_half</item>
         <item name="android:paddingEnd">@dimen/margin_standard_and_half</item>
+        <item name="android:paddingTop">@dimen/margin_standard</item>
         <item name="android:paddingBottom">@dimen/margin_standard</item>
     </style>
 
@@ -556,10 +557,6 @@
         <item name="android:background">@android:color/transparent</item>
         <item name="android:paddingStart">@dimen/margin_standard_and_half</item>
         <item name="android:paddingEnd">@dimen/margin_standard_and_half</item>
-    </style>
-
-    <style name="DialogFragmentErrorLinkView" parent="MPText_Bold">
-        <item name="android:textColor">@color/red</item>
     </style>
 
     <style name="SwitchCompatStyle">

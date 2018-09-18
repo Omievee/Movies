@@ -85,12 +85,12 @@
     <string name="activity_onboarding_body_3">You can see any 2D movie from its first day of release.</string>
 
     <!--<string name="activity_onboarding_body_4">Use the apptestheck into a theater, then swipe your card to get your ticket!</string>-->
-    <string name="activity_onboarding_body_4">Sign up, get your MoviePass card in the mail, and you\'re ready to go!</string>
+    <string name="activity_onboarding_body_4">Sign up, get your MoviePass card in the\nmail, and you\'re ready to go!</string>
 
     <!--<string name="activity_onboarding_body_5">Its that easy! Imaging all the great movies you can see in theaters with MoviePass!</string>-->
-    <string name="activity_onboarding_body_5">Use the app to check into a theater, then swipe your card to get your ticket!</string>
+    <string name="activity_onboarding_body_5">Use the app to check into a theater,\nthen swipe your card to get your ticket!</string>
     <string name="activity_onboarding_body_final">Look for the e-ticket icon: </string>
-    <string name="tutorial_body_final">You can reserve same-day e-tickets right on the app from any location, even before receiving your card.* </string>
+    <string name="tutorial_body_final">Go cardless by reserving same-day e-tickets right on the app.</string>
 
 
     <!--Tutorial-->
@@ -110,7 +110,7 @@
     <string name="tutorial_header_3">Use your MoviePass Card to Purchase Your Ticket!</string>
     <string name="tutorial_body_3">You have 30 minutes to swipe your card at a kiosk, or with a ticket agent.</string>
     <string name="tutorial_header_4">Movie Sold Out? Changed Your Mind?</string>
-    <string name="tutorial_body_4">Press \"Cancel/Change Check-In,\" and pick something new.</string>
+    <string name="tutorial_body_4">Press “Cancel Check-In,” and pick something new.</string>
 
 
     <!-- SelectSeatActivity -->
@@ -464,7 +464,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="Theater_Age_policy">AGE POLICY</string>
-    <string name="Policy_One">Flix is primarily adult&#8211;oriented. Those 21 and older may see any show any time. Ages 17 to 20: You can come solo to showtimes before 7pm. But for shows 7 pm and later, you\'ll need to be with a parent or guardian. Ages 6 to 16: You are good to go for all rated G, PG, and PG&#8211;13 shows as long as you are with a parent or guardian. It isn\'t really appropriate for you to see rated R motion pictures though. Ages 2&#8211;5: You can see all the G and PG movies at Flix that start before 7pm, but not after. No PG&#8211;13 or R movies though at any time! Infants, toddlers, and strollers are only allowed in Flix during special \"Baby Day\" events.</string>
+    <string name="Policy_One">Flix is primarily adult-oriented. Those 17 and older may see any show any time.\n\nIf you are 6 to 16: You are good to go for all rated G, PG and PG‌-13 shows as long as you are with a parent or responsible adult. It isn’t really appropriate for you to see rated R motion pictures though.\n\nIf you are 2 to 5: You can see all G, PG and PG‌-13 movies that start before 7pm, but not after. Infants, toddlers and strollers are only allowed during special “Flix Family Day” events.</string>
     <string name="Theater_Late_policy">LATE ARRIVAL POLICY</string>
     <string name="Policy_two">We begin seating approximately 30 minutes prior to showtime in order to provide food and beverage service before the feature begins. We do not seat late arrivals after the feature begins, so you will not be able to see the show if you are not on time. </string>
     <string name="title_activity_near_me">Map</string>
@@ -482,7 +482,7 @@
     <!-- Reservation -->
     <string name="current_reservation">Current Reservation</string>
     <plurals name="reservation_code_description">
-        <item quantity="one">Use the code below to redeem your tickets</item>
+        <item quantity="one">Use the code below to redeem your ticket</item>
         <item quantity="many">Use the code below to redeem all of the tickets in this reservation.</item>
         <item quantity="other">Use the code below to redeem all of the tickets in this reservation.</item>
     </plurals>
@@ -770,6 +770,5 @@
     <string name="edit_loyalty_number_update">Loyalty number updated successfully</string>
 
     <string name="tap_to_reveal">Tap to reveal code</string>
-    <string name="update_payment_information">Update payment information</string>
 
 </resources>

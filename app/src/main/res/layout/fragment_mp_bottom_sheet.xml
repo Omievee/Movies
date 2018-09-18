@@ -13,9 +13,7 @@
     <TextView
         android:id="@+id/title"
         style="@style/DialogFragmentTitleView"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="@dimen/margin_standard_and_half"
-        app:layout_goneMarginTop="@dimen/margin_standard_and_half"
+        app:layout_constraintTop_toBottomOf="@id/closeButton"
         android:background="@null"
         android:text="@string/e_ticket_cancellation_policy" />
 
@@ -36,33 +34,5 @@
         app:layout_constraintTop_toBottomOf="@id/description"
         android:id="@+id/subDescription"
         style="@style/BottomSheetSubDescription" />
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/errorContainer"
-        app:layout_constraintTop_toBottomOf="@id/subDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="@dimen/action_bar_size"
-        app:layout_constraintHorizontal_bias=".5"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/errorLink"
-            style="@style/DialogFragmentErrorLinkView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_goneMarginTop="0dp" />
-
-        <ImageView
-            android:id="@+id/errorIcon"
-            android:tint="@color/red"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            style="@style/ActionButton"
-            app:layout_constraintStart_toEndOf="@id/errorLink" />
-    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
