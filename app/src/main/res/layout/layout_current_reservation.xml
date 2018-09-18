@@ -168,6 +168,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="gone"
+                android:padding="@dimen/margin_standard"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -176,6 +177,20 @@
                 tools:layout_height="100dp"
                 tools:layout_width="250dp"
                 tools:visibility="visible" />
+
+            <TextView
+                android:background="#aa666666"
+                android:layout_width="0dp"
+                android:id="@+id/tapToRevealBarcode"
+                app:layout_constraintTop_toTopOf="@id/barcodeL"
+                app:layout_constraintStart_toStartOf="@id/barcodeL"
+                android:text="@string/tap_to_reveal"
+                android:gravity="center"
+                style="@style/MPText_Bold"
+                app:layout_constraintEnd_toEndOf="@id/barcodeL"
+                app:layout_constraintBottom_toBottomOf="@id/barcodeL"
+                android:visibility="gone"
+                android:layout_height="0dp" />
 
             <ImageView
                 android:id="@+id/creditCardIV"
@@ -239,6 +254,7 @@
 
             <TextView
                 android:id="@+id/reservationCode"
+                android:padding="@dimen/margin_standard"
                 style="@style/ReservationCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -247,6 +263,20 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/zipCodeDescription" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:background="#aa666666"
+                android:id="@+id/tapToRevealCode"
+                android:gravity="center"
+                style="@style/MPText_Bold"
+                android:text="@string/tap_to_reveal"
+                app:layout_constraintTop_toTopOf="@id/reservationCode"
+                app:layout_constraintStart_toStartOf="@id/reservationCode"
+                app:layout_constraintEnd_toEndOf="@id/reservationCode"
+                app:layout_constraintBottom_toBottomOf="@id/reservationCode"
+                android:visibility="gone"
+                android:layout_height="0dp" />
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout

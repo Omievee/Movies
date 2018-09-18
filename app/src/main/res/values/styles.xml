@@ -427,7 +427,7 @@
 
     <style name="ReservationCode">
         <item name="android:minWidth">175dp</item>
-        <item name="android:minHeight">70dp</item>
+        <item name="android:minHeight">102dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textColor">@color/white_ish</item>
 

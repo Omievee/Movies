@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.mobile.MPActivty
 import com.mobile.UserPreferences
 import com.mobile.fragments.TicketVerificationV2
+import com.mobile.location.LocationManager
 import com.mobile.model.PopInfo
 import com.mobile.model.ScreeningToken
 import com.mobile.utils.onBackExtension
@@ -25,6 +26,9 @@ class ReservationActivity : MPActivty() {
     @Inject
     lateinit var presenter: ReservationActivityPresenter
 
+    @Inject
+    lateinit var locationManager:LocationManager
+
     private var canClose: Boolean = false
 
     private var reservation:CurrentReservationV2? = null
@@ -41,7 +45,7 @@ class ReservationActivity : MPActivty() {
         val showCurrentReservationText = intent.getBooleanExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
         canClose = intent.getBooleanExtra(KEY_CAN_CLOSE, false)
         reservation?.let {
-            reservationV.bind(it, showCurrentReservationText, canClose)
+            reservationV.bind(it, showCurrentReservationText, locationManager)
         }
         reservationV.setOnCloseListener(object : OnCloseListener {
             override fun openTicketVerificationFragment() {
