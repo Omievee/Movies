@@ -10,5 +10,6 @@ interface LocationRequiredView : Primary {
     fun showEnableLocation()
     fun showProgress()
     fun hideProgress()
+    fun showManuallyGrantPermissions()
 
 }

@@ -36,6 +36,10 @@ abstract class LocationRequiredPresenter(open val view: LocationRequiredView, va
         view.requestLocationPermissions()
     }
 
+    fun onDoesNotHaveLocationEnabled() {
+        view.showEnableLocation()
+    }
+
     fun onRequestPermissionResult(hasPermissions: Boolean) {
         when (hasPermissions) {
             true -> checkLocationEnabled()
@@ -71,5 +75,8 @@ abstract class LocationRequiredPresenter(open val view: LocationRequiredView, va
     }
 
     abstract fun onLocation(userLocation: UserLocation)
+    fun onDeniedPermanentLocationPermission() {
+        view.showManuallyGrantPermissions()
+    }
 
 }
