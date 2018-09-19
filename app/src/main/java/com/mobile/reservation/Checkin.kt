@@ -30,6 +30,13 @@ data class Checkin(
     }
 
     @IgnoredOnParcel
+    val showGuestFlow:Boolean by lazy {
+        val tot = screening.maximumGuests>0 && availability.guestsTicketTypes?.isEmpty() == false
+        tot
+    }
+
+
+    @IgnoredOnParcel
     val showDateTime:Date?
     get() {
         val calendar = screening.date?.calendar?: getInstance()
