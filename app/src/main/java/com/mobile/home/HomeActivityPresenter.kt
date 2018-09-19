@@ -8,10 +8,7 @@ import com.mobile.analytics.AnalyticsManager
 import com.mobile.deeplinks.DeepLinksManager
 import com.mobile.history.HistoryManager
 import com.mobile.history.model.ReservationHistory
-import com.mobile.model.Alert
-import com.mobile.model.Movie
-import com.mobile.model.PopInfo
-import com.mobile.model.Theater
+import com.mobile.model.*
 import com.mobile.network.Api
 import com.mobile.network.MicroApi
 import com.mobile.reservation.CurrentReservationV2
@@ -45,6 +42,7 @@ class HomeActivityPresenter(val view: HomeActivityView,
     var didShowAlert: Boolean = false
     var theater: Theater? = null
     var movie: Movie? = null
+    var user: User? = null
 
     fun onDeviceId(deviceId: String?) {
         this.deviceId = deviceId
@@ -53,8 +51,7 @@ class HomeActivityPresenter(val view: HomeActivityView,
 
     fun onCreate() {
         latestMovieWithoutRating()
-        val user = sessionManager.getUser() ?: return
-        analyticsManager.onBrazeDataSetUp(user)
+        user = sessionManager.getUser() ?: return
         listenForDeepLink()
     }
 
@@ -152,10 +149,12 @@ class HomeActivityPresenter(val view: HomeActivityView,
                     determineOverSoftCap(it)
                     determineTicketVerification(it)
                     determineAlertScreen(it.alert)
+                    analyticsManager.onBrazeDataSetUp(user)
                 }, {
                     it.printStackTrace()
                 })
     }
+
 
     private fun determineOverSoftCap(it: RestrictionsResponse) {
         when {

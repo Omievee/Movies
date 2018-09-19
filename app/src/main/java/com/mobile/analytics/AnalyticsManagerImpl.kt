@@ -132,11 +132,11 @@ class AnalyticsManagerImpl(val context: Application, val goWatchItManager: GoWat
     }
 
 
-    override fun onBrazeDataSetUp(user: User) {
-        appBoy.changeUser(valueOf(user.id))
-        appBoy.currentUser.setFirstName(user.firstName)
-        appBoy.currentUser.setLastName(user.lastName)
-        appBoy.currentUser.setEmail(user.email)
+    override fun onBrazeDataSetUp(user: User?) {
+        appBoy.changeUser(UserPreferences.restrictions.userUuid)
+        appBoy.currentUser.setFirstName(user?.firstName)
+        appBoy.currentUser.setLastName(user?.lastName)
+        appBoy.currentUser.setEmail(user?.email)
 
     }
 
@@ -148,6 +148,7 @@ class AnalyticsManagerImpl(val context: Application, val goWatchItManager: GoWat
 
 
     }
+
     override fun onTheaterTabOpened() {
         Answers.getInstance().logCustom(CustomEvent("theater_tab_opened"))
     }
