@@ -657,7 +657,7 @@
     <string name="ticket_verification_info_text">After you have purchased your ticket with your MoviePass card please take a picture of your ticket stub. You will not be able to proceed in the app or see another movie with MoviePass until doing so.</string>
     <string name="ticket_verification_warning_text">DO NOT TAKE A PICTURE OF YOUR RECEIPT</string>
     <string name="ticket_verification_no_stub_button">Don’t have your ticket stub?</string>
-    <string name="help">Help</string>
+    <string name="help">Help and Chat Support</string>
     <string name="ticket_verification_camera_dialog_title">This feature requires camera access.</string>
     <string name="not_now">Not Now</string>
     <string name="try_again">Try Again</string>
