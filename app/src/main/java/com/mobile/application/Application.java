@@ -19,6 +19,7 @@ import com.mobile.helpshift.HelpshiftHelper;
 import com.mobile.network.RestClient;
 import com.mobile.utils.FastStack;
 import com.moviepass.BuildConfig;
+import com.taplytics.sdk.Taplytics;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -76,6 +77,8 @@ public class Application extends android.app.Application implements HasActivityI
         if (BuildConfig.DEBUG) {
             AppboyLogger.setLogLevel(Log.VERBOSE);
         }
+        Taplytics.startTaplytics(this, "3629c653bc0ece073faa45be6fa7081561426e87");
+
         inject();
         UserPreferences.INSTANCE.load(this, gson);
         Fabric.with(this, new Crashlytics());

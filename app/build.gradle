@@ -133,6 +133,7 @@ repositories {
     maven { url "https://jitpack.io" }
     maven { url 'https://maven.google.com' }
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://github.com/taplytics/Taplytics-Android-SDK/raw/master/AndroidStudio/" }
     google()
 }
 
@@ -285,6 +286,8 @@ dependencies {
 
     implementation 'com.loopj.android:android-async-http:1.4.9'
 
+    // Taplytics
+    implementation 'com.taplytics.sdk:taplytics:+@aar'
     //Braze
     implementation 'com.appboy:android-sdk-ui:2.6.0'
 

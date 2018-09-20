@@ -116,6 +116,7 @@ public class Constants {
     public static final String IS_FROM_RATE_SCREEN = "rate_screen";
 
     //Braze Custom Keys
+    public static final String CUSTOM_DATA = "customdata";
     public static final String USER_UUID = "uuid";
     public static final String MOVIES_LOADED_DATE = "last_dl_movies";
     public static final String APPBOY_DEEP_LINK_KEY = "uri";

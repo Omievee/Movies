@@ -222,7 +222,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
     private void logIn() {
         String email = mInputEmail.getText().toString().replace(" ", "");
         String password = mInputPassword.getText().toString();
-        String deviceId = DeviceID.getID(this);
+        String deviceId = DeviceID.INSTANCE.getID(this);
         String deviceType = Build.MODEL;
         String device = "ANDROID";
 
@@ -249,7 +249,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                             areYouSure.setMessage("This cannot be undone.");
                             areYouSure.setPositiveButton("Switch to this device", (d, w) -> {
                                 d.dismiss();
-                                String userSwitchDeviceID = DeviceID.getID(getApplicationContext());
+                                String userSwitchDeviceID = DeviceID.INSTANCE.getID(getApplicationContext());
                                 INSTANCE.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
                                 verifyAndroidID(deviceType, userSwitchDeviceID, device, true);
                             });
