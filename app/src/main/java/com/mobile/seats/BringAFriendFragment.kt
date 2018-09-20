@@ -2,7 +2,6 @@ package com.mobile.seats
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import com.mobile.reservation.Checkin
 import com.mobile.reservation.ReservationActivity
 import com.mobile.responses.ReservationResponse
 import com.mobile.rx.Schedulers
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
@@ -91,7 +91,7 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
 
     override fun onClosePressed() {
         context?.let {
-            AlertDialog.Builder(it)
+            MPAlertDialog(it)
                     .setMessage(R.string.are_you_sure_exit)
                     .setPositiveButton(R.string.exit_checkout, { _, _ ->
                         activity?.finish()

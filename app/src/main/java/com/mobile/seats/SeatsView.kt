@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.annotation.StringRes
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
-import android.support.v7.app.AlertDialog
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.RecyclerView
@@ -19,6 +18,7 @@ import com.mobile.extensions.SeatHelper
 import com.mobile.model.SeatInfo
 import com.mobile.model.SeatingsInfo
 import com.mobile.recycler.layout.FixedGridLayoutManager
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_seats.view.*
 import kotlin.math.absoluteValue
@@ -287,7 +287,7 @@ class SeatView(context: Context) : ImageView(context) {
                 message = R.string.dialog_select_seat_companion_message
             }
         }
-        AlertDialog.Builder(context)
+        MPAlertDialog(context)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok) { _, _ -> seatClickListener?.onClick(it) }

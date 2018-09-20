@@ -3,7 +3,6 @@ package com.mobile.seats
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import com.mobile.model.GuestTicketType
 import com.mobile.model.SeatInfo
 import com.mobile.network.RestClient
 import com.mobile.responses.SeatingsInfoResponse
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_seat_selection.*
@@ -76,7 +76,8 @@ class SeatSelectionFragment : Fragment() {
 
     private fun showSeatsRequiredError() {
         val context = context ?: return
-        AlertDialog.Builder(context).setTitle(R.string.choose_seats)
+        MPAlertDialog(context)
+                .setTitle(R.string.choose_seats)
                 .setMessage(R.string.choose_seats_error)
                 .setPositiveButton(android.R.string.ok, { _, _ -> }).show()
     }

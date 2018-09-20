@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat.checkSelfPermission
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +21,7 @@ import android.content.Intent
 import android.widget.TextView
 import com.mobile.utils.replaceFragmentExtension
 import com.mobile.utils.startCameraIntent
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.BuildConfig
 
 
@@ -143,7 +143,7 @@ class TicketVerificationBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
     override fun showCameraRequiredDialog() {
         val context = context?:return
-        AlertDialog.Builder(context)
+        MPAlertDialog(context)
                 .setTitle(R.string.ticket_verification_camera_dialog_title)
                 .setNegativeButton(R.string.not_now, null)
                 .setPositiveButton(R.string.try_again) { _, _ ->
@@ -153,7 +153,7 @@ class TicketVerificationBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
     override fun showCameraRequiredDialogPermanently() {
         val context = context?:return
-        AlertDialog.Builder(context)
+        MPAlertDialog(context)
                 .setTitle(R.string.ticket_verification_camera_dialog_title)
                 .setMessage(R.string.ticket_verification_camera_dialog_message)
                 .setNegativeButton(R.string.not_now) { _, _ ->

@@ -1,6 +1,5 @@
 package com.mobile.profile
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -99,41 +98,37 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, Custo
 
     override fun showCancellationConfirmationDialog(reason: String, comment: String, billingDate: Date?) {
 
-        val builder = AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
 
 
         var message: String = getString(R.string.profile_cancel_remain_active, when (billingDate) {
             null -> ""
             else -> SimpleDateFormat("M/d/yy").format(billingDate)
         })
-        builder.setMessage(message)
+        val context = context ?: return
+        MPAlertDialog(context).setMessage(message)
                 .setTitle(R.string.profile_cancel_are_you_sure)
                 .setPositiveButton(getString(R.string.cancel_membership)) { _, _ ->
                     presenter.cancelFlow(reason)
                 }
                 .setNegativeButton(getString(R.string.go_back)) { _, _ ->
 
-                }
-        builder.create()
-        builder.show()
+                }.show()
     }
 
     override fun successfullCancellation(billingDate: String?) {
 
-        val builder = AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
         var message: String? = when (billingDate) {
             null -> getString(R.string.profile_cancel_membership_message)
             else -> getString(R.string.profile_cancel_membership_message) + " " + billingDate
         }
-        builder.setMessage(message)
+        val context = context ?: return
+        MPAlertDialog(context)
+                .setMessage(message)
                 .setCancelable(false)
                 .setTitle(R.string.profile_cancel_membership)
                 .setPositiveButton(getString(R.string.ok)) { _, _ ->
                     activity?.onBackPressed()
-                }
-
-        builder.create()
-        builder.show()
+                }.show()
     }
 
 

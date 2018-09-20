@@ -1,7 +1,6 @@
 package com.mobile.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -44,6 +44,7 @@ import com.mobile.requests.LogInRequest;
 import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.SubscriptionStatus;
+import com.mobile.widgets.MPAlertDialog;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
@@ -236,40 +237,31 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                     if (response.code() == 200) {
                         moviePassLoginSucceeded(response.body());
                     } else if (response.code() == 207) {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
-                        alert.setTitle("We’ve noticed you switched to a different device");
-                        alert.setMessage("Switching to a new device will permanently lock you out from any other device for 30 days.");
-                        alert.setCancelable(false);
-                        alert.setPositiveButton("Switch to this device", (dialog, which) -> {
+                        new MPAlertDialog(LogInActivity.this)
+                        .setTitle("We’ve noticed you switched to a different device")
+                        .setMessage("Switching to a new device will permanently lock you out from any other device for 30 days.")
+                        .setCancelable(false)
+                        .setPositiveButton("Switch to this device", (dialog, which) -> {
                             dialog.dismiss();
                             progress.setVisibility(View.GONE);
-                            AlertDialog.Builder areYouSure = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
-
-                            areYouSure.setTitle("Are you sure?");
-                            areYouSure.setMessage("This cannot be undone.");
-                            areYouSure.setPositiveButton("Switch to this device", (d, w) -> {
+                            new MPAlertDialog(LogInActivity.this)
+                                    .setTitle("Are you sure?")
+                            .setMessage("This cannot be undone.")
+                            .setPositiveButton("Switch to this device", (d, w) -> {
                                 d.dismiss();
                                 String userSwitchDeviceID = DeviceID.INSTANCE.getID(getApplicationContext());
                                 INSTANCE.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
                                 verifyAndroidID(deviceType, userSwitchDeviceID, device, true);
-                            });
-
-                            areYouSure.setNegativeButton(android.R.string.cancel, (d, wi) -> {
+                            }).setNegativeButton(android.R.string.cancel, (d, wi) -> {
                                 d.dismiss();
                                 d.cancel();
                                 progress.setVisibility(View.GONE);
-                            });
-                            areYouSure.show();
-                        });
-
-
-                        alert.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                            }).show();
+                        }).setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                             dialog.cancel();
                             progress.setVisibility(View.GONE);
 
-                        });
-
-                        alert.show();
+                        }).show();
 
                     } else if (response.errorBody() != null) {
                         try {

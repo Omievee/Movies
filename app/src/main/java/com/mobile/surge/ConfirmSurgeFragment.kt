@@ -1,7 +1,6 @@
 package com.mobile.surge
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,6 +22,7 @@ import com.mobile.session.UserManager
 import com.mobile.tickets.TicketManager
 import com.mobile.utils.expandTouchArea
 import com.mobile.utils.showBottomFragment
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
@@ -98,7 +98,8 @@ class ConfirmSurgeFragment : MPFragment() {
     }
 
     private fun showPaymentMethodDeclined() {
-        AlertDialog.Builder(context)
+        val context = context ?: return
+        MPAlertDialog(context)
                 .setTitle(R.string.update_payment_method)
                 .setMessage(R.string.update_payment_method_description)
     }
@@ -178,8 +179,9 @@ class ConfirmSurgeFragment : MPFragment() {
 
     private fun showTicketVerificationDialog() {
         val context = activity ?: return
-        android.support.v7.app.AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
-                .setView(R.layout.alertdialog_ticketverif)
+        MPAlertDialog(context)
+                .setTitle(R.string.ticket_verification)
+                .setMessage(getString(R.string.pre_pop_dialog) + getString(R.string.pre_pop_dialog2))
                 .setPositiveButton(android.R.string.ok, { _, _ ->
                     reserveTicket()
                 }).show()
@@ -225,7 +227,7 @@ class ConfirmSurgeFragment : MPFragment() {
 
     private fun showError(apiError: ApiError) {
         val context = activity ?: return
-        AlertDialog.Builder(context)
+       MPAlertDialog(context)
                 .setMessage(apiError.error.message)
                 .setPositiveButton(android.R.string.ok, null)
                 .show()

@@ -2,13 +2,13 @@ package com.mobile.seats
 
 import android.content.Context
 import android.support.constraint.ConstraintLayout
-import android.support.v7.app.AlertDialog
 import android.util.AttributeSet
 import com.mobile.Constants
 import com.mobile.model.GuestTicket
 import com.mobile.utils.expandTouchArea
 import com.moviepass.R
 import com.mobile.utils.text.toCurrency
+import com.mobile.widgets.MPAlertDialog
 import kotlinx.android.synthetic.main.layout_ticket_container.view.*
 
 class TicketContainer(context: Context, attributeSet: AttributeSet? = null) : ConstraintLayout(context, attributeSet) {
@@ -67,7 +67,7 @@ class TicketContainer(context: Context, attributeSet: AttributeSet? = null) : Co
     }
 
     private fun showConvenineceFeeDialog() {
-        AlertDialog.Builder(context).setTitle(
+        MPAlertDialog(context).setTitle(
                 R.string.convenience_fee_title
         ).setMessage(resources.getString(R.string.convenience_fee_message, fee.toCurrency()))
                 .setPositiveButton(android.R.string.ok, null).show()

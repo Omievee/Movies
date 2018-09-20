@@ -1,6 +1,5 @@
 package com.mobile.seats
 
-import android.app.AlertDialog
 import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.res.ResourcesCompat
@@ -15,6 +14,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import com.mobile.utils.padding
 import com.mobile.utils.text.toCurrency
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_total.view.*
 
@@ -24,7 +24,7 @@ class TotalView(context: Context, attr: AttributeSet? = null) : ConstraintLayout
         inflate(context, R.layout.layout_total, this)
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
         infoIcon.setOnClickListener {
-            AlertDialog.Builder(context).setTitle(R.string.discounted_ticket_price)
+            MPAlertDialog(context).setTitle(R.string.discounted_ticket_price)
                     .setMessage(R.string.discounted_ticket_price_descriptiopn)
                     .setPositiveButton(R.string.ok,null).show()
         }

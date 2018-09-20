@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.TextViewCompat
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +18,7 @@ import com.mobile.network.Api
 import com.mobile.network.RestClient
 import com.mobile.requests.TicketInfoRequest
 import com.mobile.utils.showBottomFragment
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
@@ -137,7 +137,7 @@ class ConfirmDetailsFragment : Fragment() {
     private fun showSoftCapDialog() {
         val context = activity ?: return
         val checkin = payload?.checkin ?: return
-        AlertDialog.Builder(context)
+        MPAlertDialog(context)
                 .setTitle(R.string.agree_to_payment)
                 .setMessage(if (checkin.availability.isETicket()) {
                     R.string.agree_to_payment_e_ticket_description
@@ -152,7 +152,7 @@ class ConfirmDetailsFragment : Fragment() {
 
     private fun showDialogToReserveTickets() {
         val context = context ?: return
-        AlertDialog.Builder(context).setTitle(
+       MPAlertDialog(context).setTitle(
                 R.string.e_ticket_cancellation_policy_modal_title
         )
                 .setMessage(R.string.e_ticket_cancellation_policy_modal)
@@ -256,7 +256,7 @@ class ConfirmDetailsFragment : Fragment() {
                     analyticsManager.onCheckinFailed(checkIn)
                     if (error is ApiError) {
                         val context = context ?: return@subscribe
-                        AlertDialog.Builder(context).setTitle(error.error.title)
+                        MPAlertDialog(context).setTitle(error.error.title)
                                 .setMessage(error.error.message)
                                 .setPositiveButton(android.R.string.ok) { _, _ ->
                                     when (error.httpErrorCode) {
