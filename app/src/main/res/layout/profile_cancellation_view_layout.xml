@@ -75,10 +75,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/bottom_navigation_height"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/bottomPlaceHolder"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:mp_text="@string/cancel_membership" />
+
+            <com.mobile.widgets.BottomSoftNavigationPlaceholder
+                android:layout_width="wrap_content"
+                android:id="@+id/bottomPlaceHolder"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_height="wrap_content" />
 
             <include
                 android:id="@+id/progress"
