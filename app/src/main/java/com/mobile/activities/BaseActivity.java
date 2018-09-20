@@ -14,19 +14,34 @@ import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.mobile.UserPreferences;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
+import com.taplytics.sdk.Taplytics;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     UserInfoResponse userInfoResponse;
 
 
-
     /* Creation */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            JSONObject attributes = new JSONObject();
+            attributes.put("email", UserPreferences.INSTANCE.getUserEmail());
+            attributes.put("name", UserPreferences.INSTANCE.getFirstName());
+            attributes.put("user_id", String.valueOf(UserPreferences.INSTANCE.getUserId()));
+            Taplytics.setUserAttributes(attributes);
+        } catch (JSONException e) {
+
+        }
+
     }
 
 
@@ -39,7 +54,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        //COMMENTED OUT - ALEXIS WANTED A TOAST INSTEAD
 
         checkInternetConnection();
     }
