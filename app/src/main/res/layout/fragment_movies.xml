@@ -2,154 +2,79 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fitsSystemWindows="true">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:layout_height="match_parent">
 
     <com.mobile.seats.MPSwipeRefreshLayout
-        android:id="@+id/SWIPE2REFRESH"
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
-        <ScrollView
-            android:id="@+id/MOVIES_MAINCONTENT"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:id="@+id/MAIN"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/double_margin_standard"
-                android:descendantFocusability="blocksDescendants">
+                android:layout_height="match_parent" />
 
-                <FrameLayout
-                    android:id="@+id/FRAME"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/FeaturedRE"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:nestedScrollingEnabled="false"
-                        android:orientation="horizontal">
-
-                    </android.support.v7.widget.RecyclerView>
-
-                </FrameLayout>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/moviesRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/FRAME"
-                    android:layout_marginBottom="60dp"
-                    android:layout_marginTop="@dimen/margin_half"
-                    android:nestedScrollingEnabled="false" />
-
-            </RelativeLayout>
-
-        </ScrollView>
+        </android.support.constraint.ConstraintLayout>
 
     </com.mobile.seats.MPSwipeRefreshLayout>
 
-    <ImageView
-        android:id="@+id/toolBarBackground"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="32dp"
-        android:alpha="0.0"
-        android:background="@color/test_black_30_opacity"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/toolBar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:animateLayoutChanges="true"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:minHeight="@dimen/action_bar_size"
+        android:paddingTop="@dimen/margin_standard"
         app:layout_constraintTop_toTopOf="parent">
 
-
         <ImageView
-            android:id="@+id/MoviePass_HEADER"
+            android:id="@+id/moviepassHeader"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/logo_white_medium"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline1"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <ImageView
-            android:id="@+id/search_inactive"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"
-            android:background="?selectableItemBackgroundBorderless"
-            android:elevation="2dp"
-            android:padding="@dimen/more_spacing"
-            android:src="@drawable/search_icon_white"
-            android:tint="@color/white"
+            android:layout_height="@dimen/action_bar_size"
+            android:src="@drawable/moviepass_horizontal_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent=".45"
+            app:layout_scrollFlags="enterAlways|scroll" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.3" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.7" />
-
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:src="@drawable/search_icon_white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/ActionButton" />
     </android.support.constraint.ConstraintLayout>
 
-
-    <Button
-        android:id="@+id/bottomButton"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="@dimen/bottom_navigation_height"
-        android:background="@color/new_red"
-        android:gravity="center"
-        android:padding="@dimen/margin_standard"
-        android:text="@string/activate_your_moviepass_card"
-        android:textColor="@color/almost_white"
-        android:textSize="14sp"
-        android:textStyle="bold"
+    <com.mobile.widgets.MPProgressText
+        android:id="@+id/activateMPCardView"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        tools:visibility="visible"
+        style="@style/ReservationCheckinButton"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavSpace"
+        app:mp_text="@string/activate_your_moviepass_card" />
 
-    <FrameLayout
-        android:id="@+id/frame_layout"
+    <View
+        android:id="@+id/bottomNavSpace"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="@dimen/bottom_navigation_height"
+        app:layout_constraintBottom_toTopOf="@id/softNav"/>
 
-    <include
-        android:id="@+id/progress"
-        layout="@layout/view_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <com.mobile.widgets.SoftNavigationPlaceholder
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/softNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </android.support.constraint.ConstraintLayout>

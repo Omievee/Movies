@@ -239,6 +239,16 @@ object UserPreferences {
             return null
         }
 
+    var showWhiteListPopUp: Boolean
+        get() {
+            return sPrefs.getBoolean("show_white_list_pop_up",true)
+        }
+    set(value) {
+        val edit = sPrefs.edit()
+        edit.putBoolean("show_white_list_pop_up", value)
+        edit.apply()
+    }
+
     var zipCode: String?
         get() {
             return sPrefs.getString(Constants.ZIP_CODE, null)
@@ -323,7 +333,6 @@ object UserPreferences {
         editor.putBoolean(Constants.CARD_ACTIVATED_SCREEN, cardScreen)
         editor.apply()
     }
-
 
 
     fun verifyAndroidIDFirstRun(isAndroidIDVerified: Boolean) {

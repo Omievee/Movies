@@ -19,13 +19,16 @@ import com.mobile.activities.ActivateMoviePassCard
 import com.mobile.adapters.BasicDiffCallback
 import com.mobile.adapters.ItemSame
 import com.mobile.fragments.*
+import com.mobile.listeners.BonusMovieClickListener
 import com.mobile.model.Movie
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.responses.CurrentMoviesResponse
 import com.mobile.screening.MoviePosterClickListener
+import com.mobile.seats.MPBottomSheetFragment
+import com.mobile.seats.SheetData
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_movies_v2.*
+import kotlinx.android.synthetic.main.fragment_movies.*
 import javax.inject.Inject
 
 class MoviesFragment : MPFragment(), MoviesView, Primary {
@@ -34,8 +37,7 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
     lateinit var presenter: MoviesFragmentPresenter
 
 
-
-    val movieClickListener: MoviePosterClickListener = object : MoviePosterClickListener {
+    val movieClickListener = object : MoviePosterClickListener {
         override fun onMoviePosterClick(movie: Movie) {
             showFragment(ScreeningsFragment.newInstance(ScreeningsData(
                     movie = movie
@@ -43,10 +45,19 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         }
     }
 
-    var adapter: MoviesAdapter = MoviesAdapter(movieClickListener)
+    val bonusClickListener = object : BonusMovieClickListener {
+        override fun onBonusBannerClickListener() {
+            MPBottomSheetFragment.newInstance(SheetData(
+                    title = resources.getString(R.string.bonus_movies_title),
+                    description = resources.getString(R.string.bonus_movies_description)
+            )).show(childFragmentManager, "")
+        }
+    }
+
+    var adapter: MoviesAdapter = MoviesAdapter(movieClickListener, bonusClickListener)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_movies_v2, container, false)
+        return inflater.inflate(R.layout.fragment_movies, container, false)
     }
 
     override fun onPrimary() {
@@ -115,7 +126,7 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
             showFragment(SearchFragment())
         }
         activateMPCardView.setOnClickListener {
-            startActivity(Intent(context,ActivateMoviePassCard::class.java))
+            startActivity(Intent(context, ActivateMoviePassCard::class.java))
         }
         presenter.onViewCreated()
     }
@@ -131,6 +142,7 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         }
         adapter.data = Data(newD, DiffUtil.calculateDiff(BasicDiffCallback(old, newD)))
     }
+
     override fun showDeepLinkMovie(movie: Movie?) {
         showFragment(ScreeningsFragment.newInstance(ScreeningsData(
                 movie = movie

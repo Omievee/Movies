@@ -52,6 +52,7 @@ class ShowtimeAdapter : RecyclerView.Adapter<BaseViewHolder>() {
                 val avail = showTime?.availability?:return
                 val surge = showTime.surge?:return
                 v.bind(avail, surge, it)
+
             }
 
         }

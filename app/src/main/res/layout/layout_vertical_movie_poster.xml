@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/list_item_movie_poster">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_item_movie_poster"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/ticket_top_red_dark"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="5dp"
-        fresco:actualImageScaleType="fitXY"
-        fresco:failureImageScaleType="centerInside"
-        fresco:roundedCornerRadius="2dp" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:foreground="?selectableItemBackground"
+        app:actualImageScaleType="fitXY"
+        app:failureImageScaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundedCornerRadius="2dp" />
+
+    <FrameLayout
+        android:id="@+id/whiteListBanner"
+        android:layout_width="wrap_content"
+        android:layout_height="17dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/ticket_top_red_dark"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.mobile.featured.BadgeView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/RELEASEDATE"
@@ -29,12 +50,11 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/margin_half"
         android:layout_marginRight="@dimen/margin_half"
-        android:ellipsize="marquee"
         android:gravity="center"
-        android:lines="2"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/whiteListBanner" />
 
 </merge>

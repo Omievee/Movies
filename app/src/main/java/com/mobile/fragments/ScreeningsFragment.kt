@@ -20,6 +20,7 @@ import com.mobile.adapters.ScreeningsAdapter
 import com.mobile.adapters.ScreeningsAdapter.Companion.createData
 import com.mobile.deeplinks.DeepLinksManager
 import com.mobile.history.model.ReservationHistory
+import com.mobile.listeners.BonusMovieClickListener
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.location.UserLocation
 import com.mobile.model.AmcDmaMap
@@ -32,6 +33,8 @@ import com.mobile.reservation.Checkin
 import com.mobile.responses.ScreeningsResponseV2
 import com.mobile.screening.MoviePosterClickListener
 import com.mobile.screenings.PinnedBottomSheetBehavior
+import com.mobile.seats.MPBottomSheetFragment
+import com.mobile.seats.SheetData
 import com.mobile.surge.PeakPricingActivity
 import com.mobile.utils.highestElevation
 import com.mobile.utils.isComingSoon
@@ -42,7 +45,13 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_screenings.*
 import javax.inject.Inject
 
-class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, MissingCheckinListener, ScreeningsFragmentView {
+class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, MissingCheckinListener, ScreeningsFragmentView, BonusMovieClickListener {
+    override fun onBonusBannerClickListener() {
+        MPBottomSheetFragment.newInstance(SheetData(
+                title = resources.getString(R.string.bonus_movies_title),
+                description = resources.getString(R.string.bonus_movies_description)
+        )).show(childFragmentManager, "")
+    }
 
     @Inject
     lateinit var presenter: ScreeningsFragmentPresenter
@@ -53,7 +62,7 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     @Inject
     lateinit var deepLinksManager: DeepLinksManager
 
-    val adapter: ScreeningsAdapter = ScreeningsAdapter(this, this)
+    val adapter: ScreeningsAdapter = ScreeningsAdapter(this, this, this)
 
     val synopsislistener = object : MoviePosterClickListener {
         override fun onMoviePosterClick(movie: Movie) {
@@ -136,11 +145,11 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
         removeFragment(R.id.checkinFragment)
     }
 
-    override fun setMovieHeader(movie: Movie, synopsisListener: Boolean) {
+    override fun setMovieHeader(movie: Movie, synopsisListener: Boolean, showWhiteListBanner: Boolean) {
         movieHeader.visibility = View.VISIBLE
         when (synopsisListener) {
-            true -> movieHeader.bind(movie, this.synopsislistener)
-            false -> movieHeader.bind(movie, null)
+            true -> movieHeader.bind(movie, this.synopsislistener, showWhiteListBanner,this)
+            false -> movieHeader.bind(movie, null, showWhiteListBanner,this)
         }
     }
 

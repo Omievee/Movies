@@ -1,9 +1,11 @@
 package com.mobile.fragments
 
+import com.mobile.UserPreferences
 import com.mobile.deeplinks.DeepLinksManager
 import com.mobile.home.RestrictionsManager
 import com.mobile.model.Movie
 import com.mobile.movie.MoviesManager
+import com.mobile.responses.RestrictionsResponse
 import io.reactivex.disposables.Disposable
 
 class MoviesFragmentPresenter(val view: MoviesView, val movieManager: MoviesManager, val restrictionsManager: RestrictionsManager, val deepLinksManager: DeepLinksManager) {
@@ -12,6 +14,7 @@ class MoviesFragmentPresenter(val view: MoviesView, val movieManager: MoviesMana
     var restrictionsDisposable: Disposable? = null
     var movie: Movie? = null
     var deeplinksDisposable: Disposable? = null
+    var didShowMovieWhitelist : Boolean = false
 
     fun onViewCreated() {
         determineMovieFromDeepLink()

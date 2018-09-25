@@ -772,5 +772,9 @@
     <string name="enable_location_services">Enable location services</string>
 
     <string name="tap_to_reveal">Tap to reveal code</string>
+    <string name="bonus_movies_title">Bonus Movies! </string>
+    <string name="bonus_movies_description">Movies with the “Bonus” label do not count toward your monthly movie limit! \n\nYou can also check into Bonus movies for free after you have reached your monthly plan cap.</string>
+    <string name="bonus">Bonus</string>
+
 
 </resources>

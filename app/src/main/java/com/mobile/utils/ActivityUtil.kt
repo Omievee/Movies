@@ -8,6 +8,7 @@ import android.provider.Settings
 import android.support.transition.*
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.TouchDelegate
 import android.view.View
@@ -27,16 +28,16 @@ fun Context?.startIntentIfResolves(intent: Intent) {
     }
 }
 
-val View.highestElevation:Float
-get() {
-    val vg = this as? ViewGroup?:return this.elevation
-    val max = (0 until vg.childCount).maxBy {
-        val view = vg.getChildAt(it)
-        view.elevation
-    }?:return this.elevation
-    val view = vg.getChildAt(max)
-    return view.elevation
-}
+val View.highestElevation: Float
+    get() {
+        val vg = this as? ViewGroup ?: return this.elevation
+        val max = (0 until vg.childCount).maxBy {
+            val view = vg.getChildAt(it)
+            view.elevation
+        } ?: return this.elevation
+        val view = vg.getChildAt(max)
+        return view.elevation
+    }
 
 fun FragmentActivity.showFragment(fragment: Fragment) {
     val view = findViewById(R.id.mpActivityContainer) as? ViewGroup ?: return
@@ -62,12 +63,13 @@ fun FragmentActivity.showFragment(fragment: Fragment) {
 }
 
 fun FragmentActivity.onBackExtension(): Boolean {
-    val fragment = supportFragmentManager.findFragmentById(R.id.activityFragmentContainer) ?: return false
+    val fragment = supportFragmentManager.findFragmentById(R.id.activityFragmentContainer)
+            ?: return false
 
-    when(fragment) {
+    when (fragment) {
         is BackFragment -> {
-            when(fragment.onBack()) {
-                true-> return true
+            when (fragment.onBack()) {
+                true -> return true
             }
         }
     }
@@ -94,14 +96,18 @@ fun FragmentActivity.onBackExtension(): Boolean {
     return true
 }
 
-fun View?.expandTouchArea() {
+fun View?.expandTouchArea(extraPaddingInDips: Int = -1) {
+    this ?: return
+    val extraPadding = when (extraPaddingInDips) {
+        -1 -> resources.getDimension(R.dimen.margin_standard).toInt()
+        else -> TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, extraPaddingInDips.toFloat(), resources.displayMetrics).toInt()
+    }
     Single.just(this).compose(Schedulers.singleDefault())
             .subscribe({
                 val view = it ?: return@subscribe
                 val rect = Rect()
                 val parent = (it.parent as? ViewGroup) ?: return@subscribe
                 view.getHitRect(rect)
-                val extraPadding = view.resources.getDimension(R.dimen.margin_standard).toInt()
                 rect.top -= extraPadding
                 rect.left -= extraPadding
                 rect.right += extraPadding
@@ -110,8 +116,8 @@ fun View?.expandTouchArea() {
             }, {})
 }
 
-fun Fragment?.startCameraIntent(requestCode:Int) {
-    val context = this?.activity?:return
+fun Fragment?.startCameraIntent(requestCode: Int) {
+    val context = this?.activity ?: return
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
     val uri = Uri.fromParts("package", context.packageName, null)
     intent.data = uri
