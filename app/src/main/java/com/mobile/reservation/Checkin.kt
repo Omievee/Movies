@@ -2,6 +2,7 @@ package com.mobile.reservation
 
 import android.os.Parcelable
 import com.mobile.model.*
+import com.mobile.model.TicketType
 import com.mobile.responses.PeakPass
 import com.mobile.utils.calendar
 import com.mobile.utils.timeToCalendar
@@ -31,7 +32,7 @@ data class Checkin(
 
     @IgnoredOnParcel
     val showGuestFlow:Boolean by lazy {
-        val tot = screening.maximumGuests>0 && availability.guestsTicketTypes?.isEmpty() == false
+        val tot = screening.maximumGuests>0 && availability.guestsTicketTypes?.isEmpty() == false && availability.ticketType==TicketType.SELECT_SEATING
         tot
     }
 
