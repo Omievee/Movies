@@ -739,7 +739,7 @@
     <string name="plan_and_billing_info"><![CDATA[Plan & Billing Info]]></string>
     <string name="movies_left_in_billing_cycle">Movies left in current billing cycle:</string>
     <string name="continue_seeing_movies_title">Continue seeing movies with the MoviePass Discount!</string>
-    <string name="continue_seeing_movies_description">You have seen three movies this month, but you can still check into showtimes with MoviePass. Your billing card on file will be charged the theater’s listed ticket price, and you will receive a discount by paying through the MoviePass app.</string>
+    <string name="continue_seeing_movies_description">You have seen %1$d movies this month, but you can still check into showtimes with MoviePass. Your billing card on file will be charged the theater’s listed ticket price, and you will receive a discount by paying through the MoviePass app.</string>
     <string name="zero_movies">0 Movies</string>
     <string name="continue_seeing_movies">Continue seeing discounted movies with  MoviePass until your cycle renews!</string>
     <string name="over_hard_cap">Your plan monthly cap was met</string>
