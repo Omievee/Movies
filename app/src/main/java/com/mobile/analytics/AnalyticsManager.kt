@@ -1,13 +1,14 @@
 package com.mobile.analytics
 
+import com.mobile.model.User
 import com.mobile.model.*
 import com.mobile.reservation.Checkin
 import com.mobile.responses.ReservationResponse
 
 interface AnalyticsManager {
 
-    fun onUserLoggedIn(user:User)
-    fun onUserLoggedOut(user:User?)
+    fun onUserLoggedIn(user: User)
+    fun onUserLoggedOut(user: User?)
     fun onAppOpened()
     fun onShowtimeClicked(mytheater: Theater, screening: Screening, availability: Availability)
     fun onTheaterOpened(theater:Theater)

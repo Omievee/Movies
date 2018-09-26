@@ -6,7 +6,8 @@ import com.mobile.responses.UserInfoResponse
 import com.mobile.rx.Schedulers
 import io.reactivex.Single
 
-class UserManagerImpl(val api:Api) : UserManager {
+class UserManagerImpl(val api: Api) : UserManager {
+
 
     private var userInfo: UserInfoResponse? = null
 
@@ -15,6 +16,10 @@ class UserManagerImpl(val api:Api) : UserManager {
             null -> api.getUserDataRx(UserPreferences.userId).doOnSuccess { userInfo = it }
             else -> Single.just(userInfo)
         }.compose(Schedulers.singleDefault())
+    }
+
+    override fun updateUserInfo() {
+
     }
 
 }

@@ -6,7 +6,6 @@ import android.support.v4.widget.TextViewCompat
 import android.util.AttributeSet
 import android.view.View
 import com.mobile.UserPreferences
-import com.mobile.model.UserInfo
 import com.mobile.profile.ProfilePresentation
 import com.mobile.responses.UserInfoResponse
 import com.mobile.seats.MPBottomSheetFragment

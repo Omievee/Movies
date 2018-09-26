@@ -8,7 +8,10 @@ import com.mobile.analytics.AnalyticsManager
 import com.mobile.deeplinks.DeepLinksManager
 import com.mobile.history.HistoryManager
 import com.mobile.history.model.ReservationHistory
-import com.mobile.model.*
+import com.mobile.model.Alert
+import com.mobile.model.Movie
+import com.mobile.model.PopInfo
+import com.mobile.model.Theater
 import com.mobile.network.Api
 import com.mobile.network.MicroApi
 import com.mobile.reservation.CurrentReservationV2
@@ -16,6 +19,7 @@ import com.mobile.responses.AndroidIDVerificationResponse
 import com.mobile.responses.RestrictionsResponse
 import com.mobile.responses.SubscriptionStatus
 import com.mobile.session.SessionManager
+import com.mobile.session.UserManager
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
@@ -27,10 +31,12 @@ class HomeActivityPresenter(val view: HomeActivityView,
                             val restrictionManager: RestrictionsManager,
                             val historyManager: HistoryManager,
                             val analyticsManager: AnalyticsManager,
-                            val deepLinksManager: DeepLinksManager) {
+                            val deepLinksManager: DeepLinksManager,
+                            val userManager: UserManager) {
 
     var androidIdDisposable: Disposable? = null
     var restrictionsDisposable: Disposable? = null
+    var userInfoDisposable: Disposable? = null
     var reservationDisposable: Disposable? = null
     var deviceId: String? = null
     var lastRestrictionRequest: Long = 0
@@ -41,7 +47,7 @@ class HomeActivityPresenter(val view: HomeActivityView,
     var didShowAlert: Boolean = false
     var theater: Theater? = null
     var movie: Movie? = null
-    var user: User? = null
+
 
     fun onDeviceId(deviceId: String?) {
         this.deviceId = deviceId
@@ -50,8 +56,8 @@ class HomeActivityPresenter(val view: HomeActivityView,
 
     fun onCreate() {
         latestMovieWithoutRating()
-        user = sessionManager.getUser() ?: return
         listenForDeepLink()
+        println("...... ID" + UserPreferences.oneDeviceId)
     }
 
 
@@ -63,6 +69,9 @@ class HomeActivityPresenter(val view: HomeActivityView,
         }
         setProfileTabBadge()
         subscribeToBadgeChange()
+        if (UserPreferences.user.firstName == null || UserPreferences.user.lastName == null) {
+            retrieveUserData()
+        }
     }
 
     private fun subscribeToBadgeChange() {
@@ -149,7 +158,19 @@ class HomeActivityPresenter(val view: HomeActivityView,
                     determineOverSoftCap(it)
                     determineTicketVerification(it)
                     determineAlertScreen(it.alert)
-                    analyticsManager.onBrazeDataSetUp(user)
+                    analyticsManager.onBrazeDataSetUp(UserPreferences.user)
+                }, {
+                    it.printStackTrace()
+                })
+    }
+
+    private fun retrieveUserData() {
+        userInfoDisposable?.dispose()
+        userInfoDisposable = userManager
+                .getUserInfo()
+                .subscribe({
+                    UserPreferences.user = it.user ?: return@subscribe
+                    println(">>.>> OBJECT:" + it.user)
                 }, {
                     it.printStackTrace()
                 })

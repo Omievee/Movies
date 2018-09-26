@@ -32,6 +32,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.mobile.DeviceID;
+import com.mobile.UserPreferences;
 import com.mobile.analytics.AnalyticsManager;
 import com.mobile.fragments.ReactivateDialog;
 import com.mobile.fragments.WebViewFragment;
@@ -236,28 +237,30 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                     userRESPONSE = response.body();
                     if (response.code() == 200) {
                         moviePassLoginSucceeded(response.body());
+                        UserPreferences.INSTANCE.setUser(userRESPONSE);
                     } else if (response.code() == 207) {
                         new MPAlertDialog(LogInActivity.this)
-                        .setTitle("We’ve noticed you switched to a different device")
-                        .setMessage("Switching to a new device will permanently lock you out from any other device for 30 days.")
-                        .setCancelable(false)
-                        .setPositiveButton("Switch to this device", (dialog, which) -> {
-                            dialog.dismiss();
-                            progress.setVisibility(View.GONE);
-                            new MPAlertDialog(LogInActivity.this)
-                                    .setTitle("Are you sure?")
-                            .setMessage("This cannot be undone.")
-                            .setPositiveButton("Switch to this device", (d, w) -> {
-                                d.dismiss();
-                                String userSwitchDeviceID = DeviceID.INSTANCE.getID(getApplicationContext());
-                                INSTANCE.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
-                                verifyAndroidID(deviceType, userSwitchDeviceID, device, true);
-                            }).setNegativeButton(android.R.string.cancel, (d, wi) -> {
-                                d.dismiss();
-                                d.cancel();
-                                progress.setVisibility(View.GONE);
-                            }).show();
-                        }).setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                                .setTitle("We’ve noticed you switched to a different device")
+                                .setMessage("Switching to a new device will permanently lock you out from any other device for 30 days.")
+                                .setCancelable(false)
+                                .setPositiveButton("Switch to this device", (dialog, which) -> {
+                                    dialog.dismiss();
+                                    progress.setVisibility(View.GONE);
+                                    new MPAlertDialog(LogInActivity.this)
+                                            .setTitle("Are you sure?")
+                                            .setMessage("This cannot be undone.")
+                                            .setPositiveButton("Switch to this device", (d, w) -> {
+                                                d.dismiss();
+                                                String userSwitchDeviceID = DeviceID.INSTANCE.getID(getApplicationContext());
+                                                UserPreferences.INSTANCE.setUser(userRESPONSE);
+                                                INSTANCE.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
+                                                verifyAndroidID(deviceType, userSwitchDeviceID, device, true);
+                                            }).setNegativeButton(android.R.string.cancel, (d, wi) -> {
+                                        d.dismiss();
+                                        d.cancel();
+                                        progress.setVisibility(View.GONE);
+                                    }).show();
+                                }).setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                             dialog.cancel();
                             progress.setVisibility(View.GONE);
 
@@ -301,6 +304,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                 if (response.code() == 200 || response.code() == 201) {
                     androidId = response.body();
                     moviePassLoginSucceeded(userRESPONSE);
+
                     INSTANCE.setOneDeviceId(androidId.getOneDeviceId());
 
                 } else if (response.code() == 403) {
@@ -383,10 +387,9 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
             int us = user.getId();
             String deviceUuid = user.getAndroidID();
             String authToken = user.getAuthToken();
-            String ODID = user.getOneDeviceId();
+            String AID = user.getOneDeviceId();
 
-
-            INSTANCE.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getLastName(), user.getEmail(), ODID);
+            INSTANCE.setUserCredentials(us, deviceUuid, authToken, AID);
             analyticsManager.onUserLoggedIn(user);
             checkRestrictions(user);
         }
@@ -402,7 +405,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                     restriction = response.body();
 
                     INSTANCE.setRestrictions(restriction);
-
 
                     //Checking restriction
                     //If Missing - Account is cancelled, User can't log in
@@ -423,7 +425,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                             INSTANCE.hasUserLoggedInBefore(true);
                             TaskStackBuilder b = TaskStackBuilder.create(LogInActivity.this);
                             b.addParentStack(HomeActivity.class);
-                            b.addNextIntent(ActivatedCardTutorialActivity.newIntent(LogInActivity.this,true));
+                            b.addNextIntent(ActivatedCardTutorialActivity.newIntent(LogInActivity.this, true));
                             b.startActivities();
                         } else {
                             Intent i = new Intent(LogInActivity.this, HomeActivity.class);

@@ -15,8 +15,6 @@ open class GoWatchit(
     val organic:String = "organic",
         @SerializedName("eid[movie_pass]")
     val userId:Int = UserPreferences.userId,
-        @SerializedName("eid[idfa]")
-    val idfa:String = UserPreferences.deviceAndroidID,
         @SerializedName("vn")
     val versionName:String = BuildConfig.VERSION_NAME,
         @SerializedName("vc")
@@ -30,3 +28,4 @@ open class GoWatchit(
     }
 
 }
+

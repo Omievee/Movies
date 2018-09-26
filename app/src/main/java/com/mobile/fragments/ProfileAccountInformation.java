@@ -72,7 +72,7 @@ public class ProfileAccountInformation extends MPFragment {
 
                     userName.setText(firstName + " " + lastName);
                     userEmail.setText(email);
-                    android.util.Log.d(Constants.TAG, "onResponse: EMAIL "+email);
+
 
                     moviePassCard.setText(userInfoResponse.getMoviePassCardNumber());
 

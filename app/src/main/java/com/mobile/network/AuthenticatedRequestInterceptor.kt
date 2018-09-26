@@ -33,8 +33,7 @@ class AuthenticatedRequestInterceptor(val sessionManager: SessionManager) : Inte
             }
         }
         requestBuilder.apply {
-            addHeader(HEADER_USER_AGENT.first, HEADER_USER_AGENT.second);
-            addHeader(HEADER_DEVICE_ANDROID_ID, UserPreferences.deviceAndroidID)
+            addHeader(HEADER_USER_AGENT.first, HEADER_USER_AGENT.second)
         }
         UserPreferences.oneDeviceId?.let {
             requestBuilder.addHeader(HEADER_ONE_DEVICE_ID, it)

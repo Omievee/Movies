@@ -1,12 +1,10 @@
 package com.mobile.responses
 
-import com.mobile.model.ParcelableDate
 import com.mobile.billing.BillingAddress
 import com.mobile.billing.BillingInfo
 import com.mobile.billing.PaymentInfo
-import com.mobile.billing.removeSpaces
-import com.mobile.model.UserInfo
-import java.util.*
+import com.mobile.model.ParcelableDate
+import com.mobile.model.User
 
 
 /**
@@ -16,7 +14,7 @@ import java.util.*
 class UserInfoResponse(
 
         var authToken: String? = null,
-        var user: UserInfo? = null,
+        var user: User? = null,
         var billingAddressLine1: String? = null,
         var billingAddressLine2: String? = null,
         var billingCard: String? = null,

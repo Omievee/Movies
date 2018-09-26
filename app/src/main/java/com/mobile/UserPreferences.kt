@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.mobile.history.model.ReservationHistory
 import com.mobile.location.UserLocation
 import com.mobile.model.ScreeningToken
+import com.mobile.model.User
 import com.mobile.reservation.Checkin
 import com.mobile.responses.RestrictionsResponse
 import com.mobile.responses.UserInfoResponse
@@ -56,6 +57,28 @@ object UserPreferences {
             return field
         }
 
+    var user: User = User()
+        set(it) {
+            field = it
+            sPrefs.edit()
+                    .putString(Constants.USER, gson.toJson(it)).apply()
+        }
+        get() {
+            val ss = sPrefs.getString(Constants.USER, null)
+            if (ss == null) {
+                field = User()
+            } else {
+                try {
+                    field = gson.fromJson(ss, User::class.java)
+                } catch (e: java.lang.Exception) {
+                    field = User()
+                }
+
+            }
+
+            return field
+        }
+
 
     var showPeakPassBottomSheet: Boolean
         get() {
@@ -63,11 +86,6 @@ object UserPreferences {
         }
         set(value) {
             hasNewPeakPass = false
-        }
-
-    val deviceAndroidID: String
-        get() {
-            return sPrefs.getString(Constants.DEVICE_ID, "ID") ?: "ID"
         }
 
     val hasUserLoggedInBefore: Boolean
@@ -89,6 +107,7 @@ object UserPreferences {
             editor.putString(Constants.ONE_DEVICE_ID, id)
             editor.apply()
         }
+
 
     val userId: Int
         get() {
@@ -315,11 +334,6 @@ object UserPreferences {
         this.gson = gson
     }
 
-    fun saveDeviceAndroidID(deviceId: String?) {
-        val editor = sPrefs.edit()
-        editor.putString(Constants.DEVICE_ANDROID_ID, deviceId)
-        editor.apply()
-    }
 
     fun hasUserLoggedInBefore(isUserFirstLogin: Boolean) {
         val editor = sPrefs.edit()
@@ -332,13 +346,6 @@ object UserPreferences {
         val editor = sPrefs.edit()
         editor.putBoolean(Constants.CARD_ACTIVATED_SCREEN, cardScreen)
         editor.apply()
-    }
-
-
-    fun verifyAndroidIDFirstRun(isAndroidIDVerified: Boolean) {
-        val edit = sPrefs.edit()
-        edit.putBoolean(Constants.IS_ANDROID_ID_VERIFIED, isAndroidIDVerified)
-        edit.apply()
     }
 
 
@@ -362,18 +369,14 @@ object UserPreferences {
         editor.apply()
     }
 
-    fun setUserCredentials(userId: Int, deviceAndroidID: String?, authToken: String?,
-                           firstName: String?, lastName: String?, email: String?, oneDeviceID: String?) {
+    fun setUserCredentials(userId: Int, deviceAndroidID: String?, authToken: String?, oneDeviceID: String?) {
         val editor = sPrefs.edit() ?: return
 
         editor.putInt(Constants.USER_ID, userId)
         editor.putString(Constants.DEVICE_ANDROID_ID, deviceAndroidID)
         editor.putString(Constants.USER_AUTH_TOKEN, authToken)
-        editor.putString(Constants.USER_FIRST_NAME, firstName)
-        editor.putString(Constants.USER_LAST_NAME, lastName)
         if (oneDeviceID != null && !oneDeviceID.isEmpty())
             editor.putString(Constants.ONE_DEVICE_ID, oneDeviceID)
-        editor.putString(Constants.USER_EMAIL, email)
         editor.apply()
     }
 

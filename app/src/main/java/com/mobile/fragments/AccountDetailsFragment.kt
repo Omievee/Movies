@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.mobile.UserPreferences
 import com.mobile.adapters.BasicDiffCallback
-import com.mobile.model.UserInfo
 import com.mobile.network.Api
 import com.mobile.profile.*
 import com.mobile.recycler.decorator.SpaceDecorator

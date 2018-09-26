@@ -5,4 +5,6 @@ import io.reactivex.Single
 
 interface UserManager {
     fun getUserInfo(): Single<UserInfoResponse>
+
+    fun updateUserInfo()
 }

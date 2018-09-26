@@ -2,12 +2,10 @@ package com.mobile.session
 
 import com.helpshift.util.HelpshiftContext
 import com.mobile.UserPreferences
-import com.mobile.history.HistoryManager
 import com.mobile.model.User
 import com.mobile.rx.Schedulers
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import javax.inject.Provider
 
 class SessionManagerImpl : SessionManager {
 
@@ -24,15 +22,14 @@ class SessionManagerImpl : SessionManager {
         }
         val token = UserPreferences.authToken
         val oneDeviceId = UserPreferences.oneDeviceId
-        val email = UserPreferences.userEmail
-        val androidId = UserPreferences.deviceAndroidID
+//        val androidId = UserPreferences.deviceAndroidID
         UserPreferences.firebaseHelpshiftToken
         return User(
                 id = userId,
                 authToken = token,
-                oneDeviceId = oneDeviceId,
-                email = email,
-                androidID = androidId
+                email = UserPreferences.user.email,
+                firstName = UserPreferences.user.firstName,
+                lastName = UserPreferences.user.lastName
         )
     }
 

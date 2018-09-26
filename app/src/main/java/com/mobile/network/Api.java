@@ -93,6 +93,7 @@ public interface Api {
 
     @GET("/rest/v3/screenings/{segment}")
     Single<ScreeningsResponseV2> getScreeningsForMovieRx(@Path("segment") int segment, @Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
+
     /* Registration */
     @POST("mobile/check/email")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
@@ -147,6 +148,11 @@ public interface Api {
     /* user Data */
     @GET("/rest/v1/users/{userId}")
     Call<UserInfoResponse> getUserData(@Path("userId") int userId);
+
+    /* user Data */
+    @GET("/rest/v1/users/{userId}")
+    Single<UserInfoResponse> getUserRX(@Path("userId") int userId);
+
 
     /* user Data */
     @GET("/rest/v1/users/{userId}")

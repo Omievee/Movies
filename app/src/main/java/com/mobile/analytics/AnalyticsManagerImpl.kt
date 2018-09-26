@@ -8,6 +8,7 @@ import com.crashlytics.android.answers.CustomEvent
 import com.crashlytics.android.answers.LoginEvent
 import com.crashlytics.android.answers.PurchaseEvent
 import com.helpshift.Core
+import com.mobile.model.User
 import com.mobile.UserPreferences
 import com.mobile.application.Application
 import com.mobile.gowatchit.GoWatchItManager
