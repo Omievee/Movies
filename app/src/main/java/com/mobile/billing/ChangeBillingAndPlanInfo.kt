@@ -10,7 +10,6 @@ import com.mobile.fragments.MPFragment
 import com.mobile.profile.ProfileCancellationFragment
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fragment_change_billing_and_plan_info.*
-import kotlinx.android.synthetic.main.fragment_profile_account_plan_and_billing.*
 import java.text.SimpleDateFormat
 
 class ChangeBillingAndPlanInfo : MPFragment() {
@@ -37,8 +36,8 @@ class ChangeBillingAndPlanInfo : MPFragment() {
         val dateFormat = SimpleDateFormat("MMMM dd, yyyy")
 
         when (UserPreferences.userInfo.nextBillingDate) {
-            null -> BillingDate.text = "Unknown"
-            else -> BillingDate.text = dateFormat.format(UserPreferences.userInfo.nextBillingDate)
+            null -> billingDate.text = "Unknown"
+            else -> billingDate.text = dateFormat.format(UserPreferences.userInfo.nextBillingDate)
         }
     }
 

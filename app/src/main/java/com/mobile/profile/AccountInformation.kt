@@ -14,6 +14,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_account_information.*
 import javax.inject.Inject
 
+
 class AccountInformation : MPFragment() {
 
 
@@ -52,17 +53,17 @@ class AccountInformation : MPFragment() {
 
 
     fun retrieveLatestData() {
-        updateData?.dispose()
-        updateData = userManager
-                .getUserInfo()
-                .subscribe({
-                    UserPreferences.userInfo = it
-                    UserPreferences.user = it.user ?: return@subscribe
-                    setData()
-                }, {
-                    it.printStackTrace()
+            updateData?.dispose()
+            updateData = userManager
+                    .getUserInfo()
+                    .subscribe({
+                        UserPreferences.userInfo = it
+                        UserPreferences.user = it.user ?: return@subscribe
+                        setData()
+                    }, {
+                        it.printStackTrace()
 
-                })
+                    })
     }
 
     override fun onDestroy() {

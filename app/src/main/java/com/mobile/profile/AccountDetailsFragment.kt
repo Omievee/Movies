@@ -1,6 +1,7 @@
 package com.mobile.profile
 
 import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
@@ -20,6 +21,7 @@ import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_account_details.*
 import javax.inject.Inject
+
 
 /*
  * Created by anubis on 9/2/17.
@@ -62,7 +64,16 @@ class AccountDetailsFragment : MPFragment() {
     override fun onResume() {
         super.onResume()
         adapter.data = data
-        fetchUserInfo()
+        if (isOnline()) {
+            fetchUserInfo()
+        }
+
+    }
+
+    fun isOnline(): Boolean {
+        val cm = activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = cm.activeNetworkInfo
+        return netInfo != null && netInfo.isConnectedOrConnecting
     }
 
     private fun fetchUserInfo() {
@@ -70,12 +81,13 @@ class AccountDetailsFragment : MPFragment() {
             return
         }
         planSub?.dispose()
-        planSub = api.getUserDataRx(UserPreferences.userId).subscribe { t1, t2 ->
-            UserPreferences.userInfo = t1
-            UserPreferences.user = t1.user ?: return@subscribe
-            activity ?: return@subscribe
-            planResponse = t1
-            adapter.data = data
+        planSub = api.getUserDataRx(UserPreferences.userId).subscribe { t1 ->
+            t1?.let {
+                UserPreferences.userInfo = it
+                UserPreferences.user = it.user ?: return@subscribe
+                planResponse = it
+                adapter.data = data
+            }
         }
     }
 

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,13 +45,13 @@ class ChangeShippingAddress : MPFragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        Address2.isEnabled = false
+        userAddress2.isEnabled = false
         state.isEnabled = false
         zip.isEnabled = false
         city.isEnabled = false
 
-        Address1.addTextChangedListener(CustomTextWatcher())
-        Address2.addTextChangedListener(CustomTextWatcher())
+        userAddress.addTextChangedListener(CustomTextWatcher())
+        userAddress2.addTextChangedListener(CustomTextWatcher())
         zip.addTextChangedListener(CustomTextWatcher())
         state.addTextChangedListener(CustomTextWatcher())
         city.addTextChangedListener(CustomTextWatcher())
@@ -62,11 +61,11 @@ class ChangeShippingAddress : MPFragment() {
     }
 
     private fun touchListener(): Boolean {
-        Address1.setOnTouchListener { _, _ ->
+        userAddress.setOnTouchListener { _, _ ->
             if (firstClick) {
 
                 firstClick = false
-                Address2.isEnabled = true
+                userAddress2.isEnabled = true
                 state.isEnabled = true
                 zip.isEnabled = true
                 city.isEnabled = true
@@ -95,8 +94,11 @@ class ChangeShippingAddress : MPFragment() {
     }
 
     private fun setData() {
-        val address1 = SpannableStringBuilder(UserPreferences.userInfo.shippingAddressLine1)
-        Address1.text = address1
+        println(UserPreferences.userInfo.shippingAddressLine1)
+        val address = SpannableStringBuilder(UserPreferences.userInfo.shippingAddressLine1)
+        userAddress.text = address
+
+
 
         val addressList = SpannableStringBuilder(UserPreferences.userInfo.shippingAddressLine2)
         val list = Arrays.asList<String>(*addressList.split(",".toRegex()).toTypedArray())
@@ -139,10 +141,10 @@ class ChangeShippingAddress : MPFragment() {
 
     private fun updateShippingAddress() {
         val userId = UserPreferences.user.id
-        if (Address1.text.toString() != UserPreferences.userInfo.shippingAddressLine1) {
+        if (userAddress.text.toString() != UserPreferences.userInfo.shippingAddressLine1) {
             if (isValidAddress()) {
-                val newAddress = Address1.text.toString().trim()
-                val newAddress2 = Address2.text.toString().trim()
+                val newAddress = userAddress.text.toString().trim()
+                val newAddress2 = userAddress2.text.toString().trim()
                 val newCity = city.text.toString().trim()
                 val newZip = zip.text.toString().trim()
                 val newState = state.text.toString().trim()
@@ -175,8 +177,8 @@ class ChangeShippingAddress : MPFragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE2) {
             if (resultCode == -1) {
-                Address1.clearFocus()
-                Address2.clearFocus()
+                userAddress.clearFocus()
+                userAddress2.clearFocus()
                 state.clearFocus()
                 zip.clearFocus()
                 city.clearFocus()
@@ -189,8 +191,7 @@ class ChangeShippingAddress : MPFragment() {
                         Toast.makeText(context, "Invalid Address", Toast.LENGTH_SHORT).show()
                         firstClick = true
                     } else {
-                        Log.d(Constants.TAG, "onActivityResult 3 : " + localList[i])
-                        Address1.setText(localList[0])
+                        userAddress.setText(localList[0])
                         city.setText(localList[1].trim { it <= ' ' })
                         val State = localList[2].substring(0, 3).trim { it <= ' ' }
                         val zipString = localList[2].substring(4, 9)
@@ -198,8 +199,8 @@ class ChangeShippingAddress : MPFragment() {
                         zip.setText(zipString)
                     }
                 }
-                Address1.clearFocus()
-                Address2.clearFocus()
+                userAddress.clearFocus()
+                userAddress2.clearFocus()
                 state.clearFocus()
                 zip.clearFocus()
                 city.clearFocus()
@@ -216,15 +217,15 @@ class ChangeShippingAddress : MPFragment() {
         zipTextInputLayout.error = null
 
         var i = 0
-        if (!Address1.text.toString().trim { it <= ' ' }.isEmpty() && !city.text.toString().trim { it <= ' ' }.isEmpty() && !zip.text.toString().trim { it <= ' ' }.isEmpty() && !state.text.toString().trim { it <= ' ' }.isEmpty()) {
+        if (!userAddress.text.toString().trim { it <= ' ' }.isEmpty() && !city.text.toString().trim { it <= ' ' }.isEmpty() && !zip.text.toString().trim { it <= ' ' }.isEmpty() && !state.text.toString().trim { it <= ' ' }.isEmpty()) {
 
             //Validating Address
-            val address1Array = Address1.text.toString().split("\\W+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val address1Array = userAddress.text.toString().split("\\W+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             if (address1Array.size >= 2 && address1Array[0].trim { it <= ' ' }.matches(".*\\d+.*".toRegex())) {
                 i++
             } else {
                 address1TextInputLayout.error = resources.getString(R.string.address_invalid_address)
-                Address1.clearFocus()
+                userAddress.clearFocus()
                 LogUtils.newLog("ADDRESS", "isValidAddress: ")
             }
 
@@ -257,9 +258,9 @@ class ChangeShippingAddress : MPFragment() {
 
 
         } else {
-            if (Address1.text.toString().trim { it <= ' ' }.isEmpty()) {
+            if (userAddress.text.toString().trim { it <= ' ' }.isEmpty()) {
                 address1TextInputLayout.error = resources.getString(R.string.address_empty_shipping_address)
-                Address1.clearFocus()
+                userAddress.clearFocus()
             }
             if (state.text.toString().trim { it <= ' ' }.isEmpty()) {
                 stateTextInputLayout.error = resources.getString(R.string.address_empty_state)
@@ -290,10 +291,10 @@ class ChangeShippingAddress : MPFragment() {
 
         override fun afterTextChanged(s: Editable) {
 
-            if (Address1.isFocused || Address2.isFocused || city.isFocused || state.isFocused || zip.isFocused) {
+            if (userAddress.isFocused || userAddress2.isFocused || city.isFocused || state.isFocused || zip.isFocused) {
                 saveChanges()
             }
-            if (Address1.hasFocus())
+            if (userAddress.hasFocus())
                 address1TextInputLayout.error = null
             if (city.hasFocus())
                 cityTextInputLayout.error = null
