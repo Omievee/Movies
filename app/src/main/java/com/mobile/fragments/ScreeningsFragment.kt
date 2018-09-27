@@ -18,7 +18,6 @@ import com.mobile.UserPreferences
 import com.mobile.adapters.MissingCheckinListener
 import com.mobile.adapters.ScreeningsAdapter
 import com.mobile.adapters.ScreeningsAdapter.Companion.createData
-import com.mobile.deeplinks.DeepLinksManager
 import com.mobile.history.model.ReservationHistory
 import com.mobile.listeners.BonusMovieClickListener
 import com.mobile.listeners.ShowtimeClickListener
@@ -59,8 +58,6 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     @Inject
     lateinit var dataMap:AmcDmaMap
 
-    @Inject
-    lateinit var deepLinksManager: DeepLinksManager
 
     val adapter: ScreeningsAdapter = ScreeningsAdapter(this, this, this)
 

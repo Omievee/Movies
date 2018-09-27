@@ -145,7 +145,6 @@ class ActivateMoviePassCard : AppCompatActivity() {
         digits = activateDigits.text.toString().trim { it <= ' ' }
         val request = CardActivationRequest(digits)
 
-
         activateCardDisposable?.dispose()
 
         activateCardDisposable = api

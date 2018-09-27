@@ -45,8 +45,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
         )).show(supportFragmentManager, "")
     }
 
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+
 
     @Inject
     lateinit var presenter: HomeActivityPresenter

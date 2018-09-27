@@ -79,6 +79,39 @@ object UserPreferences {
             return field
         }
 
+    var loadUserData: Boolean
+        get() {
+            return sPrefs.getBoolean(Constants.LOADED, true)
+        }
+        set(value) {
+            sPrefs.edit()
+                    .putBoolean(Constants.LOADED, value).apply()
+        }
+
+
+
+
+    var userInfo: UserInfoResponse = UserInfoResponse()
+        set(it) {
+            field = it
+            sPrefs.edit()
+                    .putString(Constants.USERINFO, gson.toJson(it)).apply()
+        }
+        get() {
+            val ss = sPrefs.getString(Constants.USERINFO, null)
+            if (ss == null) {
+                field = UserInfoResponse()
+            } else {
+                try {
+                    field = gson.fromJson(ss, UserInfoResponse::class.java)
+                } catch (e: java.lang.Exception) {
+                    field = UserInfoResponse()
+                }
+
+            }
+            return field
+        }
+
 
     var showPeakPassBottomSheet: Boolean
         get() {

@@ -78,13 +78,13 @@ public interface Api {
      * Change Password
      */
     @POST("rest/v1/passwordChange")
-    Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
+    Single<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
 
     /**
      * Change Email
      */
     @POST("rest/v1/emailChange")
-    Call<ChangeEmailResponse> changeEmail(@Body ChangeEmailRequest request);
+    Single<ChangeEmailResponse> changeEmail(@Body ChangeEmailRequest request);
 
     /* Activate MP Card */
     @POST("/rest/v1/cards/activate")
@@ -167,11 +167,11 @@ public interface Api {
 
     /* User Address */
     @PUT("/rest/v1/users/{userId}")
-    Call<Object> updateAddress(@Path("userId") int userId, @Body AddressChangeRequest address);
+    Single<Object> updateAddress(@Path("userId") int userId, @Body AddressChangeRequest address);
 
     /* Billing Update */
     @PUT("/rest/v1/users/{userId}")
-    Call<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
+    Single<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
 
     @PUT("/rest/v1/users/{userId}")
     Single<ResponseBody> updateBilling(@Path("userId") int userId, @Body BillingInfo info);

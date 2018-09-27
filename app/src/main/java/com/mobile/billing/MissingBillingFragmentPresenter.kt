@@ -16,7 +16,7 @@ class MissingBillingFragmentPresenter(
 
     var saveSub: Disposable? = null
     var errorMessages: ErrorMessages? = null
-    var userBillingInfo: Disposable ? = null
+    var userBillingInfo: Disposable? = null
 
     var creditCardChange = false
     var billingChange = false
@@ -39,9 +39,9 @@ class MissingBillingFragmentPresenter(
         if (valid != null) {
             return view.showErrors(valid)
         }
-        if(!billingChange)
+        if (!billingChange)
             data.billingAddress = null
-        if(!creditCardChange)
+        if (!creditCardChange)
             data.paymentInfo = null
         saveSub?.dispose()
         view.showProgress()
@@ -53,20 +53,20 @@ class MissingBillingFragmentPresenter(
                 }.subscribe({
                     view.showSuccessDialog(R.string.billing_updated)
                 }, { error ->
-                     when(error){
-                         is ApiError ->  view.showErrorDialog(error.error.message)
-                         else -> view.showGenericError()
-                     }
+                    when (error) {
+                        is ApiError -> view.showErrorDialog(error.error.message)
+                        else -> view.showGenericError()
+                    }
                 })
     }
 
-    fun creditCardTextEntered(editText: EditText){
-        if(editText.text.toString().isNotEmpty() && !CreditCardUtils.isNumeric(editText.text[0].toString())){
+    fun creditCardTextEntered(editText: EditText) {
+        if (editText.text.toString().isNotEmpty() && !CreditCardUtils.isNumeric(editText.text[0].toString())) {
             view.clearText(editText)
         }
     }
 
-    private fun getUserBillingInfo(){
+    private fun getUserBillingInfo() {
         userBillingInfo?.dispose()
         view.showProgress()
 
@@ -80,26 +80,26 @@ class MissingBillingFragmentPresenter(
         })
     }
 
-    private fun showBillingInfo(billingInfo: BillingInfo){
+    private fun showBillingInfo(billingInfo: BillingInfo) {
 
         billingChange = true
         creditCardChange = true
-        if(!billingInfo.billingAddress?.street.isNullOrEmpty()){
+        if (!billingInfo.billingAddress?.street.isNullOrEmpty()) {
             view.showBillingAddress(billingInfo)
             billingChange = false
         }
-        if(!billingInfo.paymentInfo?.number.isNullOrEmpty()){
+        if (!billingInfo.paymentInfo?.number.isNullOrEmpty()) {
             creditCardChange = false
             view.showBillingCreditCard(billingInfo)
         }
     }
 
-    fun creditCardTextChanged(){
+    fun creditCardTextChanged() {
         view.showSaveAndCancel()
         creditCardChange = true
     }
 
-    fun billingAddresChange(){
+    fun billingAddresChange() {
         view.showSaveAndCancel()
         billingChange = true
     }
@@ -109,7 +109,7 @@ class MissingBillingFragmentPresenter(
      */
     private fun isValid(data: BillingInfo): BillingInfo? {
         val validated = BillingInfo()
-        if(creditCardChange){
+        if (creditCardChange) {
             validated.paymentInfo = PaymentInfo()
             data.paymentInfo?.number = data.paymentInfo?.number?.removeSpaces()
             validated.paymentInfo?.number = when (data.paymentInfo?.number.isNullOrEmpty()) {
@@ -126,15 +126,15 @@ class MissingBillingFragmentPresenter(
                     false -> errorMessages?.invalidExpiration
                 }
             }
-            validated.paymentInfo?.cvv = when (data.paymentInfo?.cvv.isNullOrEmpty()){
+            validated.paymentInfo?.cvv = when (data.paymentInfo?.cvv.isNullOrEmpty()) {
                 true -> errorMessages?.needSecurityCode
-                false -> when(CreditCardUtils.isValidSecurityCode(data.paymentInfo?.cvv)) {
+                false -> when (CreditCardUtils.isValidSecurityCode(data.paymentInfo?.cvv)) {
                     true -> null
                     false -> errorMessages?.needSecurityCode
                 }
             }
         }
-        if(billingChange){
+        if (billingChange) {
             validated.billingAddress = BillingAddress()
             validated.billingAddress?.street = when (data.billingAddress?.street.isNullOrEmpty()) {
                 true -> errorMessages?.needAddress
@@ -148,15 +148,15 @@ class MissingBillingFragmentPresenter(
                 true -> errorMessages?.needStateOrInvalid
                 false -> null
             }
-            validated.billingAddress?.zip = when(data.billingAddress?.zip?.isValidZip()) {
-                true-> null
-                else-> errorMessages?.needsValidZip
+            validated.billingAddress?.zip = when (data.billingAddress?.zip?.isValidZip()) {
+                true -> null
+                else -> errorMessages?.needsValidZip
             }
         }
 
-        return when(validated.allFieldsNull) {
-            true->null
-            false->validated
+        return when (validated.allFieldsNull) {
+            true -> null
+            false -> validated
         }
     }
 
@@ -178,7 +178,7 @@ fun String.isValidZip(): Boolean {
     return size == 5 || size == 9
 }
 
-val BillingInfo.allFieldsNull:Boolean
+val BillingInfo.allFieldsNull: Boolean
     get() {
         val fields = arrayOf(
                 paymentInfo?.number,
@@ -189,8 +189,8 @@ val BillingInfo.allFieldsNull:Boolean
                 billingAddress?.state,
                 billingAddress?.zip
         )
-        return fields.count { it==null } == fields.size
-       return false
+        return fields.count { it == null } == fields.size
+        return false
     }
 
 data class ErrorMessages(
@@ -200,7 +200,7 @@ data class ErrorMessages(
         val emptyExpiration: String,
         val needSecurityCode: String,
         val needAddress: String,
-        val needCity:String,
-        val needStateOrInvalid:String,
-        val needsValidZip:String
+        val needCity: String,
+        val needStateOrInvalid: String,
+        val needsValidZip: String
 )

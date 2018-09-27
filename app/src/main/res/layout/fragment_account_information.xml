@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    tools:context="com.mobile.fragments.ProfileAccountInformation">
+    tools:context="com.mobile.profile.AccountInformation">
 
     <TextView
         android:id="@+id/accountHeader"
@@ -30,7 +30,7 @@
         app:layout_constraintTop_toBottomOf="@id/accountHeader">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/USER_NAME"
+            android:id="@+id/userName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -68,7 +68,7 @@
         app:layout_constraintTop_toBottomOf="@+id/usernameTextInputLayout">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/USER_EMAIL"
+            android:id="@+id/userEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -123,7 +123,7 @@
         app:layout_constraintTop_toBottomOf="@+id/emailTextInputLayout">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/MPCardNum"
+            android:id="@+id/moviepassCardNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -143,10 +143,6 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <include
-        android:id="@+id/progress"
-        layout="@layout/view_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
 
 </android.support.constraint.ConstraintLayout>

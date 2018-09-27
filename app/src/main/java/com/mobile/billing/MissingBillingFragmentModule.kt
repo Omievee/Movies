@@ -9,7 +9,7 @@ import dagger.Provides
 class MissingBillingFragmentModule {
 
     @Provides
-    fun providePresenter(fragment:MissingBillingFragment, sessionManager: SessionManager, api:Api) : MissingBillingFragmentPresenter {
+    fun providePresenter(fragment: MissingBillingFragment, sessionManager: SessionManager, api: Api): MissingBillingFragmentPresenter {
         return MissingBillingFragmentPresenter(fragment, sessionManager, api)
     }
 

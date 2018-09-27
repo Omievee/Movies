@@ -57,7 +57,6 @@ class HomeActivityPresenter(val view: HomeActivityView,
     fun onCreate() {
         latestMovieWithoutRating()
         listenForDeepLink()
-        println("...... ID" + UserPreferences.oneDeviceId)
     }
 
 
@@ -69,7 +68,8 @@ class HomeActivityPresenter(val view: HomeActivityView,
         }
         setProfileTabBadge()
         subscribeToBadgeChange()
-        if (UserPreferences.user.firstName == null || UserPreferences.user.lastName == null) {
+
+        if (UserPreferences.loadUserData) {
             retrieveUserData()
         }
     }
@@ -168,9 +168,12 @@ class HomeActivityPresenter(val view: HomeActivityView,
         userInfoDisposable?.dispose()
         userInfoDisposable = userManager
                 .getUserInfo()
+                .doOnSuccess { UserPreferences.loadUserData = false }
+                .map {
+                    UserPreferences.userInfo = it
+                    UserPreferences.user = it.user ?: return@map
+                }
                 .subscribe({
-                    UserPreferences.user = it.user ?: return@subscribe
-                    println(">>.>> OBJECT:" + it.user)
                 }, {
                     it.printStackTrace()
                 })
@@ -203,7 +206,7 @@ class HomeActivityPresenter(val view: HomeActivityView,
                         .subscribe({ r ->
                             showMovieForRating(r)
                         }) {
-
+                            it.printStackTrace()
                         }
     }
 

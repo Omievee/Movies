@@ -21,8 +21,6 @@ class SessionManagerImpl : SessionManager {
             return null;
         }
         val token = UserPreferences.authToken
-        val oneDeviceId = UserPreferences.oneDeviceId
-//        val androidId = UserPreferences.deviceAndroidID
         UserPreferences.firebaseHelpshiftToken
         return User(
                 id = userId,
