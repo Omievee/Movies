@@ -38,7 +38,6 @@ class HomeActivityPresenter(val view: HomeActivityView,
     var changesDisposable: Disposable? = null
     var deepLInksDisposable: Disposable? = null
     var historyDispose: Disposable? = null
-    var didShowOverSoftCap: Boolean = false
     var didShowAlert: Boolean = false
     var theater: Theater? = null
     var movie: Movie? = null
@@ -143,6 +142,7 @@ class HomeActivityPresenter(val view: HomeActivityView,
                 .subscribe({
                     lastRestrictionRequest = System.currentTimeMillis()
                     restrictionManager.publish(it)
+                    determineShowWhiteListFragment(it)
                     determineActivationScreen(it)
                     determineForceLogout(it)
                     UserPreferences.restrictions = it
@@ -155,11 +155,20 @@ class HomeActivityPresenter(val view: HomeActivityView,
                 })
     }
 
+    private fun determineShowWhiteListFragment(it: RestrictionsResponse?) {
+        val restrictions = it ?: return
+        val showMovieListedFragment = UserPreferences.showWhiteListPopUp
+        when{
+            showMovieListedFragment && restrictions.capWhitelistedMovieIds.isNotEmpty() -> {
+                UserPreferences.showWhiteListPopUp = false
+                view.showWhiteListMovie()
+            }
+        }
+    }
 
     private fun determineOverSoftCap(it: RestrictionsResponse) {
         when {
-            !didShowOverSoftCap && it.cappedPlan?.isOverSoftCap == true && it.cappedPlan?.used == 3 -> {
-                didShowOverSoftCap = true
+            it.cappedPlan?.isOverSoftCap == true && it.cappedPlan?.used == 3 -> {
                 view.showOverSoftCap()
             }
         }

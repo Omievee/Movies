@@ -55,16 +55,26 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
         when (surge.level) {
             SurgeType.NO_SURGE -> {
                 val cappedPlan = UserPreferences.restrictions.cappedPlan
-                when (cappedPlan?.isOverSoftCap) {
-                    true -> view.showSoftCapMessage(checkin = checkin, cappedPlan = cappedPlan)
-                    else -> {
+                val isMovieWhiteListed = UserPreferences.restrictions.capWhitelistedMovieIds.contains(checkin.screening.moviepassId)
+                when(isMovieWhiteListed){
+                    true -> {
                         view.showCheckin(checkin)
                         if (showProofOfPurchase) {
                             view.showCheckinWithProof()
                         }
                     }
+                    false -> {
+                        when (cappedPlan?.isOverSoftCap) {
+                            true -> view.showSoftCapMessage(checkin = checkin, cappedPlan = cappedPlan)
+                            else -> {
+                                view.showCheckin(checkin)
+                                if (showProofOfPurchase) {
+                                    view.showCheckinWithProof()
+                                }
+                            }
+                        }
+                    }
                 }
-
             }
             SurgeType.WILL_SURGE -> {
                 view.showWillSurge(surge, peak, peak.currentPeakPass)
@@ -83,13 +93,14 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
                 return false
             }
             val surge = checkin.screening.getSurge(checkin.availability.startTime, UserPreferences.restrictions.userSegments)
-            val cap = UserPreferences.restrictions.cappedPlan
-            if (cap?.isOverSoftCap == true) {
-                return true
-            }
-            if (cap?.isOverHardCap == false) {
-                return false
-            }
+//            val cap = UserPreferences.restrictions.cappedPlan
+//            val isMovieWhiteListed = UserPreferences.restrictions.capWhitelistedMovieIds.contains(checkin.screening.moviepassId)
+//            if (cap?.isOverSoftCap == true && !isMovieWhiteListed) {
+//                return true
+//            }
+//            if (cap?.isOverHardCap == false) {
+//                return false
+//            }
             if (surge.level == SurgeType.SURGING) {
                 return true
             }
@@ -140,11 +151,11 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
     private fun skipRestrictionsCheck() {
         val checkin = checkin ?: return
         val surge = checkin.screening.getSurge(checkin.availability.startTime, UserPreferences.restrictions.userSegments)
-        val cap = UserPreferences.restrictions.cappedPlan
-        if (cap?.isOverSoftCap == true) {
-            checkin.softCap = true
-            return view.navigateToSoftCapCheckout(checkin)
-        }
+//        val cap = UserPreferences.restrictions.cappedPlan
+//        if (cap?.isOverSoftCap == true) {
+//            checkin.softCap = true
+//            return view.navigateToSoftCapCheckout(checkin)
+//        }
         if (surge.level == SurgeType.SURGING) {
             val pinfo = UserPreferences.restrictions.peakPassInfo
             if (pinfo.currentPeakPass != null) {
@@ -175,7 +186,7 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
                 checkin.softCap = true
                 view.navigateToSoftCapCheckout(checkin)
             }
-            it.data.overSoftCap || it.data.overHardCap -> {
+            (it.data.overSoftCap || it.data.overHardCap) -> {
                 UserPreferences.restrictions.apply {
                     val old = cappedPlan
                     cappedPlan = CappedPlan(

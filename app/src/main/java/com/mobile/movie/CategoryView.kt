@@ -7,10 +7,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.ViewGroup
+import com.mobile.UserPreferences
 import com.mobile.adapters.BaseViewHolder
 import com.mobile.adapters.BasicDiffCallback
 import com.mobile.adapters.ItemSame
+import com.mobile.featured.CategoryMoviePosterView
 import com.mobile.featured.VerticalMoviePosterView
+import com.mobile.listeners.BonusMovieClickListener
 import com.mobile.model.Movie
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.screening.MoviePosterClickListener
@@ -39,13 +42,18 @@ class CategoryView(context: Context?, attrs: AttributeSet? = null) : ConstraintL
         ))
     }
 
-    fun bind(cat: Pair<String, List<Movie>>, moviePosterClickListener: MoviePosterClickListener?=null) {
-        text.text = DEFAULT_HEADERS[cat.first]?:cat.first
+    fun bind(
+            cat: Pair<String, List<Movie>>,
+            moviePosterClickListener: MoviePosterClickListener? = null,
+            bonusMovieClickListener: BonusMovieClickListener? = null
+    ) {
+        text.text = DEFAULT_HEADERS[cat.first] ?: cat.first
         val old = adapter.data?.list ?: emptyList()
         val newD = cat.second.map {
             CategoryPresentation(movie = it)
         }
         adapter.moviePosterClickListener = moviePosterClickListener
+        adapter.bonusClickListener = bonusMovieClickListener
         adapter.data = CategoryData(newD, DiffUtil.calculateDiff(BasicDiffCallback(old, newD)))
 
     }
@@ -59,10 +67,11 @@ class CategoryAdapter() : RecyclerView.Adapter<BaseViewHolder>() {
             value?.diffResult?.dispatchUpdatesTo(this)
         }
 
-    var moviePosterClickListener:MoviePosterClickListener?=null
+    var moviePosterClickListener: MoviePosterClickListener? = null
+    var bonusClickListener:BonusMovieClickListener?=null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        return BaseViewHolder(VerticalMoviePosterView(parent.context))
+        return BaseViewHolder(CategoryMoviePosterView(parent.context))
     }
 
     override fun getItemCount(): Int {
@@ -73,7 +82,9 @@ class CategoryAdapter() : RecyclerView.Adapter<BaseViewHolder>() {
         val view = holder.itemView
         val data = data!!.list[position]
         when (view) {
-            is VerticalMoviePosterView -> view.bind(data.movie,moviePosterClickListener)
+            is VerticalMoviePosterView -> {
+                view.bind(data.movie, moviePosterClickListener, bonusClickListener)
+            }
         }
     }
 

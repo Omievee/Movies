@@ -39,6 +39,12 @@ import javax.inject.Inject
 
 
 class HomeActivity : MPActivty(), HomeActivityView {
+    override fun showWhiteListMovie() {
+        MPBottomSheetFragment.newInstance(SheetData(
+                title = resources.getString(R.string.bonus_movies_title),
+                description = resources.getString(R.string.bonus_movies_description)
+        )).show(supportFragmentManager, "")
+    }
 
     @Inject
     lateinit var analyticsManager: AnalyticsManager

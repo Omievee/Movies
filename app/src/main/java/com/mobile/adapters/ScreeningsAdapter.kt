@@ -4,7 +4,9 @@ import android.location.Location
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import com.mobile.UserPreferences
 import com.mobile.history.model.ReservationHistory
+import com.mobile.listeners.BonusMovieClickListener
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.model.AmcDmaMap
 import com.mobile.model.Screening
@@ -16,7 +18,8 @@ import com.mobile.screening.ScreeningPresentation
 
 class ScreeningsAdapter(
         var listener: ShowtimeClickListener? = null,
-        var missingCheckinListener: MissingCheckinListener? = null) : RecyclerView.Adapter<BaseViewHolder>() {
+        var missingCheckinListener: MissingCheckinListener? = null,
+        var bonusMovieClickListener: BonusMovieClickListener? = null) : RecyclerView.Adapter<BaseViewHolder>() {
 
     var data: ScreeningData? = null
         set(value) {
@@ -47,7 +50,10 @@ class ScreeningsAdapter(
         data?.let { pres ->
             when (view) {
                 is MovieScreeningView -> view.bind(pres, listener)
-                is ScreeningView -> view.bind(pres, listener)
+                is ScreeningView -> {
+                    val showWhiteListBanner = UserPreferences.restrictions.capWhitelistedMovieIds.contains(pres.screening?.moviepassId)
+                    view.bind(pres, listener,showWhiteListBanner,bonusMovieClickListener)
+                }
                 is MissingCheckinView -> view.bind(pres, missingCheckinListener)
             }
         }

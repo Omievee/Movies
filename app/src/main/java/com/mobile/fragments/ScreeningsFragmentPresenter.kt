@@ -60,12 +60,13 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
             null -> {
             }
             else -> {
+                val showWhiteListBanner = UserPreferences.restrictions.capWhitelistedMovieIds.contains(movie.id)
                 when (movie.isComingSoon) {
                     true -> {
-                        view.setMovieHeader(movie, false)
+                        view.setMovieHeader(movie, false, showWhiteListBanner)
                         view.showSynopsis(movie)
                     }
-                    false -> view.setMovieHeader(movie, true)
+                    false -> view.setMovieHeader(movie, true, showWhiteListBanner)
                 }
                 analyticsManager.onMovieImpression(movie)
             }

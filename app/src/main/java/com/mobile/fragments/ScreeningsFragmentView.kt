@@ -12,7 +12,7 @@ import com.mobile.responses.ScreeningsResponseV2
 
 interface ScreeningsFragmentView : LocationRequiredView {
     fun removeCheckinFragment()
-    fun setMovieHeader(movie: Movie, synopssListener:Boolean)
+    fun setMovieHeader(movie: Movie, synopssListener:Boolean, showWhiteListBanner: Boolean)
     fun setTheaterHeader(theater: Theater)
     fun showCheckinFragment(checkin: Checkin)
     fun updateAdapter(response: Pair<List<ReservationHistory>, ScreeningsResponseV2>, location: UserLocation?, selected: Pair<Screening, String?>?, segments: List<Int>)

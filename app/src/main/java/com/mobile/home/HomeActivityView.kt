@@ -19,4 +19,5 @@ interface HomeActivityView {
     fun showOverSoftCap()
     fun updateBottomNavForTheaters()
     fun updateBottomNavForMovies()
+    fun showWhiteListMovie()
 }

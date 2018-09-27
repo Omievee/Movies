@@ -1,89 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/posterSPV"
-        app:failureImage="@drawable/filmreel1"
-        app:placeholderImage="@drawable/filmreel1"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:foreground="@drawable/poster_gradient_2" />
+        android:foreground="@drawable/poster_gradient_2"
+        app:failureImage="@drawable/filmreel1"
+        app:placeholderImage="@drawable/filmreel1" />
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/whiteListBanner"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal">
+        android:paddingBottom="@dimen/margin_half"
+        android:paddingStart="@dimen/margin_half"
+        android:paddingTop="@dimen/margin_half"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/bottomArea"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/bottomArea">
+
+        <com.mobile.featured.BadgeView
+            layout="@layout/icon_bonus"
+            android:layout_width="wrap_content"
+            android:layout_height="17dp" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/movieTitle"
+        style="@style/MovieTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:layout_marginStart="@dimen/margin_standard"
+        app:layout_constraintBottom_toTopOf="@id/bottomArea"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="[ MOVIE TITLE ] " />
+
+
+    <TextView
+        style="@style/RatedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PLACEHOLDER"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:id="@+id/bottomArea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_standard"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:id="@+id/movieTitle"
-            style="@style/MovieTitleText"
-            tools:text="[ MOVIE TITLE ] "
+            android:id="@+id/movieRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_standard" />
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/movieTitle"
-            android:minHeight="20dp"
-            android:layout_marginBottom="@dimen/margin_half"
             android:layout_marginStart="@dimen/margin_standard"
-            android:layout_marginTop="@dimen/margin_quarter">
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Runtime " />
 
-            <TextView
-                style="@style/RatedText"
-                tools:ignore="HardcodedText"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PLACEHOLDER"
-                android:visibility="invisible" />
+        <Space
+            android:id="@+id/spacer"
+            android:layout_width="@dimen/margin_standard"
+            android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/movieRating"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="Runtime "
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/movieTime"
+            style="@style/RatedText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/spacer"
+            tools:text="Rating " />
 
-            <Space
-                android:id="@+id/spacer"
-                tools:visibility="visible"
-                android:layout_width="@dimen/margin_standard"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/movieRating"
-                android:visibility="gone" />
+        <ImageView
+            android:id="@+id/synopsisIV"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginStart="@dimen/margin_half"
+            android:src="@drawable/infoicon2"
+            android:tint="@color/almost_white"
+            app:layout_constraintStart_toEndOf="@id/movieTime" />
 
-            <TextView
-                android:id="@+id/movieTime"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                style="@style/RatedText"
-                tools:text="Rating "
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/spacer" />
+    </LinearLayout>
 
-            <ImageView
-                android:id="@+id/synopsisIV"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginStart="@dimen/margin_half"
-                app:layout_constraintStart_toEndOf="@id/movieTime"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:src="@drawable/infoicon2"
-                android:tint="@color/almost_white" />
-        </android.support.constraint.ConstraintLayout>
-    </RelativeLayout>
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

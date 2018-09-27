@@ -71,7 +71,7 @@ class AccountDetailsFragment : MPFragment() {
         }
         planSub?.dispose()
         planSub = api.getUserDataRx(UserPreferences.userId).subscribe { t1, t2 ->
-            activity?: return@subscribe
+            activity ?: return@subscribe
             planResponse = t1
             adapter.data = data
         }
@@ -110,8 +110,8 @@ class AccountDetailsFragment : MPFragment() {
             }
             when (UserPreferences.restrictions.peakPassInfo.enabled) {
                 true -> {
-                    if(newData.any { it.type==Profile.CAPPED_PLAN }) {
-                        newData.add(ProfilePresentation(type=Profile.DIVIDER))
+                    if (newData.any { it.type == Profile.CAPPED_PLAN }) {
+                        newData.add(ProfilePresentation(type = Profile.DIVIDER))
                     }
                     newData.add(ProfilePresentation(
                             type = Profile.PEAK_PASS
@@ -127,7 +127,7 @@ class AccountDetailsFragment : MPFragment() {
         backButton.setOnClickListener { activity?.onBackPressed() }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.addItemDecoration(SpaceDecorator(lastBottom = recyclerView.navBarHeight*2))
+        recyclerView.addItemDecoration(SpaceDecorator(lastBottom = recyclerView.navBarHeight * 2))
         recyclerView.itemAnimator = null
     }
 

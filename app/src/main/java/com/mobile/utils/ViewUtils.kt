@@ -6,6 +6,8 @@ import android.content.res.Configuration.SCREENLAYOUT_SIZE_MASK
 import android.R.attr.orientation
 import android.content.Context
 import android.content.res.Configuration
+import android.content.res.Resources
+import android.util.TypedValue
 import android.view.KeyEvent.KEYCODE_BACK
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
@@ -15,19 +17,33 @@ import com.moviepass.R
 
 
 fun View.padding(
-        start:Int = paddingStart,
-        top:Int = paddingTop,
-        bottom:Int = paddingBottom,
-        end:Int = paddingEnd) {
+        start: Int = paddingStart,
+        top: Int = paddingTop,
+        bottom: Int = paddingBottom,
+        end: Int = paddingEnd) {
     this.setPadding(
             start, top, bottom, end
     )
 }
 
-val View.navBarHeight:Int
-get() {
-    return getNavBarHeight(context)
+fun View.paddingDp(
+        start: Int = paddingStart,
+        top: Int = paddingTop,
+        bottom: Int = paddingBottom,
+        end: Int = paddingEnd) {
+    this.setPadding(
+            asDp(start, resources), asDp(top, resources), asDp(bottom, resources), asDp(end, resources)
+    )
 }
+
+fun asDp(dimen: Int, resources: Resources): Int {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dimen.toFloat(), resources.displayMetrics).toInt()
+}
+
+val View.navBarHeight: Int
+    get() {
+        return getNavBarHeight(context)
+    }
 
 fun getNavBarHeight(c: Context): Int {
     var result = 0

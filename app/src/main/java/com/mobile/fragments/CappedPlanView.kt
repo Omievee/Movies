@@ -50,7 +50,7 @@ class CappedPlanView(context: Context?, attrs: AttributeSet? = null) : PeakConta
         descriptionContainer.setOnClickListener {
             MPBottomSheetFragment.newInstance(SheetData(
                     title = resources.getString(R.string.continue_seeing_movies_title),
-                    description = resources.getString(R.string.continue_seeing_movies_description)
+                    description = resources.getString(R.string.continue_seeing_movies_description, cap.used?:3)
             )).show(childFragmentManager, "")
         }
     }

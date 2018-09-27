@@ -22,5 +22,6 @@ class RestrictionsResponse(
         var canReactivate: CanReactivate? = null,
         var userSegments: List<Int> = emptyList(),
         var peakPassInfo: PeakPassInfo = PeakPassInfo(),
-        var userUuid: String? = null
+        var userUuid: String? = null,
+        var capWhitelistedMovieIds: List<Int> = emptyList()
 )

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="android.support.constraint.ConstraintLayout">
+
+    <TextView
+        android:paddingStart="10.5dp"
+        android:paddingEnd="3dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="11.5sp"
+        android:gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:text="@string/bonus"
+        android:layout_height="match_parent"
+        tools:ignore="RtlSymmetry" />
+
+</merge>

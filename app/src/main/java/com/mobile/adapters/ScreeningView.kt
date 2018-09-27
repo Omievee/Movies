@@ -13,10 +13,14 @@ import android.widget.FrameLayout
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
+import com.mobile.home.HomeActivity
+import com.mobile.listeners.BonusMovieClickListener
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.screening.ScreeningPresentation
 import com.mobile.screening.ShowtimeAdapter
+import com.mobile.seats.MPBottomSheetFragment
+import com.mobile.seats.SheetData
 import com.moviepass.R
 import kotlinx.android.synthetic.main.horizontal_poster.view.*
 import kotlinx.android.synthetic.main.list_item_cinemaposter.view.*
@@ -107,13 +111,12 @@ class ScreeningView(context: Context) : FrameLayout(context) {
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
     }
 
-    fun bind(screening: ScreeningPresentation, showtimeClickListener: ShowtimeClickListener?) {
+    fun bind(screening: ScreeningPresentation, showtimeClickListener: ShowtimeClickListener?, showWhiteListedBanner: Boolean ? = false, bonusMovieClickListener: BonusMovieClickListener?) {
         this.screeningPresentation = screening
         this.showtimeListener = showtimeListener
         adapter.screening = screening
         adapter.showtimeClickListener = showtimeClickListener
         adapter.data = ShowtimeAdapter.createData(adapter.data, screening)
-        synopsisIV.visibility = View.GONE
         val imgUrl = Uri.parse(screeningPresentation?.screening?.landscapeImageUrl)
         val request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
@@ -144,6 +147,14 @@ class ScreeningView(context: Context) : FrameLayout(context) {
             }
             true -> {
                 notSupported.visibility = View.GONE
+                when(showWhiteListedBanner){
+                    true -> {
+                        whiteListBanner.visibility = View.VISIBLE
+                        whiteListBanner.setOnClickListener {
+                            bonusMovieClickListener?.onBonusBannerClickListener()
+                        }
+                    }
+                }
             }
         }
         if (posterSPV.controller?.isSameImageRequest(controller) != true) {
@@ -161,7 +172,6 @@ class ScreeningView(context: Context) : FrameLayout(context) {
             true -> View.GONE
             else -> View.VISIBLE
         }
-        spacer.visibility = movieRating.visibility
     }
 
 }

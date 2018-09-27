@@ -15,32 +15,25 @@ import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import android.os.Build
+import android.view.View
+import com.mobile.UserPreferences
+import com.mobile.listeners.BonusMovieClickListener
 
 
-open class VerticalMoviePosterView(context: Context?,
-                                   attrs: AttributeSet? = null
-
-
-) : ConstraintLayout(context, attrs) {
+open class VerticalMoviePosterView(
+        context: Context?,
+        attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
 
     var movie: Movie? = null
-    var moviePosterClickListener: MoviePosterClickListener?=null
+    var moviePosterClickListener: MoviePosterClickListener? = null
+    var bonusClickListener: BonusMovieClickListener? = null
 
     init {
         inflate(context, R.layout.layout_vertical_movie_poster, this)
-        try {
-            val attrs = intArrayOf(R.attr.selectableItemBackground)
-            val typedArray = context?.obtainStyledAttributes(attrs)
-            val foregroundDrawable = typedArray?.getDrawable(0)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                foreground = foregroundDrawable
-            }
-            typedArray?.recycle()
-        } catch (e:Exception) {}
         val aspectW = 2
         val aspectH = 3
 
-        val width = getResources().displayMetrics.widthPixels
+        val width = resources.displayMetrics.widthPixels
         val finalWidth = width / 2.85
         val height = finalWidth * aspectH / aspectW
 
@@ -48,15 +41,21 @@ open class VerticalMoviePosterView(context: Context?,
         val h = Math.round(height).toInt()
 
         layoutParams = MarginLayoutParams(w, h)
+
+        whiteListBanner.setOnClickListener {
+            bonusClickListener?.onBonusBannerClickListener()
+        }
+
         setOnClickListener {
-            val movie = this.movie?: return@setOnClickListener
+            val movie = this.movie ?: return@setOnClickListener
             moviePosterClickListener?.onMoviePosterClick(movie)
         }
     }
 
-    fun bind(movie: Movie, moviePosterClickListener: MoviePosterClickListener?=null) {
+    fun bind(movie: Movie, moviePosterClickListener: MoviePosterClickListener? = null, bonusMovieClickListener: BonusMovieClickListener?=null) {
         this.movie = movie
         this.moviePosterClickListener = moviePosterClickListener
+        this.bonusClickListener = bonusMovieClickListener
         val imgUrl = Uri.parse(movie.imageUrl)
         val request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
@@ -82,5 +81,14 @@ open class VerticalMoviePosterView(context: Context?,
                 .build()
 
         ticket_top_red_dark.controller = controller
+        showWhiteListMovieBanner()
+    }
+
+    private fun showWhiteListMovieBanner() {
+        whiteListBanner.visibility = when (UserPreferences.restrictions.capWhitelistedMovieIds.contains(movie?.id
+                ?: 0)) {
+            true -> View.VISIBLE
+            else -> View.INVISIBLE
+        }
     }
 }
