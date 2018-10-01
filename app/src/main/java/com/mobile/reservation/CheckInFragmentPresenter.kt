@@ -55,7 +55,7 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
         when (surge.level) {
             SurgeType.NO_SURGE -> {
                 val cappedPlan = UserPreferences.restrictions.cappedPlan
-                val isMovieWhiteListed = UserPreferences.restrictions.capWhitelistedMovieIds.contains(checkin.screening.moviepassId)
+                val isMovieWhiteListed = UserPreferences.restrictions.capWhitelistedMovieIds.contains(checkin.screening.moviepassId) && UserPreferences.restrictions.cappedPlan != null
                 when(isMovieWhiteListed){
                     true -> {
                         view.showCheckin(checkin)

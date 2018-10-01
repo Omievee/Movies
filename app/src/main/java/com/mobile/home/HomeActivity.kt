@@ -14,6 +14,7 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.mobile.BackFragment
 import com.mobile.DeviceID
 import com.mobile.MPActivty
+import com.mobile.UserPreferences
 import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
@@ -130,7 +131,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
     override fun showOverSoftCap() {
         MPBottomSheetFragment.newInstance(SheetData(
                 title = resources.getString(R.string.continue_seeing_movies_title),
-                description = resources.getString(R.string.continue_seeing_movies_description)
+                description = resources.getString(R.string.continue_seeing_movies_description,UserPreferences.restrictions.cappedPlan?.used ?: 3)
         )).show(supportFragmentManager, "")
     }
 

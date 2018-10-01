@@ -111,7 +111,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
     }
 
-    fun bind(screening: ScreeningPresentation, showtimeClickListener: ShowtimeClickListener?, showWhiteListedBanner: Boolean ? = false, bonusMovieClickListener: BonusMovieClickListener?) {
+    fun bind(screening: ScreeningPresentation, showtimeClickListener: ShowtimeClickListener?, showWhiteListedBanner: Boolean? = false, bonusMovieClickListener: BonusMovieClickListener?) {
         this.screeningPresentation = screening
         this.showtimeListener = showtimeListener
         adapter.screening = screening
@@ -147,7 +147,11 @@ class ScreeningView(context: Context) : FrameLayout(context) {
             }
             true -> {
                 notSupported.visibility = View.GONE
-                when(showWhiteListedBanner){
+                whiteListBanner.visibility = when (showWhiteListedBanner) {
+                    true -> View.VISIBLE
+                    else -> View.GONE
+                }
+                when (showWhiteListedBanner) {
                     true -> {
                         whiteListBanner.visibility = View.VISIBLE
                         whiteListBanner.setOnClickListener {

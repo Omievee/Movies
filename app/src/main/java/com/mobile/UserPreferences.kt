@@ -319,6 +319,16 @@ object UserPreferences {
             return null
         }
 
+    var showOverSoftCap: Boolean
+        get() {
+            return sPrefs.getBoolean("show_over_soft_cap",true)
+        }
+        set(value) {
+            val edit = sPrefs.edit()
+            edit.putBoolean("show_over_soft_cap", value)
+            edit.apply()
+        }
+
 
     val historyLoadedDate: Calendar
         get() {

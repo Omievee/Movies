@@ -171,9 +171,6 @@ class HomeActivityPresenter(val view: HomeActivityView,
                 .doOnSuccess { UserPreferences.loadUserData = false }
                 .map {
                     UserPreferences.userInfo = it
-                    println("USER INFO IS" + UserPreferences.userInfo)
-                    println("USER INFO IS" + it.shippingAddressLine1)
-                    println("USER INFO IS" + UserPreferences.userInfo.shippingAddressLine1)
                     UserPreferences.user = it.user ?: return@map
                 }
                 .subscribe({
@@ -185,8 +182,9 @@ class HomeActivityPresenter(val view: HomeActivityView,
     private fun determineShowWhiteListFragment(it: RestrictionsResponse?) {
         val restrictions = it ?: return
         val showMovieListedFragment = UserPreferences.showWhiteListPopUp
-        when {
-            showMovieListedFragment && restrictions.capWhitelistedMovieIds.isNotEmpty() -> {
+        val isUserInCapPlan = restrictions.cappedPlan
+        when{
+            isUserInCapPlan != null && showMovieListedFragment && restrictions.capWhitelistedMovieIds.isNotEmpty() -> {
                 UserPreferences.showWhiteListPopUp = false
                 view.showWhiteListMovie()
             }
@@ -195,8 +193,12 @@ class HomeActivityPresenter(val view: HomeActivityView,
 
     private fun determineOverSoftCap(it: RestrictionsResponse) {
         when {
-            it.cappedPlan?.isOverSoftCap == true && it.cappedPlan?.used == 3 -> {
+            it.cappedPlan?.isOverSoftCap == true && UserPreferences.showOverSoftCap -> {
                 view.showOverSoftCap()
+                UserPreferences.showOverSoftCap = false
+            }
+            it.cappedPlan?.isOverSoftCap == false ->{
+                UserPreferences.showOverSoftCap = true
             }
         }
     }
