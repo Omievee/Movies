@@ -10,16 +10,16 @@
 
     <ImageView
         android:id="@+id/rightButton"
+        style="@style/BackButton"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        style="@style/BackButton" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/theaterName"
         style="@style/TheaterHeaderName"
-        app:layout_constraintStart_toEndOf="@id/backButton"
-        app:layout_constraintEnd_toStartOf="@id/rightButton"
         app:layout_constraintBottom_toTopOf="@id/guide"
+        app:layout_constraintEnd_toStartOf="@id/rightButton"
+        app:layout_constraintStart_toEndOf="@id/backButton"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -30,7 +30,22 @@
     <TextView
         android:id="@+id/theaterCity"
         style="@style/TheaterHeaderAddress"
+        android:layout_width="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:paddingBottom="@dimen/margin_half"
         app:layout_constraintTop_toBottomOf="@id/theaterStreet" />
+
+    <ImageView
+        android:id="@+id/theaterPin"
+        style="@style/TheaterPin"
+        android:paddingTop="1dp"
+        android:paddingBottom="2dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/theaterCity"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toEndOf="@id/theaterCity"
+        app:layout_constraintTop_toTopOf="@id/theaterCity" />
 
 </merge>

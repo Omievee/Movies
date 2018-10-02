@@ -783,9 +783,8 @@
         <item name="android:layout_width">26dp</item>
         <item name="android:layout_height">26dp</item>
         <item name="android:layout_marginStart">@dimen/margin_half</item>
-        <item name="android:tint">@color/red</item>
         <item name="android:foreground">?selectableItemBackgroundBorderless</item>
-        <item name="android:src">@drawable/icon_location_pin</item>
+        <item name="android:src">@drawable/place_red_20</item>
     </style>
 
     <style name="GuestTicketTotal" parent="MPText_Bold">
@@ -1037,7 +1036,9 @@
     </style>
 
     <style name="TheaterHeaderAddress" parent="MPText">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">12sp</item>
