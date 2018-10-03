@@ -15,14 +15,13 @@ import com.mobile.UserPreferences
 import com.mobile.activities.ActivatedCardTutorialActivity
 import com.mobile.activities.LogInActivity
 import com.mobile.analytics.AnalyticsManager
-import com.mobile.fragments.AccountDetailsFragment
 import com.mobile.fragments.MPFragment
 import com.mobile.helpshift.HelpshiftHelper
-import com.mobile.referafriend.ReferAFriendFragment
 import com.mobile.history.HistoryFragment
 import com.mobile.loyalty.LoyaltyProgramFragment
 import com.mobile.network.Api
 import com.mobile.recycler.decorator.SpaceDecorator
+import com.mobile.referafriend.ReferAFriendFragment
 import com.mobile.reservation.ReservationActivity
 import com.mobile.session.SessionManager
 import com.mobile.utils.startIntentIfResolves
@@ -46,12 +45,13 @@ class ProfileFragment : MPFragment(), Primary {
                 Profile.HISTORY -> showFragment(HistoryFragment())
                 Profile.REFER_A_FRIEND -> showFragment(ReferAFriendFragment())
                 Profile.LOYALTY_PROGRAMS -> showFragment(LoyaltyProgramFragment.newInstance())
-                Profile.HOW_TO_USE_MOVIEPASS -> navigateTo(ActivatedCardTutorialActivity.newIntent(activity,false))
+                Profile.HOW_TO_USE_MOVIEPASS -> navigateTo(ActivatedCardTutorialActivity.newIntent(activity, false))
                 Profile.HELP -> onHelpClicked()
-                Profile.LINK-> navigateTo(Intent(Intent.ACTION_VIEW, Uri.parse(pres.link)))
+                Profile.LINK -> navigateTo(Intent(Intent.ACTION_VIEW, Uri.parse(pres.link)))
                 Profile.SIGN_OUT -> onLogout()
                 Profile.CLEAR_FLAGS -> UserPreferences.clearOutEverythingButUser()
-                else-> {}
+                else -> {
+                }
             }
         }
     }

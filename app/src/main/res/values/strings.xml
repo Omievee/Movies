@@ -776,5 +776,8 @@
     <string name="bonus_movies_description">Movies with the “Bonus” label do not count toward your monthly movie limit! \n\nYou can also check into Bonus movies for free after you have reached your monthly plan cap.</string>
     <string name="bonus">Bonus</string>
 
+    <string name="profile_password_change">Password change successful</string>
+    <string name="profile_password_mismatch">Current password does not match</string>
+    <string name="profile_shipping_update">Address update successful</string>
 
 </resources>

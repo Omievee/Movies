@@ -18,7 +18,6 @@ import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
 import com.mobile.analytics.AnalyticsManager
-import com.mobile.fragments.TheatersFragment
 import com.mobile.fragments.TicketVerificationV2
 import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.model.ReservationHistory
@@ -46,13 +45,10 @@ class HomeActivity : MPActivty(), HomeActivityView {
         )).show(supportFragmentManager, "")
     }
 
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
+
 
     @Inject
     lateinit var presenter: HomeActivityPresenter
-
-    var theatersFragment: TheatersFragment? = null
 
     companion object {
         const val POSITION: String = "position"

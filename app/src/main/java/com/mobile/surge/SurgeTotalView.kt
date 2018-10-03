@@ -13,9 +13,6 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import com.mobile.UserPreferences
-import com.mobile.model.Availability
-import com.mobile.model.Surge
-import com.mobile.model.UserInfo
 import com.mobile.reservation.Checkin
 import com.mobile.responses.UserInfoResponse
 import com.mobile.utils.text.toCurrency

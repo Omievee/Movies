@@ -78,13 +78,13 @@ public interface Api {
      * Change Password
      */
     @POST("rest/v1/passwordChange")
-    Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
+    Single<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
 
     /**
      * Change Email
      */
     @POST("rest/v1/emailChange")
-    Call<ChangeEmailResponse> changeEmail(@Body ChangeEmailRequest request);
+    Single<ChangeEmailResponse> changeEmail(@Body ChangeEmailRequest request);
 
     /* Activate MP Card */
     @POST("/rest/v1/cards/activate")
@@ -93,6 +93,7 @@ public interface Api {
 
     @GET("/rest/v3/screenings/{segment}")
     Single<ScreeningsResponseV2> getScreeningsForMovieRx(@Path("segment") int segment, @Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
+
     /* Registration */
     @POST("mobile/check/email")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
@@ -150,6 +151,11 @@ public interface Api {
 
     /* user Data */
     @GET("/rest/v1/users/{userId}")
+    Single<UserInfoResponse> getUserRX(@Path("userId") int userId);
+
+
+    /* user Data */
+    @GET("/rest/v1/users/{userId}")
     Single<UserInfoResponse> getUserDataV2(@Path("userId") int userId);
 
     /* user Data */
@@ -161,11 +167,11 @@ public interface Api {
 
     /* User Address */
     @PUT("/rest/v1/users/{userId}")
-    Call<Object> updateAddress(@Path("userId") int userId, @Body AddressChangeRequest address);
+    Single<Object> updateAddress(@Path("userId") int userId, @Body AddressChangeRequest address);
 
     /* Billing Update */
     @PUT("/rest/v1/users/{userId}")
-    Call<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
+    Single<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
 
     @PUT("/rest/v1/users/{userId}")
     Single<ResponseBody> updateBilling(@Path("userId") int userId, @Body BillingInfo info);

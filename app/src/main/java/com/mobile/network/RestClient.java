@@ -16,11 +16,9 @@ import com.mobile.model.ParcelableDate;
 import com.mobile.rx.RxJava2CallAdapterFactory;
 import com.moviepass.BuildConfig;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Cache;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -117,7 +115,7 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + UserPreferences.INSTANCE.getUserId())
-                        .addHeader("device_androidID", UserPreferences.INSTANCE.getDeviceAndroidID())
+//                        .addHeader("device_androidID", UserPreferences.INSTANCE.getOneDeviceId())
                         .addHeader("device_uuid", "902183")
                         .addHeader("auth_token", UserPreferences.INSTANCE.getAuthToken())
                         .addHeader("Content-type", "application/json")
@@ -284,7 +282,7 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + UserPreferences.INSTANCE.getUserId())
-                        .addHeader("device_androidID", UserPreferences.INSTANCE.getDeviceAndroidID())
+//                        .addHeader("device_androidID", DeviceID.INSTANCE.getID(this))
                         .addHeader("auth_token", UserPreferences.INSTANCE.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
@@ -342,7 +340,7 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", String.valueOf(UserPreferences.INSTANCE.getUserId()))
-                        .addHeader("device_androidID", UserPreferences.INSTANCE.getDeviceAndroidID())
+//                        .addHeader("device_androidID", UserPreferences.INSTANCE.getDeviceAndroidID())
                         .addHeader("auth_token", UserPreferences.INSTANCE.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("device_uuid", "902183")

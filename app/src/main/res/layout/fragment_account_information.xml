@@ -1,0 +1,148 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ReservationBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    tools:context="com.mobile.profile.AccountInformation">
+
+    <TextView
+        android:id="@+id/accountHeader"
+        style="@style/TitleView"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:text="Account Information"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/usernameTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:focusable="false"
+        android:textColorHint="@color/white_80_opacity"
+        android:theme="@style/EditTextStyle"
+        app:hintTextAppearance="@style/text_in_layout_hint_Style"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/accountHeader">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/userName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:animateLayoutChanges="true"
+            android:backgroundTint="@color/white_40_opacity"
+            android:enabled="false"
+            android:focusable="false"
+            android:hint="Name"
+            android:inputType="text|textCapSentences"
+            android:maxLines="1"
+            android:text=" "
+            android:textColor="@color/white"
+            android:textColorLink="@android:color/transparent"
+            android:textCursorDrawable="@color/white"
+            android:textSize="@dimen/text_size_14"
+            app:backgroundTint="@color/white_40_opacity" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/emailTextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:textColorHint="@color/white_80_opacity"
+        android:theme="@style/EditTextStyle"
+        app:hintTextAppearance="@style/text_in_layout_hint_Style"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameTextInputLayout">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/userEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:animateLayoutChanges="true"
+            android:backgroundTint="@color/white_40_opacity"
+            android:enabled="false"
+            android:focusable="false"
+            android:hint="Email"
+            android:inputType="text|textCapSentences"
+            android:maxLines="1"
+            android:text=" "
+            android:textColor="@color/white"
+            android:textColorLink="@android:color/transparent"
+            android:textCursorDrawable="@color/white"
+            android:textSize="@dimen/text_size_14"
+            app:backgroundTint="@color/white_40_opacity" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/changeEmailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="@dimen/margin_half"
+        android:text="Change"
+        android:textColor="@color/new_red"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintBottom_toBottomOf="@+id/emailTextInputLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/emailTextInputLayout" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/moviePassCardTextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:focusable="false"
+        android:textColorHint="@color/white_80_opacity"
+        android:theme="@style/EditTextStyle"
+        app:hintTextAppearance="@style/text_in_layout_hint_Style"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailTextInputLayout">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/moviepassCardNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:animateLayoutChanges="true"
+            android:backgroundTint="@color/white_40_opacity"
+            android:enabled="false"
+            android:focusable="false"
+            android:hint="MoviePass Card"
+            android:inputType="text|textCapSentences"
+            android:maxLines="1"
+            android:text=" "
+            android:textColor="@color/white"
+            android:textColorLink="@android:color/transparent"
+            android:textCursorDrawable="@color/white"
+            android:textSize="@dimen/text_size_14"
+            app:backgroundTint="@color/white_40_opacity" />
+
+    </android.support.design.widget.TextInputLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>

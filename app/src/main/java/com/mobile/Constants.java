@@ -47,7 +47,9 @@ public class Constants {
     public static final String IS_USER_FIRST_LOGIN = "bobloblaw";
     public static final String IS_ANDROID_ID_VERIFIED = "Android";
     public static final String CARD_ACTIVATED_SCREEN = "activated";
-    /* TODO REMOVE GENERIC VALUES */
+
+    public static final String USER = "user";
+    public static final String USERINFO = "userinfo";
     public static final String USER_ID = "0";
     public static final String DEVICE_ANDROID_ID = "androidID";
     public static final String USER_AUTH_TOKEN = "AUTH";
@@ -114,6 +116,9 @@ public class Constants {
     public static final String SHOW_HISTORY_RATING = "historyRating";
 
     public static final String IS_FROM_RATE_SCREEN = "rate_screen";
+
+    public static final String LOADED = "loaded";
+    public static final String DATA_CHANGED = "changeData";
 
     //Braze Custom Keys
     public static final String CUSTOM_DATA = "customdata";

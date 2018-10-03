@@ -94,8 +94,6 @@ public class Application extends android.app.Application implements HasActivityI
         Core.init(All.getInstance());
 
 
-
-
         registerActivityLifecycleCallbacks(new ActivigtyCallbacks() {
             @Override
             public void onActivityResumed(@Nullable Activity activity) {

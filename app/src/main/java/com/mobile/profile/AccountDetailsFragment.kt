@@ -1,4 +1,4 @@
-package com.mobile.fragments
+package com.mobile.profile
 
 import android.content.Context
 import android.os.Bundle
@@ -9,9 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.mobile.UserPreferences
 import com.mobile.adapters.BasicDiffCallback
-import com.mobile.model.UserInfo
+import com.mobile.billing.ChangeBillingAndPlanInfo
+import com.mobile.fragments.MPFragment
 import com.mobile.network.Api
-import com.mobile.profile.*
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.responses.UserInfoResponse
 import com.mobile.utils.navBarHeight
@@ -37,10 +37,10 @@ class AccountDetailsFragment : MPFragment() {
     val clickListener = object : ProfileClickListener {
         override fun onClick(pres: ProfilePresentation) {
             when (pres.type) {
-                Profile.ACCOUNT_INFORMATION -> showFragment(ProfileAccountInformation())
-                Profile.SHIPPING_ADDRESS -> showFragment(ProfileAccountShippingInformation())
-                Profile.CHANGE_PASSWORD -> showFragment(ProfileAccountChangePassword())
-                Profile.PLAN_AND_BILLING -> showFragment(ProfileAccountPlanAndBilling())
+                Profile.ACCOUNT_INFORMATION -> showFragment(AccountInformation())
+                Profile.SHIPPING_ADDRESS -> showFragment(ChangeShippingAddress())
+                Profile.CHANGE_PASSWORD -> showFragment(ChangePassword())
+                Profile.PLAN_AND_BILLING -> showFragment(ChangeBillingAndPlanInfo())
                 else -> {
                 }
             }
@@ -71,6 +71,8 @@ class AccountDetailsFragment : MPFragment() {
         }
         planSub?.dispose()
         planSub = api.getUserDataRx(UserPreferences.userId).subscribe { t1, t2 ->
+            UserPreferences.userInfo = t1
+            UserPreferences.user = t1.user ?: return@subscribe
             activity ?: return@subscribe
             planResponse = t1
             adapter.data = data
@@ -130,7 +132,6 @@ class AccountDetailsFragment : MPFragment() {
         recyclerView.addItemDecoration(SpaceDecorator(lastBottom = recyclerView.navBarHeight * 2))
         recyclerView.itemAnimator = null
     }
-
 }
 
 

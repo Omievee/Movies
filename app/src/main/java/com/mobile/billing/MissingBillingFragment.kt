@@ -6,24 +6,27 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
-import android.view.*
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import com.mobile.Constants
 import com.mobile.fragments.MPFragment
-import com.mobile.widgets.MPAlertDialog
-import com.mobile.textwatcher.TextWatcherInterface
-import com.mobile.textwatcher.MPTextWatcher
 import com.mobile.keyboard.KeyboardManager
+import com.mobile.textwatcher.MPTextWatcher
+import com.mobile.textwatcher.TextWatcherInterface
 import com.mobile.utils.startCardIOActivity
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import io.card.payment.CardIOActivity
 import io.card.payment.CreditCard
 import kotlinx.android.synthetic.main.fragment_missing_billing.*
 import javax.inject.Inject
-import android.text.Spannable
-import android.text.style.ForegroundColorSpan
-import android.text.SpannableStringBuilder
 
 
 

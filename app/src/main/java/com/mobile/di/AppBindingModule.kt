@@ -4,6 +4,7 @@ import com.mobile.activities.ActivateMoviePassCard
 import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
 import com.mobile.alertscreen.AlertScreenModule
+import com.mobile.profile.ChangeShippingAddress
 import com.mobile.billing.MissingBillingFragment
 import com.mobile.billing.MissingBillingFragmentModule
 import com.mobile.fragments.*
@@ -13,7 +14,10 @@ import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
 import com.mobile.loyalty.EditLoyaltyProgramFragment
 import com.mobile.loyalty.EditLoyaltyProgramModule
-import com.mobile.profile.ProfileCancellationModule
+import com.mobile.movie.MoviesFragment
+import com.mobile.profile.*
+import com.mobile.referafriend.ReferAFriendFragment
+import com.mobile.referafriend.ReferAFriendFragmentModule
 import com.mobile.reservation.CheckInFragment
 import com.mobile.reservation.ReservationActivity
 import com.mobile.reservation.ReservationCheckinModule
@@ -26,12 +30,6 @@ import com.mobile.theater.TheaterMapFragment
 import com.mobile.theater.TheatersFragmentModule
 import com.mobile.ticketverification.OcrCaptureFragment
 import com.mobile.ticketverification.TicketVerificationBottomSheetDialogFragment
-import com.mobile.fragments.ScreeningsFragmentModule
-import com.mobile.referafriend.ReferAFriendFragmentModule
-import com.mobile.referafriend.ReferAFriendFragment
-import com.mobile.movie.MoviesFragment
-import com.mobile.profile.ProfileFragment
-import com.mobile.profile.ProfileCancellationFragment
 import com.mobile.tv.ReservationActivityModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -61,7 +59,7 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun searchFragment():SearchFragment
+    fun searchFragment(): SearchFragment
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [TheatersFragmentModule::class])
@@ -93,7 +91,7 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun enableLocation():EnableLocationFragment
+    fun enableLocation(): EnableLocationFragment
 
     @TVScope
     @ContributesAndroidInjector()
@@ -123,6 +121,11 @@ interface AppBindingModule {
     @ContributesAndroidInjector
     fun confirmSurgeFragment(): ConfirmSurgeFragment
 
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    fun changeEmail(): ChangeEmail
+
     @FragmentScope
     @ContributesAndroidInjector
     fun profileFragmentt(): ProfileFragment
@@ -145,10 +148,24 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun accountDetailsFragment():AccountDetailsFragment
+    fun accountDetailsFragment(): AccountDetailsFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    fun accountInformation(): AccountInformation
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    fun changePassword(): ChangePassword
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    fun changeShippingAddress(): ChangeShippingAddress
+
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [AlertScreenModule::class])
     fun alertScreenFragment(): AlertScreenFragment
+
 
 }

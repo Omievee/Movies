@@ -20,7 +20,7 @@ class HelpshiftHelper {
 
         fun getHelpshiftUser(): HelpshiftUser {
             val helpshiftUser: HelpshiftUser.Builder = HelpshiftUser.Builder(UserPreferences.userId.toString(),
-                    UserPreferences.userEmail).setName(UserPreferences.firstName)
+                    UserPreferences.user.email).setName(UserPreferences.user.firstName)
             return helpshiftUser.build()
         }
 
@@ -33,11 +33,11 @@ class HelpshiftHelper {
             val checkinAttempt = UserPreferences.lastCheckInAttempt
             val checkedIn: Boolean
 
-            if (token != null && token.reservation.reservation!=null) {
+            if (token != null && token.reservation.reservation != null) {
                 val rs = token.reservation.reservation
                 checkedIn = rs.expiration > System.currentTimeMillis()
                 val starttime = token.getTimeAsDate()
-                val diff = starttime?.getTime()?:0 - System.currentTimeMillis()
+                val diff = starttime?.getTime() ?: 0-System.currentTimeMillis()
                 val minutes = TimeUnit.MILLISECONDS.toMinutes(diff).toInt()
                 if (checkedIn && minutes >= -30) {
                     customIssueFileds["minutes_until_showtime"] = arrayOf("n", minutes.toString())
@@ -69,7 +69,7 @@ class HelpshiftHelper {
             customIssueFileds["checked_in"] = arrayOf("b", checkedIn.toString())
             customIssueFileds["total_movies_seen"] = arrayOf("n", UserPreferences.totalMovieSeen.toString())
             customIssueFileds["total_movies_seen_last_thirty_days"] = arrayOf("n", UserPreferences.totalMovieSeenLastMonth.toString())
-            userData["last_movie_seen"] = UserPreferences.lastMovieSeen?:""
+            userData["last_movie_seen"] = UserPreferences.lastMovieSeen ?: ""
             val tags = arrayOf<String>(BuildConfig.VERSION_NAME)
 
             userData["version"] = BuildConfig.VERSION_NAME
@@ -85,7 +85,7 @@ class HelpshiftHelper {
             Support.showFAQs(activity, apiConfig)
         }
 
-        private fun sign(helpshiftUser: HelpshiftUser, secretKey:String): String? {
+        private fun sign(helpshiftUser: HelpshiftUser, secretKey: String): String? {
             return try {
                 val hmacsha256 = Mac.getInstance("HmacSHA256")
                 hmacsha256.init(SecretKeySpec(secretKey.toByteArray(), "HmacSHA256"));

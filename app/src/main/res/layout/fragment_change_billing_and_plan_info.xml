@@ -1,12 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ReservationBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/ReservationBackground"
     android:layout_marginBottom="@dimen/margin_standard"
-    android:clickable="true"
-    tools:context="com.mobile.fragments.ProfileAccountPlanAndBilling">
+    android:clickable="true">
 
     <RelativeLayout
         android:id="@+id/ACCOUNTHEADER"
@@ -58,7 +57,7 @@
 
 
                 <TextView
-                    android:id="@+id/Plan"
+                    android:id="@+id/userPlan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -83,7 +82,7 @@
                     android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/PLan_cancel"
+                    android:id="@+id/cancelPlan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -124,7 +123,7 @@
 
 
                     <TextView
-                        android:id="@+id/userBilling"
+                        android:id="@+id/USER_BILLING"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
@@ -135,7 +134,7 @@
 
 
                     <TextView
-                        android:id="@+id/Billing_Change"
+                        android:id="@+id/billingChange"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -289,7 +288,7 @@
 
 
                 <LinearLayout
-                    android:id="@+id/Billing2"
+                    android:id="@+id/billing2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_standard"
@@ -308,7 +307,7 @@
                         app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
                         <EditText
-                            android:id="@+id/Address1"
+                            android:id="@+id/address1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
@@ -337,7 +336,7 @@
                         app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
                         <EditText
-                            android:id="@+id/Address2"
+                            android:id="@+id/address2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
@@ -460,12 +459,12 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/bottom_navigation_height"
                     android:layout_marginTop="@dimen/double_margin_standard"
+                    android:layout_marginBottom="@dimen/bottom_navigation_height"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/Date"
+                        android:id="@+id/date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha=".6"
@@ -474,7 +473,7 @@
                         android:textSize="@dimen/text_size_14" />
 
                     <TextView
-                        android:id="@+id/BillingDate"
+                        android:id="@+id/billingDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_standard"
@@ -487,9 +486,9 @@
                 </LinearLayout>
 
                 <com.mobile.widgets.SoftNavigationPlaceholder
-                    android:layout_marginTop="@dimen/bottom_navigation_height"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bottom_navigation_height" />
 
             </LinearLayout>
 
