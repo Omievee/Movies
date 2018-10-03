@@ -189,6 +189,11 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
+        <activity
+            android:name="com.mobile.webview.WebViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/HomeActivity" />
         <activity
             android:name="com.mobile.onboard.OnboardingActivityV2"
             android:label="@string/title_activity_onboarding"
@@ -258,7 +263,6 @@
         </receiver>
 
 
-
         <!-- Taplytics -->
         <receiver
             android:name="com.mobile.TaplyticsReceiver"
@@ -284,7 +288,6 @@
         <meta-data
             android:name="com.taplytics.sdk.notification_icon"
             android:resource="@mipmap/ic_launcher_round" />
-
 
 
     </application>

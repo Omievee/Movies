@@ -6,8 +6,10 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
-import com.mobile.UserPreferences
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import com.mobile.adapters.BaseViewHolder
 import com.mobile.adapters.BasicDiffCallback
 import com.mobile.adapters.ItemSame
@@ -17,6 +19,7 @@ import com.mobile.listeners.BonusMovieClickListener
 import com.mobile.model.Movie
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.screening.MoviePosterClickListener
+import com.mobile.utils.startCalendarIntent
 import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_category.view.*
 
@@ -34,16 +37,21 @@ class CategoryView(context: Context?, attrs: AttributeSet? = null) : ConstraintL
 
     init {
         inflate(context, R.layout.layout_category, this)
+        layoutParams = MarginLayoutParams(MATCH_PARENT,WRAP_CONTENT)
         recyclerView.itemAnimator = null
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(SpaceDecorator(
                 start = resources.getDimension(R.dimen.margin_half).toInt()
         ))
+        calendar.setOnClickListener {
+            context.startCalendarIntent()
+        }
     }
 
     fun bind(
             cat: Pair<String, List<Movie>>,
+            position:Int=-1,
             moviePosterClickListener: MoviePosterClickListener? = null,
             bonusMovieClickListener: BonusMovieClickListener? = null
     ) {
@@ -55,7 +63,10 @@ class CategoryView(context: Context?, attrs: AttributeSet? = null) : ConstraintL
         adapter.moviePosterClickListener = moviePosterClickListener
         adapter.bonusClickListener = bonusMovieClickListener
         adapter.data = CategoryData(newD, DiffUtil.calculateDiff(BasicDiffCallback(old, newD)))
-
+        calendar.visibility = when(position) {
+            0-> View.VISIBLE
+            else->View.GONE
+        }
     }
 }
 

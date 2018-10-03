@@ -41,7 +41,7 @@ class MoviesAdapter(
         val pres = data!!.list[position]
         when (view) {
             is FeaturedView -> view.bind(pres, movieCLickListener)
-            is CategoryView -> view.bind(pres.data, movieCLickListener, bonusClickListener)
+            is CategoryView -> view.bind(position = data!!.positionForCateogry(position), cat = pres.data, moviePosterClickListener = movieCLickListener, bonusMovieClickListener = bonusClickListener)
         }
     }
 
