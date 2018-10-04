@@ -10,16 +10,20 @@ import com.mobile.listeners.BonusMovieClickListener
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.model.AmcDmaMap
 import com.mobile.model.Screening
-import com.mobile.model.Theater
 import com.mobile.model.TicketType
 import com.mobile.responses.ScreeningsResponseV2
+import com.mobile.screening.MoviePosterClickListener
 import com.mobile.screening.NoMoreScreenings
 import com.mobile.screening.ScreeningPresentation
+import com.mobile.theater.TheaterClickListener
 
 class ScreeningsAdapter(
         var listener: ShowtimeClickListener? = null,
         var missingCheckinListener: MissingCheckinListener? = null,
-        var bonusMovieClickListener: BonusMovieClickListener? = null) : RecyclerView.Adapter<BaseViewHolder>() {
+        var bonusMovieClickListener: BonusMovieClickListener? = null,
+        var theaterClickListener: TheaterClickListener,
+        var moviePosterClickListener: MoviePosterClickListener
+) : RecyclerView.Adapter<BaseViewHolder>() {
 
     var data: ScreeningData? = null
         set(value) {
@@ -49,10 +53,10 @@ class ScreeningsAdapter(
         val data = data?.data?.get(position)
         data?.let { pres ->
             when (view) {
-                is MovieScreeningView -> view.bind(pres, listener)
+                is MovieScreeningView -> view.bind(pres, listener, theaterClickListener)
                 is ScreeningView -> {
-                    val showWhiteListBanner = UserPreferences.restrictions.capWhitelistedMovieIds.contains(pres.screening?.moviepassId) && UserPreferences.restrictions.cappedPlan != null
-                    view.bind(pres, listener,showWhiteListBanner,bonusMovieClickListener)
+                    val showWhiteListBanner = UserPreferences.restrictions.capWhitelistedMovieIds.contains(pres.screening?.moviepassId)
+                    view.bind(pres, listener, showWhiteListBanner, bonusMovieClickListener, moviePosterClickListener)
                 }
                 is MissingCheckinView -> view.bind(pres, missingCheckinListener)
             }
@@ -70,9 +74,9 @@ class ScreeningsAdapter(
         fun createData(data: ScreeningData?,
                        response: android.util.Pair<List<ReservationHistory>,
                                ScreeningsResponseV2>,
-                       location: Location?, userSegments:List<Int>,
+                       location: Location?, userSegments: List<Int>,
                        selected: android.util.Pair<Screening, String?>?,
-                       dataMap:AmcDmaMap
+                       dataMap: AmcDmaMap
         ): ScreeningData {
             val screeningsResponse = response.second;
             val movies = response.first.associateBy { it.id }
@@ -82,7 +86,8 @@ class ScreeningsAdapter(
                 it.tribuneTheaterId
             } ?: emptyMap()
             val theaterLoc = location?.let { Location("") }
-            val hasAnyTheaterMoveToBottom = dataMap.hasOneMoveToBottom(screeningsResponse.theaters?: emptyList())?:false
+            val hasAnyTheaterMoveToBottom = dataMap.hasOneMoveToBottom(screeningsResponse.theaters
+                    ?: emptyList()) ?: false
             val presentations = screenings?.map {
 
                 val theater = theaters.get(it.tribuneTheaterId)
@@ -107,40 +112,42 @@ class ScreeningsAdapter(
                 )
             }?.filter { it ->
                 (it.type == TYPE_MISSING) || it.hasShowtimes
-            }?.filter { when(it.type==TYPE_MISSING) {
-                true-> !    screeningsResponse.isSurging(userSegments)
-                else-> true
-            } }
-            ?.sortedWith(compareBy(
-                    {
-                        when (it.screening?.getTicketType()) {
-                            TicketType.SELECT_SEATING, TicketType.E_TICKET -> false
-                            else -> true
-                        }
-                    }, {
-
-                when (it.type) {
-                    TYPE_MISSING -> true
-                    else -> false
+            }?.filter {
+                when (it.type == TYPE_MISSING) {
+                    true -> !screeningsResponse.isSurging(userSegments)
+                    else -> true
                 }
+            }
+                    ?.sortedWith(compareBy(
+                            {
+                                when (it.screening?.getTicketType()) {
+                                    TicketType.SELECT_SEATING, TicketType.E_TICKET -> false
+                                    else -> true
+                                }
+                            }, {
 
-
-            }, {
-                dataMap.shouldMoveToBottom(it.theater)
-            },
-            {
-                !(it.screening?.approved ?: false)
-            },
-                    {
-                        it.distance ?: false
-                    },
-                    {
-                        when (it.movie) {
-                            null -> false
-                            else -> true
+                        when (it.type) {
+                            TYPE_MISSING -> true
+                            else -> false
                         }
-                    }
-            ))?.toMutableList()
+
+
+                    }, {
+                        dataMap.shouldMoveToBottom(it.theater)
+                    },
+                            {
+                                !(it.screening?.approved ?: false)
+                            },
+                            {
+                                it.distance ?: false
+                            },
+                            {
+                                when (it.movie) {
+                                    null -> false
+                                    else -> true
+                                }
+                            }
+                    ))?.toMutableList()
             val noMoreScreenings = presentations?.none { it.type == TYPE_SCREENING || it.type == TYPE_THEATER }
                     ?: false
             if (noMoreScreenings) {

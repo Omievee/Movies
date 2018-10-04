@@ -12,10 +12,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.mobile.listeners.ShowtimeClickListener
+import com.mobile.model.Theater
 import com.mobile.model.TicketType
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.screening.ScreeningPresentation
 import com.mobile.screening.ShowtimeAdapter
+import com.mobile.theater.TheaterClickListener
 import com.mobile.utils.text.toFixed
 import com.mobile.utils.text.toMiles
 import com.moviepass.R
@@ -26,6 +28,8 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
     val adapter: ShowtimeAdapter = ShowtimeAdapter()
     var screeningPresentation: ScreeningPresentation? = null
     var showtimeListener: ShowtimeClickListener? = null
+    var theaterClick: TheaterClickListener? = null
+    var theater: Theater? = null
 
     init {
         View.inflate(context, R.layout.list_item_theaters_and_showtimes, this)
@@ -41,7 +45,7 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
         recyclerView.addItemDecoration(SpaceDecorator(
                 bottom = resources.getDimension(R.dimen.card_button_margin_start).toInt(),
                 firstStart = resources.getDimension(R.dimen.card_button_margin_start).toInt()
-                ))
+        ))
         val margin = resources.getDimension(R.dimen.margin_half).toInt()
         layoutParams = MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
             marginStart = margin
@@ -49,7 +53,11 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
             bottomMargin = margin * 2
         }
 
-        pinIcon.setOnClickListener {
+        theatersItem.setOnClickListener {
+            theaterClick?.onTheaterClicked(theater ?: return@setOnClickListener)
+        }
+
+        distanceLayout.setOnClickListener {
             val screeningPresentation = this.screeningPresentation ?: return@setOnClickListener
             val uri = Uri.parse("geo:" + screeningPresentation.theater?.lat + "," + screeningPresentation.theater?.lon + "?q=" + Uri.encode(screeningPresentation.theater?.name))
 
@@ -62,22 +70,24 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
             } catch (x: Exception) {
                 x.message
             }
-
         }
 
     }
 
-    fun bind(p: ScreeningPresentation, showtimeClickListener: ShowtimeClickListener?) {
+    fun bind(p: ScreeningPresentation, showtimeClickListener: ShowtimeClickListener?, t: TheaterClickListener) {
+
+        this.theater = p.theater
+        this.theaterClick = t
         this.screeningPresentation = p
         this.showtimeListener = showtimeClickListener
-        THEATER_NAME_LISTITEM.text = p.theater?.name
-        THEATER_ADDRESS2_LISTITEM.text = p.theater?.address
-        THEATER_DISTANCE_LISTITEM.text = "${p.distance?.toMiles()?.toFixed(1)?.toString()} mi"
-        THEATER_DISTANCE_LISTITEM.visibility = when(p.hideDistance) {
-            true->View.INVISIBLE
-            else->View.VISIBLE
+        theaterName.text = p.theater?.name
+        theaterAddress2.text = p.theater?.address
+        theaterDistance.text = "${p.distance?.toMiles()?.toFixed(1)?.toString()} mi"
+        theaterDistance.visibility = when (p.hideDistance) {
+            true -> View.INVISIBLE
+            else -> View.VISIBLE
         }
-        THEATER_ADDRESS_LISTITEM.text = p.theater?.cityStateZip
+        theaterAddress.text = p.theater?.cityStateZip
         iconSeat.visibility = when (screeningPresentation?.screening?.getTicketType()) {
             TicketType.SELECT_SEATING -> View.VISIBLE
             else -> View.GONE

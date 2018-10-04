@@ -51,7 +51,9 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
     private List<Movie> suggestions;
     private ImageView backArrow, removeIcon;
 
-    @Nullable  Disposable movieSub;
+    @Nullable
+    Disposable movieSub;
+
     public SearchFragment() {
     }
 
@@ -134,7 +136,7 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
     }
 
     private void search(String movieSearch) {
-        if(ALLMOVIES==null) {
+        if (ALLMOVIES == null) {
             return;
         }
         boolean isMovieDuplicated = false;
@@ -159,7 +161,7 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
     }
 
     public void getAllMovies() {
-        if(movieSub!=null) {
+        if (movieSub != null) {
             movieSub.dispose();
         }
         movieSub = manager

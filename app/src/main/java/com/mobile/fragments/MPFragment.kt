@@ -157,4 +157,5 @@ open class MPFragment : Fragment(), BackFragment {
         view.animation = animation
     }
 
+
 }

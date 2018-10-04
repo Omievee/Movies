@@ -27,6 +27,7 @@ import com.mobile.model.AmcDmaMap
 import com.mobile.model.Movie
 import com.mobile.model.Screening
 import com.mobile.model.Theater
+import com.mobile.movie.MoviesFragment
 import com.mobile.peakpass.PeakPassActivity
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.reservation.Checkin
@@ -36,6 +37,7 @@ import com.mobile.screenings.PinnedBottomSheetBehavior
 import com.mobile.seats.MPBottomSheetFragment
 import com.mobile.seats.SheetData
 import com.mobile.surge.PeakPricingActivity
+import com.mobile.theater.TheaterClickListener
 import com.mobile.utils.highestElevation
 import com.mobile.utils.isComingSoon
 import com.mobile.utils.showTheaterBottomSheetIfNecessary
@@ -45,7 +47,38 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_screenings.*
 import javax.inject.Inject
 
-class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, MissingCheckinListener, ScreeningsFragmentView, BonusMovieClickListener {
+
+class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, MissingCheckinListener, ScreeningsFragmentView, BonusMovieClickListener, TheaterClickListener, MoviePosterClickListener {
+
+    @Inject
+    lateinit var presenter: ScreeningsFragmentPresenter
+
+    @Inject
+    lateinit var dataMap: AmcDmaMap
+
+    var root: View? = null
+    override fun displayMovieFromScreening(movie: Movie?) {
+        when (parentFragment) {
+            is TheatersFragment -> showFragment(ScreeningsFragment.newInstance(ScreeningsData(movie = movie)))
+        }
+
+
+    }
+
+
+    override fun onMoviePosterClick(movie: Movie?, screening: Screening?) {
+        if (screening != null) {
+            presenter.findMovieFromScreening(screening)
+        }
+    }
+
+    override fun onTheaterClicked(theater: Theater) {
+        when (parentFragment) {
+            is MoviesFragment -> showFragment(ScreeningsFragment.newInstance(ScreeningsData(theater = theater)))
+        }
+    }
+
+
     override fun onBonusBannerClickListener() {
         MPBottomSheetFragment.newInstance(SheetData(
                 title = resources.getString(R.string.bonus_movies_title),
@@ -53,18 +86,12 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
         )).show(childFragmentManager, "")
     }
 
-    @Inject
-    lateinit var presenter: ScreeningsFragmentPresenter
 
-    @Inject
-    lateinit var dataMap:AmcDmaMap
-
-
-    val adapter: ScreeningsAdapter = ScreeningsAdapter(this, this, this)
+    val adapter: ScreeningsAdapter = ScreeningsAdapter(this, this, this, this, this)
 
     val synopsislistener = object : MoviePosterClickListener {
-        override fun onMoviePosterClick(movie: Movie) {
-            showSynopsis(movie)
+        override fun onMoviePosterClick(movie: Movie?, screning: Screening?) {
+            movie?.let { showSynopsis(it) }
         }
     }
 
@@ -127,6 +154,7 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     }
 
     override fun onClick(screening: Screening, showTime: String) {
+
         presenter.onShowtimeClick(null, screening, showTime)
     }
 
@@ -146,8 +174,8 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     override fun setMovieHeader(movie: Movie, synopsisListener: Boolean, showWhiteListBanner: Boolean) {
         movieHeader.visibility = View.VISIBLE
         when (synopsisListener) {
-            true -> movieHeader.bind(movie, this.synopsislistener, showWhiteListBanner,this)
-            false -> movieHeader.bind(movie, null, showWhiteListBanner,this)
+            true -> movieHeader.bind(movie, this.synopsislistener, showWhiteListBanner, this)
+            false -> movieHeader.bind(movie, null, showWhiteListBanner, this)
         }
     }
 
@@ -169,11 +197,11 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
         presenter.onViewCreated()
     }
 
-    override fun setRecyclerSpacing(topSpacing:Boolean) {
+    override fun setRecyclerSpacing(topSpacing: Boolean) {
         val dimens = resources.getDimension(R.dimen.bottom_navigation_height)
-        val top = when(topSpacing) {
-            true-> resources.getDimension(R.dimen.margin_half)
-            false-> 0f
+        val top = when (topSpacing) {
+            true -> resources.getDimension(R.dimen.margin_half)
+            false -> 0f
         }
         recyclerView.addItemDecoration(
                 SpaceDecorator(
@@ -188,7 +216,7 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     }
 
     override fun showNoMoreScreenings() {
-        activity?:return
+        activity ?: return
         errorView.show(ApiError(
                 error = Error(
                         message = getString(R.string.screenings_no_more_screenings)
@@ -197,23 +225,24 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     }
 
     override fun showError(apiError: ApiError) {
-        activity?:return
+        activity ?: return
         errorView.show(apiError)
     }
 
     override fun showError() {
-        activity?:return
+        activity ?: return
         errorView.show()
     }
 
     override fun onBack(): Boolean {
         val bottom = BottomSheetBehavior.from(synopsisBottomSheetView) as? PinnedBottomSheetBehavior
-        return when(bottom?.locked) {
+        return when (bottom?.locked) {
+
             null -> super.onBack()
             true -> super.onBack()
             false -> {
-                when(bottom.state!=BottomSheetBehavior.STATE_HIDDEN) {
-                    true-> {
+                when (bottom.state != BottomSheetBehavior.STATE_HIDDEN) {
+                    true -> {
                         hideSynopsis()
                         true
                     }
@@ -251,10 +280,12 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     override fun onDestroyView() {
         super.onDestroyView()
         presenter.onDestroy()
+        root = null
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_screenings, container, false)
+        root = inflater.inflate(R.layout.fragment_screenings, container, false)
+        return root
     }
 
     override fun surgeInterstitialFlow(screening: ScreeningsResponseV2, lastCode: Int) {

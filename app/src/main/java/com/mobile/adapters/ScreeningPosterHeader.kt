@@ -17,6 +17,7 @@ class ScreeningPosterHeader(context: Context?, attrs: AttributeSet? = null) : Co
 
     var synopsisListener: MoviePosterClickListener? = null
     var bonusMoviePosterClickListener: BonusMovieClickListener? = null
+    var movie: Movie? = null
 
     init {
         inflate(context, R.layout.layout_screening_poster_header, this)

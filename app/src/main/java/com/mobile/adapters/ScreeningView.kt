@@ -17,14 +17,13 @@ import com.facebook.imagepipeline.listener.BaseRequestListener
 import com.facebook.imagepipeline.listener.RequestListener
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
-import com.mobile.home.HomeActivity
 import com.mobile.listeners.BonusMovieClickListener
 import com.mobile.listeners.ShowtimeClickListener
+import com.mobile.model.Screening
 import com.mobile.recycler.decorator.SpaceDecorator
+import com.mobile.screening.MoviePosterClickListener
 import com.mobile.screening.ScreeningPresentation
 import com.mobile.screening.ShowtimeAdapter
-import com.mobile.seats.MPBottomSheetFragment
-import com.mobile.seats.SheetData
 import com.moviepass.R
 import kotlinx.android.synthetic.main.horizontal_poster.view.*
 import kotlinx.android.synthetic.main.list_item_cinemaposter.view.*
@@ -90,11 +89,12 @@ fun String?.toBold(context: Context): SpannableStringBuilder {
 }
 
 class ScreeningView(context: Context) : FrameLayout(context) {
-
     val adapter: ShowtimeAdapter = ShowtimeAdapter()
     var screeningPresentation: ScreeningPresentation? = null
     var showtimeListener: ShowtimeClickListener? = null
     val layoutManager: LinearLayoutManager
+    var moviePosterClickListener: MoviePosterClickListener? = null
+    var movie: Screening? = null
     var lastRequest:ImageRequest? = null
 
     init {
@@ -114,9 +114,15 @@ class ScreeningView(context: Context) : FrameLayout(context) {
                 bottom = resources.getDimension(R.dimen.margin_half).toInt() + resources.getDimension(R.dimen.dp_1).toInt()
         ))
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
+
+        cardView.setOnClickListener {
+            moviePosterClickListener?.onMoviePosterClick(null, movie ?: return@setOnClickListener)
+        }
     }
 
-    fun bind(screening: ScreeningPresentation, showtimeClickListener: ShowtimeClickListener?, showWhiteListedBanner: Boolean? = false, bonusMovieClickListener: BonusMovieClickListener?) {
+    fun bind(screening: ScreeningPresentation, showtimeClickListener: ShowtimeClickListener?, showWhiteListedBanner: Boolean? = false, bonusMovieClickListener: BonusMovieClickListener?, moviePosterClickListener: MoviePosterClickListener) {
+        this.moviePosterClickListener = moviePosterClickListener
+        this.movie = screening.screening
         this.screeningPresentation = screening
         this.showtimeListener = showtimeListener
         adapter.screening = screening
@@ -138,6 +144,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
 
         cinemaApprovedV.isEnabled = screening.enabled
         movieTitle.text = screening.screening?.title
+        synopsisIV.visibility = View.GONE
         val disabledEx = screeningPresentation?.screening?.disabledExplanation ?: ""
         val approval = screeningPresentation?.screening?.approved ?: true
 
