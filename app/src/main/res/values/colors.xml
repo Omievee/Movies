@@ -8,7 +8,7 @@
     <color name="red_dark">#8f0000</color>
     <color name="new_red">#D50000</color>
 
-    <color name="colorPrimary">#ff202b36</color>
+    <color name="colorPrimary">#202b36</color>
     <color name="colorPrimaryDark">#ff202b36</color>
     <color name="colorAccent">#c82229</color>
     <!--<color name="colorPrimary">#323c46</color>-->
@@ -34,6 +34,7 @@
     <!--TODO: DARKER COLORS?-->
     <color name="test_blue">#14171b</color>
     <color name="test_black">#202b36</color>
+    <color name="colorPrimaryTransparent">#00202b36</color>
     <color name="test_black_30_opacity">#65040000</color>
     <color name="test_black_transparent">#55202b36</color>
     <!--<color name="test_black">#0e1013</color>-->

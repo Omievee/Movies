@@ -2,6 +2,8 @@ package com.mobile;
 
 import com.moviepass.BuildConfig;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 
 /**
@@ -125,5 +127,9 @@ public class Constants {
     public static final String USER_UUID = "uuid";
     public static final String MOVIES_LOADED_DATE = "last_dl_movies";
     public static final String APPBOY_DEEP_LINK_KEY = "uri";
+
+    //Endless Scroll
+    public static final int ENDLESS_SCROLL_SIZE = Integer.MAX_VALUE;
+    public static final int ENDLESS_HALF_START_POSITION = ENDLESS_SCROLL_SIZE/2;
 
 }

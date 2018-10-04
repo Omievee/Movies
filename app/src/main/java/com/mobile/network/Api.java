@@ -21,12 +21,14 @@ import com.mobile.requests.TicketInfoRequest;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.reservation.CurrentReservationV2;
+import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ChangeEmailResponse;
 import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.ChangedMindResponse;
+import com.mobile.responses.CurrentMoviesResponse;
 import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.PlanResponse;
 import com.mobile.responses.ReferAFriendResponse;
@@ -35,6 +37,7 @@ import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.ScreeningsResponseV2;
 import com.mobile.responses.SeatingsInfoResponse;
 import com.mobile.responses.SignUpResponse;
+import com.mobile.responses.TheatersResponse;
 import com.mobile.responses.UserInfoResponse;
 import com.mobile.responses.VerificationLostResponse;
 import com.mobile.responses.VerificationResponse;
@@ -179,6 +182,21 @@ public interface Api {
     /* Cancel Subscription */
     @POST("/rest/v1/subscription/cancellation")
     Single<CancellationResponse> requestCancellation(@Body CancellationRequest request);
+
+    /*ALL MOVIES FOR MAIN PAGE */
+    @GET("/#env#/movies/current.json")
+    Call<CurrentMoviesResponse> getAllCurrentMovies();
+
+
+    /* ALL MOVIES FOR SEARCH */
+    @GET("/#env#/movies/all.json")
+    Call<List<AllMoviesResponse>> getAllMovies();
+
+
+    /* ALL THEATERS */
+    @GET("/theaters/all.json")
+    Call<TheatersResponse> getAllMoviePassTheaters();
+
 
     //NEW RESTRICTIONS
     @GET("auth/v1/session/{userId}")

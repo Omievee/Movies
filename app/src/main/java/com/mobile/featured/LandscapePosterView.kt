@@ -22,7 +22,7 @@ class LandscapePosterView(context: Context?,
     init {
         inflate(context, R.layout.list_item_featured_poster, this)
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
-        featuredPoster.minimumHeight = 9 * resources.getDisplayMetrics().heightPixels / 16
+        featuredPoster.minimumHeight = 9 * resources.displayMetrics.heightPixels / 16
         this.setOnClickListener {
             val movie = this.movie?: return@setOnClickListener
             moviePosterClickListener?.onMoviePosterClick(movie)

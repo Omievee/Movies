@@ -1,5 +1,7 @@
 package com.mobile.movie
 
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.mobile.adapters.BaseViewHolder
@@ -7,7 +9,7 @@ import com.mobile.listeners.BonusMovieClickListener
 import com.mobile.screening.MoviePosterClickListener
 
 class MoviesAdapter(
-        val movieCLickListener: MoviePosterClickListener? = null,
+        val movieCLickListener: MoviePosterClickListener,
         val bonusClickListener: BonusMovieClickListener?=null
         ) : RecyclerView.Adapter<BaseViewHolder>() {
 
@@ -33,6 +35,7 @@ class MoviesAdapter(
         return data?.list?.size ?: 0
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val view = holder.itemView
         val pres = data!!.list[position]

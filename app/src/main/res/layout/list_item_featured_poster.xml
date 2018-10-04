@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.facebook.drawee.view.SimpleDraweeView xmlns:fresco="http://schemas.android.com/apk/res-auto"
-
+    <com.facebook.drawee.view.SimpleDraweeView
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
         android:id="@+id/featuredPoster"
         android:layout_width="match_parent"
         android:layout_height="270dp"
+        android:alpha="1.0"
         android:animateLayoutChanges="true"
-        android:foreground="@drawable/poster_gradient"
-        android:visibility="visible"
-        fresco:actualImageScaleType="centerCrop" />
+        fresco:actualImageScaleType="centerCrop"
+        tools:layout_editor_absoluteX="0dp" />
 
     <FrameLayout
         android:id="@+id/videoFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
-
+        android:alpha="0.0">
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/featuredVideo"
@@ -30,51 +29,38 @@
             app:resize_mode="zoom"
             app:use_controller="false" />
 
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:visibility="gone"
-            android:layout_marginBottom="@dimen/margin_half"
-            android:layout_marginStart="@dimen/margin_half">
-
-
-            <TextView
-                android:id="@+id/seeTimes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:elevation="5dp"
-                android:text="See Showtimes"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
-
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="15dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="4dp"
-                android:layout_toEndOf="@id/seeTimes"
-                android:elevation="5dp"
-                android:src="@drawable/arrowforward"
-                android:tint="@color/white" />
-
-        </RelativeLayout>
-
     </FrameLayout>
 
     <TextView
         android:id="@+id/videoTitle"
+        style="@style/MoviePosterTitle"
+        android:layout_width="0dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guidelineTitle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/margin_half"
-        android:layout_marginStart="@dimen/margin_half"
-        android:elevation="5dp"
-        android:text="Movie Title"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/movie_poster_gradient"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline5" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
 
 
-</android.support.design.widget.CoordinatorLayout>
+</android.support.constraint.ConstraintLayout>

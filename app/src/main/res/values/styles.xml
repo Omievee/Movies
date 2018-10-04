@@ -1193,6 +1193,16 @@
         <item name="android:paddingBottom">@dimen/margin_half</item>
     </style>
 
+    <style name="MoviePosterTitle" parent="MPText">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:elevation">5dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_half</item>
+        <item name="android:layout_marginBottom">@dimen/margin_half</item>
+    </style>
+
 
     <string name="no_cancellations_or_refunds_at_this_theater">No cancellations or refunds at this theater.</string>
     <string name="skip_this_promotion">Skip this promotion</string>

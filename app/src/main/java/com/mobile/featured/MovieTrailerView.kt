@@ -28,20 +28,25 @@ import com.moviepass.R
 import kotlinx.android.synthetic.main.list_item_featured_poster.view.*
 import java.io.File
 
+
 class MovieTrailerView(context: Context?, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs), Player.EventListener {
 
     val player: SimpleExoPlayer
 
-    var lastSource: String? = null
-
     var movie: Movie? = null
 
-    var moviePosterClickListener: MoviePosterClickListener?=null
+    var moviePosterClickListener: MoviePosterClickListener? = null
+
+    fun stopVideo() {
+        player.playWhenReady = false
+        player.stop(true)
+        onNoVideo()
+    }
 
     init {
         inflate(context, R.layout.list_item_featured_poster, this)
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
-        featuredPoster.minimumHeight = 9 * resources.getDisplayMetrics().heightPixels / 16
+        featuredPoster.minimumHeight = 9 * resources.displayMetrics.heightPixels / 16
         val bandwidthMeter = DefaultBandwidthMeter()
         val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
         val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
@@ -50,9 +55,10 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null) : Constra
         featuredVideo.player = player
         this.setOnClickListener {
             Log.d(Constants.TAG, "clickclick: ")
-            val movie = this.movie?: return@setOnClickListener
+            val movie = this.movie ?: return@setOnClickListener
             moviePosterClickListener?.onMoviePosterClick(movie)
         }
+
     }
 
     fun bind(movie: Movie, enableVideoPlayback: Boolean = true) {
@@ -61,24 +67,17 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null) : Constra
         if (!enableVideoPlayback) {
             player.stop()
         }
+        onNoVideo()
+    }
 
-        if (lastSource == movie.teaserVideoUrl) {
-            if (player.playbackState == Player.STATE_READY) {
-                player.playWhenReady
-            }
-            if(movie.teaserVideoUrl.isNullOrEmpty()) {
-                onNoVideo()
-            }
-            return
-        } else {
-            onNoVideo()
+    fun setUpVideo() {
+        if (movie?.teaserVideoUrl != null) {
+            val video = ExtractorMediaSource(Uri.parse(movie?.teaserVideoUrl), CacheDataSourceFactory(context, (100 * 1024 * 1024).toLong(), (5 * 1024 * 1024).toLong()), DefaultExtractorsFactory(), null, null)
+            player.prepare(video)
+            player.playWhenReady = true
+            player.volume = Player.DISCONTINUITY_REASON_INTERNAL.toFloat()
+            player.repeatMode = Player.REPEAT_MODE_ONE
         }
-        val video = ExtractorMediaSource(Uri.parse(movie.teaserVideoUrl), CacheDataSourceFactory(context, (100 * 1024 * 1024).toLong(), (5 * 1024 * 1024).toLong()), DefaultExtractorsFactory(), null, null)
-        player.prepare(video)
-        player.playWhenReady = true
-        player.volume = Player.DISCONTINUITY_REASON_INTERNAL.toFloat()
-        player.repeatMode = Player.REPEAT_MODE_ONE
-
     }
 
     override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
@@ -116,17 +115,40 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null) : Constra
 
     }
 
-    fun onNoVideo() {
-        featuredVideo.visibility = View.GONE
-        featuredPoster.visibility = View.VISIBLE
+    private fun View.hideViewWithAnimation() =
+            this.animate().alpha(0f).setDuration(100)
+
+
+    private fun View.hideView() {
+        this.alpha = 0f
+    }
+
+    private fun View.showView() {
+        this.alpha = 1f
+    }
+
+    private fun View.showViewWithAnimation() =
+            this.animate().alpha(1f)
+
+
+    private fun onNoVideo() {
+        videoFrameLayout.hideView()
+        featuredVideo.hideView()
+        featuredVideo.videoSurfaceView.hideView()
+        featuredPoster.showView()
         featuredPoster.setImageURI(movie?.landscapeImageUrl)
     }
 
+    private fun onVideo() {
+        featuredVideo.showView()
+        featuredVideo.videoSurfaceView.showView()
+        featuredPoster.showView()
+        videoFrameLayout.showViewWithAnimation()
+    }
+
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-        if (playbackState == Player.STATE_READY) {
-            featuredPoster.visibility = View.GONE
-            videoFrameLayout.visibility = View.VISIBLE
-        }
+        if (playWhenReady && playbackState == Player.STATE_READY)
+            onVideo()
     }
 
     inner class CacheDataSourceFactory internal constructor(private val context: Context, private val maxCacheSize: Long, private val maxFileSize: Long) : DataSource.Factory {

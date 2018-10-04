@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:clipChildren="false"
     android:clipToPadding="false"
+    android:background="@color/colorPrimary"
     android:layout_height="match_parent">
 
     <com.mobile.seats.MPSwipeRefreshLayout
