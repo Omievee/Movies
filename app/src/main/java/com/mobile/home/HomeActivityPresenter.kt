@@ -171,6 +171,9 @@ class HomeActivityPresenter(val view: HomeActivityView,
                 .doOnSuccess { UserPreferences.loadUserData = false }
                 .map {
                     UserPreferences.userInfo = it
+                    println("USER INFO IS" + UserPreferences.userInfo)
+                    println("USER INFO IS" + it.shippingAddressLine1)
+                    println("USER INFO IS" + UserPreferences.userInfo.shippingAddressLine1)
                     UserPreferences.user = it.user ?: return@map
                 }
                 .subscribe({
@@ -182,7 +185,7 @@ class HomeActivityPresenter(val view: HomeActivityView,
     private fun determineShowWhiteListFragment(it: RestrictionsResponse?) {
         val restrictions = it ?: return
         val showMovieListedFragment = UserPreferences.showWhiteListPopUp
-        when{
+        when {
             showMovieListedFragment && restrictions.capWhitelistedMovieIds.isNotEmpty() -> {
                 UserPreferences.showWhiteListPopUp = false
                 view.showWhiteListMovie()

@@ -74,8 +74,8 @@ class MissingBillingFragmentPresenter(
             view.hideProgress()
             view.setUpTextWatchers()
         }.subscribe({
-            showBillingInfo(UserInfoResponse.getBillingInfo(it))
-        },{
+            showBillingInfo(getBillingInfo(it))
+        }, {
 
         })
     }
@@ -192,6 +192,43 @@ val BillingInfo.allFieldsNull: Boolean
         return fields.count { it == null } == fields.size
         return false
     }
+
+private fun getBillingInfo(user: UserInfoResponse): BillingInfo {
+    val billingAddress = user.billingAddressLine2
+    val billingAddressList = billingAddress?.split(",".toRegex(), 0)
+    var city: String? = null
+    var state: String? = null
+    var zip: String? = null
+
+    if (billingAddressList?.size ?: 0 >= 3) {
+        city = billingAddressList?.get(0)?.trim()
+        state = billingAddressList?.get(1)?.trim()
+        zip = billingAddressList?.get(2)?.trim()
+    }
+
+    val creditNumber = user.billingCard
+    var expiration: String? = null
+    var CVV: String? = null
+    if (!creditNumber.isNullOrEmpty()) {
+        expiration = "##/####"
+        CVV = "###"
+    }
+
+    return BillingInfo(null,
+            PaymentInfo(
+                    creditNumber,
+                    CVV,
+                    expiration
+            ),
+            BillingAddress(
+                    user.billingAddressLine1,
+                    null,
+                    city,
+                    state,
+                    zip
+            ))
+}
+
 
 data class ErrorMessages(
         val invalidCreditCardNumber: String,

@@ -95,7 +95,7 @@
                     android:id="@+id/view"
                     android:layout_width="fill_parent"
                     android:layout_height="1dp"
-                    android:layout_below="@id/Plan"
+                    android:layout_below="@id/userPlan"
                     android:layout_marginTop="2dp"
                     android:background="@color/white_40_opacity" />
 
@@ -123,7 +123,7 @@
 
 
                     <TextView
-                        android:id="@+id/USER_BILLING"
+                        android:id="@+id/userBilling"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
@@ -147,7 +147,7 @@
                     <View
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
-                        android:layout_below="@id/USER_BILLING"
+                        android:layout_below="@id/userBilling"
                         android:background="@color/white_40_opacity" />
 
 
