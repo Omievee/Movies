@@ -24,8 +24,8 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 142
-        versionName "3.1.3"
+        versionCode 143
+        versionName "3.1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -45,6 +45,10 @@ android {
         density {
             exclude "ldpi"
         }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
     }
 
     signingConfigs {

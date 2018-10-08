@@ -51,7 +51,7 @@ class ScreeningsAdapter(
             when (view) {
                 is MovieScreeningView -> view.bind(pres, listener)
                 is ScreeningView -> {
-                    val showWhiteListBanner = UserPreferences.restrictions.capWhitelistedMovieIds.contains(pres.screening?.moviepassId)
+                    val showWhiteListBanner = UserPreferences.restrictions.capWhitelistedMovieIds.contains(pres.screening?.moviepassId) && UserPreferences.restrictions.cappedPlan != null
                     view.bind(pres, listener,showWhiteListBanner,bonusMovieClickListener)
                 }
                 is MissingCheckinView -> view.bind(pres, missingCheckinListener)

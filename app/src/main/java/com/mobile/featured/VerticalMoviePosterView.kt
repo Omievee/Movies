@@ -86,7 +86,7 @@ open class VerticalMoviePosterView(
 
     private fun showWhiteListMovieBanner() {
         whiteListBanner.visibility = when (UserPreferences.restrictions.capWhitelistedMovieIds.contains(movie?.id
-                ?: 0)) {
+                ?: 0) && UserPreferences.restrictions.cappedPlan != null) {
             true -> View.VISIBLE
             else -> View.INVISIBLE
         }
