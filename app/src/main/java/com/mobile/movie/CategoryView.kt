@@ -19,6 +19,7 @@ import com.mobile.listeners.BonusMovieClickListener
 import com.mobile.model.Movie
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.screening.MoviePosterClickListener
+import com.mobile.utils.expandTouchArea
 import com.mobile.utils.startCalendarIntent
 import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_category.view.*
@@ -47,6 +48,7 @@ class CategoryView(context: Context?, attrs: AttributeSet? = null) : ConstraintL
         calendar.setOnClickListener {
             context.startCalendarIntent()
         }
+        calendar.expandTouchArea()
     }
 
     fun bind(

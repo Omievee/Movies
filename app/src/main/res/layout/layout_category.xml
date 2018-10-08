@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:parentTag="android.support.constraint.ConstraintLayout">
-
+    
     <TextView
         android:id="@+id/text"
         style="@style/CategoryHeader"
         android:layout_marginStart="@dimen/margin_half"
+        android:paddingTop="5dp"
+        android:paddingBottom="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
@@ -19,6 +21,7 @@
     <View android:id="@+id/middle"
         android:layout_width="wrap_content"
         app:layout_constraintTop_toTopOf="@id/text"
+        app:layout_constraintVertical_bias=".75"
         app:layout_constraintBottom_toBottomOf="@id/text"
         android:layout_height="wrap_content"/>
 
