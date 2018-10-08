@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_standard"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="Runtime " />
+            tools:text="Rating " />
 
         <Space
             android:id="@+id/spacer"
@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/spacer"
-            tools:text="Rating " />
+            tools:text="Runtime " />
 
         <ImageView
             android:id="@+id/synopsisIV"

@@ -42,7 +42,6 @@ class ScreeningPosterHeader(context: Context?, attrs: AttributeSet? = null) : Co
             else -> View.VISIBLE
         }
         movieTime.text = movie.runningTime.runningTimeString(context)
-        spacer.visibility = movieRating.visibility
         posterSPV.setImageURI(movie.landscapeImageUrl)
         when (synopsisListener) {
             null -> {
