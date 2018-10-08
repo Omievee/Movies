@@ -167,7 +167,18 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
 
 }
 
-class Data(val list: List<MoviesPresentation>, val diffResult: DiffUtil.DiffResult)
+class Data(val list: List<MoviesPresentation>, val diffResult: DiffUtil.DiffResult) {
+    val hasFeatured by lazy {
+        list.firstOrNull()?.type==MovieAdapterType.FEATURED
+    }
+
+    fun positionForCateogry(currPosition:Int):Int {
+        if(hasFeatured) {
+            return currPosition-1
+        }
+        return currPosition
+    }
+}
 
 data class MoviesPresentation(val type: MovieAdapterType, val data: Pair<String, List<com.mobile.model.Movie>>) : ItemSame<MoviesPresentation> {
     override fun sameAs(same: MoviesPresentation): Boolean {

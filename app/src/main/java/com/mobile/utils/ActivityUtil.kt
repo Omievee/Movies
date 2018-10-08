@@ -5,9 +5,11 @@ import android.content.Intent
 import android.graphics.Rect
 import android.net.Uri
 import android.provider.Settings
+import android.support.customtabs.CustomTabsIntent
 import android.support.transition.*
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
+import android.support.v4.content.ContextCompat
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.TouchDelegate
@@ -17,6 +19,8 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import com.mobile.BackFragment
 import com.mobile.rx.Schedulers
+import com.mobile.webview.WebViewActivity
+import com.moviepass.BuildConfig
 import com.moviepass.R
 import io.reactivex.Single
 
@@ -114,6 +118,16 @@ fun View?.expandTouchArea(extraPaddingInDips: Int = -1) {
                 rect.bottom += extraPadding
                 view.touchDelegate = TouchDelegate(rect, parent)
             }, {})
+}
+
+fun Context?.startCalendarIntent() {
+    val ctx = this?:return
+    ctx.startIntentIfResolves(WebViewActivity.newIntent(ctx, BuildConfig.MOVIE_CALENDAR_URL))
+//    val url = Uri.parse("https://moviepass.com/movies/")
+//    val customTabsIntent = CustomTabsIntent.Builder().apply {
+//        setToolbarColor(ContextCompat.getColor(ctx, R.color.colorAccent))
+//    }.build()
+//    customTabsIntent.launchUrl(this, url)
 }
 
 fun Fragment?.startCameraIntent(requestCode: Int) {
