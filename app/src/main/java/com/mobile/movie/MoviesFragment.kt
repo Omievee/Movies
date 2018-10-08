@@ -89,7 +89,10 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(SpaceDecorator(
-                lastBottom = resources.getDimension(R.dimen.bottom_navigation_height).toInt()
+                lastBottom =
+                resources.getDimension(R.dimen.bottom_navigation_height).toInt()
+                +
+                resources.getDimension(R.dimen.margin_half).toInt()
         ))
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
