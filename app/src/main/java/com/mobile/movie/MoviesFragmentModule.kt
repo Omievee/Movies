@@ -5,9 +5,6 @@ import com.mobile.application.Application
 import com.mobile.network.StaticApi
 import dagger.Module
 import dagger.Provides
-import io.realm.Realm
-import io.realm.RealmConfiguration
-import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module

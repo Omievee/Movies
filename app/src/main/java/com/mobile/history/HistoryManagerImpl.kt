@@ -2,6 +2,7 @@ package com.mobile.history
 
 import com.mobile.UserPreferences
 import com.mobile.UserPreferences.historyLoadedDate
+import com.mobile.db.ReservationDao
 import com.mobile.UserPreferences.saveHistoryLoadedDate
 import com.mobile.history.model.ReservationHistory
 import com.mobile.network.Api
@@ -12,21 +13,21 @@ import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
-import io.realm.Realm
 import java.util.*
 import javax.inject.Provider
 
-class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Api, val sessionManager: SessionManager) : HistoryManager {
+class HistoryManagerImpl(@History val dao: Provider<ReservationDao>, val api: Api, val sessionManager: SessionManager) : HistoryManager {
 
     var getHistoryFromApi: Disposable? = null
 
 
     init {
         sessionManager.loggedOut()
+                .map {
+                    dao.get().deleteAll()
+                }
                 .subscribe {
-                    realmHistory.get().executeTransaction { movie ->
-                        movie.deleteAll()
-                    }
+
                 }
     }
 
@@ -34,15 +35,13 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
         return Observable.create<List<ReservationHistory>> {
 
             if (!onlyFromWeb) {
-                val movies = realmHistory.get()
-                        .where(ReservationHistory::class.java)
-                        .findAll()
+                val movies = dao.get().getHistory().sortedByDescending { v-> v.createdAt }
 
                 if (it.isDisposed) {
                     return@create
                 }
 
-                it.onNext(realmHistory.get().copyFromRealm(movies))
+                it.onNext(movies)
             }
 
             if (hasItBeenFourHoursSinceHistoryTimeStamp) {
@@ -62,7 +61,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
     val hasItBeenFourHoursSinceHistoryTimeStamp: Boolean
         get() {
             val fourHoursInPast = Calendar.getInstance().apply {
-                add(Calendar.HOUR,-4)
+                add(Calendar.HOUR, -4)
             }
             return historyLoadedDate.before(fourHoursInPast)
 
@@ -83,11 +82,8 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                             }
 
                             reservationHistoryResponse.reservations?.let {
-                                realmHistory.get().executeTransaction { transaction ->
-                                    transaction.delete(ReservationHistory::class.java)
-                                    transaction.insertOrUpdate(it)
-                                    saveHistoryLoadedDate()
-                                }
+                                dao.get().replaceHistory(it)
+                                saveHistoryLoadedDate()
                                 it
                             } ?: throw RuntimeException()
                         }.map {
@@ -129,9 +125,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                 .submitRatingRx(id, HistoryResponse(rating))
                 .doOnSuccess { _ ->
                     history.userRating = rating
-                    realmHistory.get().executeTransaction { r ->
-                        r.insertOrUpdate(history)
-                    }
+                    dao.get().update(history)
                 }
                 .map { _ ->
                     history

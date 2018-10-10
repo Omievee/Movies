@@ -16,14 +16,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.mobile.responses.AllMoviesResponse;
+
 import com.mobile.search.AfterSearchListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
 import java.util.List;
 
-import io.realm.RealmList;
 
 /**
  * Created by o_vicarra on 1/29/18.

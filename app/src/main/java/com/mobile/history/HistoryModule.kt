@@ -1,12 +1,13 @@
 package com.mobile.history
 
+import com.mobile.db.AppDatabase
+import com.mobile.db.ReservationDao
 import com.mobile.network.Api
 import com.mobile.network.ApiModule
 import com.mobile.session.SessionManager
+import com.mobile.theater.TheaterDao
 import dagger.Module
 import dagger.Provides
-import io.realm.Realm
-import io.realm.RealmConfiguration
 import javax.inject.Provider
 import javax.inject.Singleton
 
@@ -14,19 +15,16 @@ import javax.inject.Singleton
 class HistoryModule {
 
     @Provides
-    @History
-    fun provideRealmHistory(): Realm {
-        return Realm.getInstance(RealmConfiguration.Builder()
-                .name("History.Realm")
-                .deleteRealmIfMigrationNeeded()
-                .build())
+    @Singleton
+    fun provideTheaterDao(appDatabase: AppDatabase): ReservationDao {
+        return appDatabase.reservationDao()
     }
 
     @Provides
     @Singleton
-    fun provideHistoryManager(@History realm: Provider<Realm>, api: Api, sessionManager: SessionManager): HistoryManager {
+    fun provideHistoryManager(provider: Provider<ReservationDao>, api: Api, sessionManager: SessionManager): HistoryManager {
         return HistoryManagerImpl(
-                realmHistory = realm,
+                dao = provider,
                 api = api,
                 sessionManager = sessionManager)
     }

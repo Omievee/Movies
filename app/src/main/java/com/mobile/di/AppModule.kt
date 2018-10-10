@@ -32,7 +32,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [StaticApiModule::class, TheaterModule::class, TheaterModuleUI::class, HistoryModule::class, LocationModule::class, TicketModule::class, GoWatchItModule::class, UploadModule::class])
+@Module(includes = [StaticApiModule::class, TheaterModule::class, TheaterModuleUI::class, HistoryModule::class, LocationModule::class, TicketModule::class, GoWatchItModule::class, UploadModule::class, DatabaseModule::class])
 class AppModule {
 
     @Provides
