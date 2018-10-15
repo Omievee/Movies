@@ -11,7 +11,7 @@ interface LocationManager {
 
     fun location(): Single<UserLocation>
 
-    fun updatingLocation(timeToWait:Int=10000,minDistanceInMeters:Int=20): Observable<UserLocation>
+    fun updatingLocation(single:Boolean, timeToWait:Int=10000,minDistanceInMeters:Int=20): Single<UserLocation>
 
 }
 

@@ -3,6 +3,7 @@ package com.mobile.fragments
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.location.LocationManager
 import com.mobile.location.UserLocation
+import com.mobile.rx.Schedulers
 import io.reactivex.disposables.Disposable
 
 abstract class LocationRequiredPresenter(open val view: LocationRequiredView, val locationManager: LocationManager) {
@@ -58,15 +59,14 @@ abstract class LocationRequiredPresenter(open val view: LocationRequiredView, va
         locationSub?.dispose()
         locationSub = locationManager
                 .location()
-                .subscribe { t1, t2 ->
-                    t1?.let {
-                        location = it
-                        onLocation(it)
-                    }
-                    t2?.let {
-                        //TODO: show error
-                    }
-                }
+                .compose(Schedulers.singleDefault())
+                .subscribe({ it ->
+                    location = it
+                    onLocation(it)
+
+                }, { t2 ->
+                    t2.printStackTrace()
+                })
     }
 
     open fun onDestroy() {
