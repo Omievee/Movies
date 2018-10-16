@@ -23,7 +23,7 @@ interface ReservationDao {
         saveAll(list)
     }
 
-    @Update
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun update(history: ReservationHistory)
 
 }

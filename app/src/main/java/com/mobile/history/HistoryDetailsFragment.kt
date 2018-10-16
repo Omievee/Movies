@@ -41,7 +41,6 @@ class HistoryDetailsFragment : MPFragment() {
     lateinit var historyManagerImpl: HistoryManager
 
 
-
     var historySub: Disposable? = null
 
     var fromRateScreen: Boolean = false
@@ -74,7 +73,7 @@ class HistoryDetailsFragment : MPFragment() {
                 .setSource(imgUrl)
                 .build()
         val hier = GenericDraweeHierarchyBuilder(resources).setDesiredAspectRatio(1.5f)
-                //.setActualImageScaleType(ScalingUtils.ScaleType.)
+        //.setActualImageScaleType(ScalingUtils.ScaleType.)
         enlargedImage.hierarchy = hier.build()
         val controller = Fresco.newDraweeControllerBuilder()
                 .setUri(imgUrl)
@@ -131,14 +130,11 @@ class HistoryDetailsFragment : MPFragment() {
         historySub?.dispose()
 
         historySub = historyManagerImpl.submitRating(history, wasGood)
-                .doAfterSuccess {
-                    activity?: return@doAfterSuccess
+                .subscribe({ res ->
+                    activity ?: return@subscribe
                     if (fromRateScreen) {
                         historyTitle.text = getString(R.string.history_rating_thanks)
                     }
-                }
-                .subscribe({ res ->
-                    activity?: return@subscribe
                     onHistorySaved(res)
                 }, {
 
@@ -161,6 +157,8 @@ class HistoryDetailsFragment : MPFragment() {
 
         if (!fromRateScreen) {
             Handler().postDelayed({ activity?.onBackPressed() }, 1500)
+        } else {
+            historyTitle.text = getString(R.string.history_rating_thanks)
         }
     }
 

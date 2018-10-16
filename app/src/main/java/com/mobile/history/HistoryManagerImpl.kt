@@ -123,13 +123,13 @@ class HistoryManagerImpl(@History val dao: Provider<ReservationDao>, val api: Ap
         }
         return api
                 .submitRatingRx(id, HistoryResponse(rating))
-                .doOnSuccess { _ ->
+                .compose(Schedulers.singleBackground())
+                .map { _ ->
                     history.userRating = rating
                     dao.get().update(history)
-                }
-                .map { _ ->
                     history
                 }
+                .compose(Schedulers.singleDefault())
     }
 
     override fun fetchLastMovieWithoutRating(): Single<ReservationHistory> {
