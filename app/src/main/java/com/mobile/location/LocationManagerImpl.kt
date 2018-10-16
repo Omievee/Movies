@@ -5,23 +5,18 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager.GPS_PROVIDER
 import android.location.LocationManager.NETWORK_PROVIDER
-import android.os.Build
+import android.os.Looper
 import android.support.v4.content.ContextCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.*
 import com.mobile.MPActivty
 import com.mobile.application.Application
 import com.mobile.rx.Schedulers
 import com.moviepass.BuildConfig
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
-import io.reactivex.ObservableOnSubscribe
-import io.reactivex.Single
+import io.reactivex.*
 import io.reactivex.Single.create
+import io.reactivex.android.schedulers.AndroidSchedulers
 
-class LocationManagerImpl(val application: Application, val systemLocationManager: android.location.LocationManager, val fused: FusedLocationProviderClient?) : LocationManager {
+class LocationManagerImpl(val application: Application, val systemLocationManager: android.location.LocationManager, val fused: FusedLocationProviderClient) : LocationManager {
 
     private var _lastLocation: UserLocation? = null
 
@@ -29,10 +24,6 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
         if (MPActivty.isEmulator) {
             _lastLocation = BuildConfig.USER_LOCATION
         }
-        location().compose(Schedulers.singleDefault())
-                .subscribe({
-                    _lastLocation = it
-                }, {})
     }
 
     override fun isLocationEnabled(): Boolean {
@@ -55,51 +46,28 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
 
     @SuppressLint("MissingPermission")
     override fun location(): Single<UserLocation> {
-        if(MPActivty.isEmulator) {
+        if (MPActivty.isEmulator) {
             return Single.just(_lastLocation)
         }
-        val single: Single<UserLocation> = create { emitter ->
-            val permission = permission
-            if (!permission) {
-                when (emitter.isDisposed) {
-                    false -> {
-                        emitter.onError(LocationPermission())
-                    }
-                }
-                return@create
-            }
-            val task = fused?.lastLocation
-
-            task?.addOnSuccessListener { location ->
-                if (emitter.isDisposed) {
-                    return@addOnSuccessListener
-                }
-                emitter.onSuccess(location.toLocation())
-            }
-            task?.addOnFailureListener {
-                emitter.onError(it)
-            }
-        }
-        return single.map {
-            _lastLocation = it
-            it
-        }.compose(Schedulers.singleDefault())
+        return updatingLocation(true, 0, 100)
     }
 
     @SuppressLint("MissingPermission")
-    override fun updatingLocation(timeToWait: Int, minDistanceInMeters: Int): Observable<UserLocation> {
-        val updates = LocationUpdates(permission, fused, LocationRequest().apply {
+    override fun updatingLocation(single: Boolean, timeToWait: Int, minDistanceInMeters: Int): Single<UserLocation> {
+        val updates = LocationUpdates(single, permission, fused, LocationRequest().apply {
             this.smallestDisplacement = minDistanceInMeters.toFloat()
             this.fastestInterval = timeToWait.toLong()
+            this.maxWaitTime
+            if (single) {
+                this.numUpdates = 1
+            }
+            this.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         })
-        val observ: Observable<UserLocation> = Observable.create(updates)
-        observ.map {
+        val observ: Single<UserLocation> = Single.create(updates)
+        return observ.map {
             _lastLocation = it
-        }
-        observ.doOnDispose {
-            updates.dispose()
-        }
-        return observ.compose(Schedulers.observableDefault())
+            it
+        }.doAfterTerminate { updates.dispose() }.compose(Schedulers.singleDefault())
     }
 }
 
@@ -109,25 +77,44 @@ fun Location?.toLocation(): UserLocation {
     } ?: return UserLocation.EMPTY
 }
 
-class LocationUpdates(val permission: Boolean, val fused: FusedLocationProviderClient?, val locationRequest: LocationRequest) : ObservableOnSubscribe<UserLocation> {
+class LocationUpdates(val single: Boolean, val permission: Boolean, val fused: FusedLocationProviderClient, val locationRequest: LocationRequest) : SingleOnSubscribe<UserLocation> {
 
-    var emitter: ObservableEmitter<UserLocation>? = null
+    lateinit var emitter: SingleEmitter<UserLocation>
+
+    var emitted: Int = 0
+
+    val canEmit: Boolean
+        get() {
+            return !single || emitted == 0
+        }
 
     private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult?) {
-            when (emitter?.isDisposed) {
-                false -> locationResult?.let {
-                    emitter?.onNext(locationResult.lastLocation.toLocation())
 
+        override fun onLocationAvailability(p0: LocationAvailability?) {
+            super.onLocationAvailability(p0)
+            println("location availability $p0")
+        }
+
+        override fun onLocationResult(locationResult: LocationResult) {
+            println("onlocationresult $locationResult")
+            when (emitter.isDisposed == false && canEmit) {
+                true -> {
+                    val last = locationResult.lastLocation
+                    println("lastLocation $last")
+                    val loc = locationResult.lastLocation.toLocation()
+                    emitter.onSuccess(loc)
+                    emitted += 1
+                }
+                false -> {
+                    fused.removeLocationUpdates(this)
                 }
             }
         }
     }
 
     @SuppressLint("MissingPermission")
-    override fun subscribe(emitter: ObservableEmitter<UserLocation>) {
+    override fun subscribe(emitter: SingleEmitter<UserLocation>) {
         this.emitter = emitter
-        val permission = permission
         if (!permission) {
             when (emitter.isDisposed) {
                 false -> {
@@ -136,11 +123,12 @@ class LocationUpdates(val permission: Boolean, val fused: FusedLocationProviderC
                 }
             }
         }
-        fused?.requestLocationUpdates(locationRequest, locationCallback, null)
+        println("request location updates")
+        fused.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 
     fun dispose() {
-        fused?.removeLocationUpdates(locationCallback)
+        fused.removeLocationUpdates(locationCallback)
     }
 }
 
