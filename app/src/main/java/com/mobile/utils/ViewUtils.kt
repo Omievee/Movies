@@ -50,7 +50,7 @@ fun getNavBarHeight(c: Context): Int {
     val hasMenuKey = ViewConfiguration.get(c).hasPermanentMenuKey()
     val hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
 
-    if (MPActivty.isEmulator || (!hasMenuKey && !hasBackKey)) {
+    if (MPActivty.isEmulator || (!hasMenuKey || !hasBackKey)) {
         //The device has a navigation bar
         val resources = c.getResources()
 
