@@ -6,6 +6,7 @@ import android.support.transition.TransitionManager
 import android.support.transition.TransitionSet
 import android.support.v4.app.Fragment
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -26,15 +27,15 @@ open class MPFragment : Fragment(), BackFragment {
         showFragment(R.id.fragmentContainer, fragment)
     }
 
-    fun showFragment(id:Int, fragment: Fragment) {
+    fun showFragment(id: Int, fragment: Fragment) {
         showFragmentExtension(id, fragment)
     }
 
-    fun removeFragment(id:Int) {
+    fun removeFragment(id: Int) {
         removeFragmentExtension(id)
     }
 
-    fun slideFragmentIn(v:ViewGroup) {
+    fun slideFragmentIn(v: ViewGroup) {
         view as? ViewGroup ?: return
         val set = TransitionSet()
         set.duration = 250
@@ -44,9 +45,9 @@ open class MPFragment : Fragment(), BackFragment {
         v.visibility = View.VISIBLE
     }
 
-    fun slideFragmentOut(v:ViewGroup?) {
+    fun slideFragmentOut(v: ViewGroup?) {
         val view = view as? ViewGroup ?: return
-        v?:return
+        v ?: return
         val set = TransitionSet()
         set.duration = 250
         val slide = Slide(Gravity.END);
@@ -55,7 +56,7 @@ open class MPFragment : Fragment(), BackFragment {
         v.visibility = View.INVISIBLE
     }
 
-    fun preloadFragment(id:Int, fragment: Fragment) {
+    fun preloadFragment(id: Int, fragment: Fragment) {
         preLoadFragmentExtension(id, fragment)
     }
 
@@ -65,6 +66,12 @@ open class MPFragment : Fragment(), BackFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        when (savedInstanceState) {
+            null -> {
+            }
+            else -> println("instance state restored")
+        }
+
         val vg = view as? ViewGroup ?: return
         val none = (0 until vg.childCount).none {
             val vv = vg.getChildAt(it)
@@ -82,7 +89,10 @@ open class MPFragment : Fragment(), BackFragment {
                 fragmentContainer = vg.findViewById(R.id.fragmentContainer)
             }
         }
-        fragmentContainer?.visibility = View.INVISIBLE
+        fragmentContainer?.visibility = when (childFragmentManager.findFragmentById(R.id.fragmentContainer)) {
+            null -> View.INVISIBLE
+            else -> View.VISIBLE
+        }
     }
 
     fun fadeIn(view: View) {
@@ -115,6 +125,10 @@ open class MPFragment : Fragment(), BackFragment {
         animation.addAnimation(fadeIn)
         view.animation = animation
 
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     fun fadeOut(view: View) {
