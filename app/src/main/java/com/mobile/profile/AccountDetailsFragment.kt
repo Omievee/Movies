@@ -81,14 +81,19 @@ class AccountDetailsFragment : MPFragment() {
             return
         }
         planSub?.dispose()
-        planSub = api.getUserDataRx(UserPreferences.userId).subscribe { t1 ->
-            t1?.let {
-                UserPreferences.userInfo = it
-                UserPreferences.user = it.user ?: return@subscribe
-                planResponse = it
-                adapter.data = data
-            }
-        }
+        planSub = api.getUserDataRx(UserPreferences.userId).subscribe(
+                { t1 ->
+                    t1?.let {
+                        UserPreferences.userInfo = it
+                        UserPreferences.user = it.user ?: return@subscribe
+                        planResponse = it
+                        adapter.data = data
+                    }
+                },
+                {
+
+                }
+        )
     }
 
     override fun onDestroy() {
