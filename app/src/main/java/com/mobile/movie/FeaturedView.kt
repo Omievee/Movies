@@ -27,14 +27,14 @@ class FeaturedView(context: Context?, attrs: AttributeSet? = null) : ConstraintL
 
     init {
         View.inflate(context, R.layout.layout_featured_container, this)
+    }
+
+    fun bind(presentation: MoviesPresentation, moviePosterClickListener: MoviePosterClickListener) {
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
         linearLayout = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         trailerView.layoutManager = linearLayout
         snapHelper = PagerSnapHelper()
         snapHelper?.attachToRecyclerView(trailerView)
-    }
-
-    fun bind(presentation: MoviesPresentation, moviePosterClickListener: MoviePosterClickListener) {
         setUpAdapter(presentation, moviePosterClickListener)
         trailerView.adapter = adapter
 

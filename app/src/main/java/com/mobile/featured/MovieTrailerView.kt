@@ -163,8 +163,7 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null) : Constra
         }
 
         override fun createDataSource(): DataSource {
-            val evictor = LeastRecentlyUsedCacheEvictor(maxCacheSize)
-            val simpleCache = SimpleCache(File(context.cacheDir, "media"), evictor)
+            val simpleCache = MPSimpleCache.instance
             return CacheDataSource(simpleCache, defaultDatasourceFactory.createDataSource(),
                     FileDataSource(), CacheDataSink(simpleCache, maxFileSize),
                     CacheDataSource.FLAG_BLOCK_ON_CACHE or CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR, null)
