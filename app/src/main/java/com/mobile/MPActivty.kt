@@ -28,7 +28,7 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
-        val intent = intent?:return
+        val intent = intent ?: return
         receiveIntent(intent)
     }
 
@@ -49,10 +49,13 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
                     || Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")
                     || "google_sdk" == Build.PRODUCT)
         }
+        val isEssentialPhone: Boolean by lazy {
+            Build.MODEL == "PH-1" && Build.MANUFACTURER == "essential"
+        }
     }
 
     fun receiveIntent(intent: Intent) {
-        val url = intent.data?:return
+        val url = intent.data ?: return
         deepLinksManager.handleCategory(url.toString())
     }
 }
