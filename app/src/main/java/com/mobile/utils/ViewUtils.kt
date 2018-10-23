@@ -1,19 +1,12 @@
 package com.mobile.utils
 
 import android.view.View
-import android.content.res.Configuration.SCREENLAYOUT_SIZE_LARGE
-import android.content.res.Configuration.SCREENLAYOUT_SIZE_MASK
-import android.R.attr.orientation
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.Point
 import android.util.TypedValue
-import android.view.KeyEvent.KEYCODE_BACK
-import android.view.KeyCharacterMap
-import android.view.KeyEvent
-import android.view.ViewConfiguration
-import com.mobile.MPActivty
-import com.moviepass.R
+import android.view.WindowManager
 
 
 fun View.padding(
@@ -46,17 +39,43 @@ val View.navBarHeight: Int
     }
 
 fun getNavBarHeight(c: Context): Int {
-    var result = 0
-    val hasMenuKey = ViewConfiguration.get(c).hasPermanentMenuKey()
-    val hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
+    val p = getNavigationBarSize(c)
+    return p.y
+}
 
-    if (MPActivty.isEmulator || (!hasMenuKey && !hasBackKey) || MPActivty.isEssentialPhone) {
-        //The device has a navigation bar
-        val resources = c.resources
+private fun getNavigationBarSize(context: Context): Point {
+    val appUsableSize = getAppUsableScreenSize(context)
+    val realScreenSize = getRealScreenSize(context)
 
-        return resources.getDimension(R.dimen.bottom_navigation_height).toInt()
+    // navigation bar on the side
+    if (appUsableSize.x < realScreenSize.x) {
+        return Point(realScreenSize.x - appUsableSize.x, appUsableSize.y)
     }
-    return result
+
+    // navigation bar at the bottom
+    return if (appUsableSize.y < realScreenSize.y) {
+        Point(appUsableSize.x, realScreenSize.y - appUsableSize.y)
+    } else Point()
+
+    // navigation bar is not present
+}
+
+private fun getAppUsableScreenSize(context: Context): Point {
+    val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    val display = windowManager.defaultDisplay
+    val size = Point()
+    display.getSize(size)
+    return size
+}
+
+private fun getRealScreenSize(context: Context): Point {
+    val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    val display = windowManager.defaultDisplay
+    val size = Point()
+
+    display.getRealSize(size)
+
+    return size
 }
 
 private fun isTablet(c: Context): Boolean {
