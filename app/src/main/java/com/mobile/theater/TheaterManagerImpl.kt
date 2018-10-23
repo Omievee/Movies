@@ -134,7 +134,7 @@ class TheaterManagerImpl(
         if (theaters.isEmpty() && radius < 40) {
             return queryRealm(str, radius + 10)
         } else {
-            return theaters
+            return theaters.sortAndFilter(str.location,amcDmaMap).take(40)
         }
     }
 
