@@ -12,7 +12,7 @@ class SessionManagerImpl : SessionManager {
     val sub = PublishSubject.create<Boolean>()
 
     override fun loggedOut(): Observable<Boolean> {
-        return sub.compose(Schedulers.observableDefault())
+        return sub.compose(Schedulers.observableBackground())
     }
 
     override fun getUser(): User? {

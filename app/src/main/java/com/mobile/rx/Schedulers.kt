@@ -13,6 +13,8 @@ class Schedulers {
 
         private var OBSERVABLE_DEFAULT: ObservableDefault<*> = ObservableDefault<Any>()
 
+        private var OBSERVABLE_BACKGROUND: ObservableBackground<*> = ObservableBackground<Any>()
+
         fun <T> singleDefault() : SingleDefaultTransformer<T> {
             @Suppress("UNCHECKED_CAST")
             return SINGLE_DEFAULT as SingleDefaultTransformer<T>
@@ -26,6 +28,11 @@ class Schedulers {
         fun <T> observableDefault() : ObservableDefault<T> {
             @Suppress("UNCHECKED_CAST")
             return OBSERVABLE_DEFAULT as ObservableDefault<T>
+        }
+
+        fun <T> observableBackground() : ObservableBackground<T> {
+            @Suppress("UNCHECKED_CAST")
+            return OBSERVABLE_BACKGROUND as ObservableBackground<T>
         }
     }
 
@@ -47,6 +54,13 @@ class Schedulers {
         override fun apply(upstream: Observable<T>): ObservableSource<T> {
             return upstream.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+        }
+    }
+
+    class ObservableBackground<T> : ObservableTransformer<T, T> {
+        override fun apply(upstream: Observable<T>): ObservableSource<T> {
+            return upstream.subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
         }
     }
 }
