@@ -92,15 +92,12 @@ class LocationUpdates(val single: Boolean, val permission: Boolean, val fused: F
 
         override fun onLocationAvailability(p0: LocationAvailability?) {
             super.onLocationAvailability(p0)
-            println("location availability $p0")
         }
 
         override fun onLocationResult(locationResult: LocationResult) {
-            println("onlocationresult $locationResult")
             when (emitter.isDisposed == false && canEmit) {
                 true -> {
                     val last = locationResult.lastLocation
-                    println("lastLocation $last")
                     val loc = locationResult.lastLocation.toLocation()
                     emitter.onSuccess(loc)
                     emitted += 1
