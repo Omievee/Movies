@@ -36,6 +36,7 @@ class ProfileView(context: Context?, attrs: AttributeSet? = null) : ConstraintLa
             topGuide.visibility=View.VISIBLE
             return
         }
+        name.contentDescription = pres.title
         name.text = pres.title
         header.text = pres.header
         header.visibility = when {

@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.google.android.gms.common.ConnectionResult
@@ -18,7 +20,6 @@ import com.mobile.UserPreferences
 import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
-import com.mobile.analytics.AnalyticsManager
 import com.mobile.fragments.TicketVerificationV2
 import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.model.ReservationHistory
@@ -29,6 +30,8 @@ import com.mobile.reservation.CurrentReservationV2
 import com.mobile.reservation.ReservationActivity
 import com.mobile.seats.MPBottomSheetFragment
 import com.mobile.seats.SheetData
+import com.mobile.utils.children
+import com.mobile.utils.forEachIndexed
 import com.mobile.utils.onBackExtension
 import com.mobile.utils.showFragment
 import com.mobile.widgets.MPAlertDialog
@@ -45,7 +48,6 @@ class HomeActivity : MPActivty(), HomeActivityView {
                 description = resources.getString(R.string.bonus_movies_description)
         )).show(supportFragmentManager, "")
     }
-
 
 
     @Inject
@@ -91,9 +93,27 @@ class HomeActivity : MPActivty(), HomeActivityView {
         bottomSheetNav.setColoredModeColors(ResourcesCompat.getColor(resources, R.color.red, theme), ResourcesCompat.getColor(resources, R.color.white_ish, theme))
         bottomSheetNav.isForceTint = true
         bottomSheetNav.setNotificationBackgroundColorResource(R.color.red)
-        tabs.forEach {
-            bottomSheetNav.addItem(it)
+        val activity = this
+        var idsSet = false
+        bottomSheetNav.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if(idsSet) {
+                return@addOnLayoutChangeListener
+            }
+            val group = bottomSheetNav.children { index, view ->
+                view is LinearLayout
+            }.firstOrNull() as? ViewGroup
+            group?.forEachIndexed { index, view ->
+                idsSet = true
+                view.contentDescription = tabs[index].getTitle(activity)
+                view.id = when (index) {
+                    0 -> R.id.movies
+                    1 -> R.id.theaters
+                    else -> R.id.profile
+                }
+            }
         }
+        bottomSheetNav.addItems(tabs.toList())
+
         bottomSheetNav.setOnTabSelectedListener { position, wasSelected ->
             when (wasSelected) {
                 true -> {
@@ -116,7 +136,6 @@ class HomeActivity : MPActivty(), HomeActivityView {
         presenter.onCreate()
     }
 
-
     override fun onResume() {
         super.onResume()
         checkGooglePlayServices()
@@ -131,7 +150,8 @@ class HomeActivity : MPActivty(), HomeActivityView {
     override fun showOverSoftCap() {
         MPBottomSheetFragment.newInstance(SheetData(
                 title = resources.getString(R.string.continue_seeing_movies_title),
-                description = resources.getString(R.string.continue_seeing_movies_description,UserPreferences.restrictions.cappedPlan?.used ?: 3)
+                description = resources.getString(R.string.continue_seeing_movies_description, UserPreferences.restrictions.cappedPlan?.used
+                        ?: 3)
         )).show(supportFragmentManager, "")
     }
 
@@ -233,7 +253,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
     }
 
 
-    var currentItem: Int = 0
+    private var currentItem: Int = 0
         set(value) {
             field = value
             viewPager.currentItem = value
