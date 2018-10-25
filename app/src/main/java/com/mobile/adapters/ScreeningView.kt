@@ -11,7 +11,11 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController
 import com.facebook.imagepipeline.common.ResizeOptions
+import com.facebook.imagepipeline.listener.BaseRequestListener
+import com.facebook.imagepipeline.listener.RequestListener
+import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.mobile.home.HomeActivity
 import com.mobile.listeners.BonusMovieClickListener
@@ -91,6 +95,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
     var screeningPresentation: ScreeningPresentation? = null
     var showtimeListener: ShowtimeClickListener? = null
     val layoutManager: LinearLayoutManager
+    var lastRequest:ImageRequest? = null
 
     init {
         View.inflate(context, R.layout.list_item_cinemaposter, this)
@@ -119,13 +124,17 @@ class ScreeningView(context: Context) : FrameLayout(context) {
         adapter.data = ShowtimeAdapter.createData(adapter.data, screening)
         val imgUrl = Uri.parse(screeningPresentation?.screening?.landscapeImageUrl)
         val request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
-                .setProgressiveRenderingEnabled(true)
                 .setResizeOptions(ResizeOptions(1280, 720))
+                .setRequestListener(object : BaseRequestListener() {
+                    override fun onRequestSuccess(request: ImageRequest?, requestId: String?, isPrefetch: Boolean) {
+                        lastRequest = request
+                    }
+                })
                 .build()
 
-        val controller = Fresco.newDraweeControllerBuilder()
-                .setImageRequest(request).build()
-        posterSPV.setImageURI(imgUrl)
+        if(lastRequest?.sourceUri!=request.sourceUri) {
+            posterSPV.setImageRequest(request)
+        }
 
         cinemaApprovedV.isEnabled = screening.enabled
         movieTitle.text = screening.screening?.title
@@ -160,9 +169,6 @@ class ScreeningView(context: Context) : FrameLayout(context) {
                     }
                 }
             }
-        }
-        if (posterSPV.controller?.isSameImageRequest(controller) != true) {
-            posterSPV.controller = controller
         }
         movieTime.text = screening.screening?.runningTime?.runningTimeString(context = context)
         movieTime.apply {
