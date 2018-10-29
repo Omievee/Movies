@@ -23,6 +23,7 @@ class ProfileLinkView(context: Context?, attrs: AttributeSet?=null) : Constraint
     }
 
     fun bind(pres:ProfilePresentation, profileClickListener: ProfileClickListener) {
+        contentDescription = pres.title
         presentation = pres
         listener = profileClickListener
         name.text = pres.title

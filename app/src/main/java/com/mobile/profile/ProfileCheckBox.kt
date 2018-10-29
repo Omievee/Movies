@@ -16,6 +16,7 @@ class ProfileCheckBox(context: Context?, attrs: AttributeSet? = null) : Constrai
     }
 
     fun bind(presentation: ProfilePresentation, checkListener: ProfileToggleListener?=null) {
+        contentDescription = resources.getString(R.string.notifications)
         check.onCheckChangedListener = null
         check.isChecked = presentation.toggled
         check.onCheckChangedListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <item name="theaters" type="id" />
+  <item name="movies" type="id" />
+  <item name="profile" type="id" />
+</resources>

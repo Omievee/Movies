@@ -1,12 +1,14 @@
 package com.mobile.utils
 
-import android.view.View
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Point
 import android.util.TypedValue
+import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
+import kotlinx.android.synthetic.main.fragment_change_billing_and_plan_info.view.*
 
 
 fun View.padding(
@@ -41,6 +43,27 @@ val View.navBarHeight: Int
 fun getNavBarHeight(c: Context): Int {
     val p = getNavigationBarSize(c)
     return p.y
+}
+
+fun ViewGroup.forEachIndexed(
+        action: (index: Int, view: View) -> Unit
+) {
+    for (i in 0 until this.childCount) {
+        action(i, this.getChildAt(i))
+    }
+}
+
+fun ViewGroup.children(
+        predicate: (index:Int, view:View) -> Boolean?
+):List<View> {
+    val views = mutableListOf<View>()
+    for(i in 0 until this.childCount) {
+        val view = this.getChildAt(i)
+        if(predicate(i,view)!=false) {
+            views.add(view)
+        }
+    }
+    return views
 }
 
 private fun getNavigationBarSize(context: Context): Point {
