@@ -6,6 +6,7 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Pair
 import android.view.LayoutInflater
@@ -159,7 +160,9 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
         super.onViewCreated(view, savedInstanceState)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
-
+        recyclerView.itemAnimator = DefaultItemAnimator().apply {
+            supportsChangeAnimations = false
+        }
         swipeRefresh.setOnRefreshListener {
             presenter.onRefresh()
         }
