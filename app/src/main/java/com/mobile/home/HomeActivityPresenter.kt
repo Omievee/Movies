@@ -183,7 +183,7 @@ class HomeActivityPresenter(val view: HomeActivityView,
         val restrictions = it ?: return
         val showMovieListedFragment = UserPreferences.showWhiteListPopUp
         val isUserInCapPlan = restrictions.cappedPlan
-        when{
+        when {
             isUserInCapPlan != null && showMovieListedFragment && restrictions.capWhitelistedMovieIds.isNotEmpty() -> {
                 UserPreferences.showWhiteListPopUp = false
                 view.showWhiteListMovie()
@@ -197,7 +197,7 @@ class HomeActivityPresenter(val view: HomeActivityView,
                 view.showOverSoftCap()
                 UserPreferences.showOverSoftCap = false
             }
-            it.cappedPlan?.isOverSoftCap == false ->{
+            it.cappedPlan?.isOverSoftCap == false -> {
                 UserPreferences.showOverSoftCap = true
             }
         }
