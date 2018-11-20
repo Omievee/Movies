@@ -48,8 +48,32 @@ class ApiModule {
 
     @Provides
     @Singleton
+    @Zuora
+    fun provideZuoraOkHttpClient(
+            cookieJar: CookieJar,
+            loggingInterceptor: HttpLoggingInterceptor,
+            authenticatedRequestInterceptor: BoxOfficeAuthenticatedRequestInterceptor,
+            cache: Cache
+    ): OkHttpClient.Builder {
+        val httpClient = OkHttpClient.Builder()
+        httpClient.connectTimeout(40, TimeUnit.SECONDS)
+        httpClient.readTimeout(40, TimeUnit.SECONDS)
+        httpClient.cookieJar(cookieJar)
+        httpClient.addInterceptor(authenticatedRequestInterceptor)
+        httpClient.addInterceptor(loggingInterceptor)
+        return httpClient
+    }
+
+    @Provides
+    @Singleton
     fun provideAuthenticatedRequestInterceptor(sessionManager: SessionManager): AuthenticatedRequestInterceptor {
         return AuthenticatedRequestInterceptor(sessionManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBoxOfficeAuthenticatedRequestInterceptor(sessionManager: SessionManager): BoxOfficeAuthenticatedRequestInterceptor {
+        return BoxOfficeAuthenticatedRequestInterceptor(sessionManager)
     }
 
     @Provides
@@ -69,11 +93,11 @@ class ApiModule {
     @Provides
     @Singleton
     fun provideGson(): Gson {
-        lateinit var gson2:Gson
-        var gson = GsonBuilder()
+        lateinit var gson2: Gson
+        val gson = GsonBuilder()
                 .setLenient()
                 .registerTypeAdapter(object : TypeToken<ParcelableDate>() {
-                    }.type, DateAdapter())
+                }.type, DateAdapter())
                 .registerTypeAdapter(object : TypeToken<Date>() {
                 }.type, DateAdapter())
                 .registerTypeAdapter(object : TypeToken<SurgeType>() {
@@ -125,5 +149,17 @@ class ApiModule {
                 .client(client.build())
                 .build()
                 .create(MicroApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBillingApi(@Zuora client: OkHttpClient.Builder, gson: Gson): BillingApi {
+        return Retrofit.Builder()
+                .baseUrl(BuildConfig.ZUORA_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(client.build())
+                .build()
+                .create(BillingApi::class.java)
     }
 }

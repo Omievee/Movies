@@ -206,7 +206,7 @@ class FixedGridLayoutManager : RecyclerView.LayoutManager() {
             childLeft = paddingLeft
             childTop = paddingTop
         } else if (!state.isPreLayout && visibleChildCount >= state.itemCount) {
-            //Data set is too small to scroll fully, just reset position
+            //SubscriptionData set is too small to scroll fully, just reset position
             mFirstVisiblePosition = 0
             childLeft = paddingLeft
             childTop = paddingTop

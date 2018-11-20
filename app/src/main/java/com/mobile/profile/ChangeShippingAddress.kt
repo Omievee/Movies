@@ -94,7 +94,6 @@ class ChangeShippingAddress : MPFragment() {
     }
 
     private fun setData() {
-        println(UserPreferences.userInfo.shippingAddressLine1)
         val address = SpannableStringBuilder(UserPreferences.userInfo.shippingAddressLine1)
         userAddress.text = address
 

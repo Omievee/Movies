@@ -145,7 +145,7 @@
                         android:visibility="visible" />
 
                     <View
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_below="@id/userBilling"
                         android:background="@color/white_40_opacity" />
@@ -295,6 +295,65 @@
                     android:animateLayoutChanges="true"
                     android:orientation="vertical"
                     android:visibility="gone">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/firstNameTextInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.4"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorEnabled="true"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/firstName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginTop="@dimen/margin_standard"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="@string/first_name"
+                            android:inputType="text|textCapSentences"
+                            android:maxLines="1"
+                            android:textColor="@color/almost_white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textCursorDrawable="@color/white"
+                            android:textSize="@dimen/text_size_14"
+                            app:backgroundTint="@color/white_40_opacity" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/lastNameInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.6"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorEnabled="true"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/lastName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="@string/last_name"
+                            android:inputType="text|textCapSentences"
+                            android:maxLines="1"
+                            android:textColor="@color/almost_white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textCursorDrawable="@color/white"
+                            android:textSize="@dimen/text_size_14"
+                            app:backgroundTint="@color/white_40_opacity" />
+                    </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/address1TextInputLayout"
@@ -485,7 +544,7 @@
 
                 </LinearLayout>
 
-                <com.mobile.widgets.SoftNavigationPlaceholder
+                <com.mobile.widgets.BottomSoftNavigationPlaceholder
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/bottom_navigation_height" />

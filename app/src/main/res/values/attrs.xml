@@ -30,8 +30,9 @@
         <attr name="android:inputType"/>
         <attr name="android:maxLength" />
         <attr name="android:maxLines" />
-        <attr name="android:nextFocusDown" />
-        <attr name="android:nextFocusRight"/>
+        <attr name="nextFocusDown" format="integer|reference"/>
+        <attr name="nextFocusRight" format="integer|reference"/>
+        <attr name="subId" format="integer|reference"/>
         <attr name="mp_endOfString" format="boolean" />
     </declare-styleable>
 

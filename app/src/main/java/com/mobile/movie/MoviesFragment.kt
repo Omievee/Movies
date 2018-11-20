@@ -84,6 +84,11 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         activateMPCardView.visibility = View.VISIBLE
     }
 
+    override fun hideSubscriptionActivationRequired() {
+        activity ?: return
+        activateMPCardView.visibility = View.GONE
+    }
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.layoutManager = LinearLayoutManager(context)

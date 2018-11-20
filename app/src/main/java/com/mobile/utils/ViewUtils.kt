@@ -17,7 +17,7 @@ fun View.padding(
         bottom: Int = paddingBottom,
         end: Int = paddingEnd) {
     this.setPadding(
-            start, top, bottom, end
+            start, top, end, bottom
     )
 }
 
@@ -27,7 +27,7 @@ fun View.paddingDp(
         bottom: Int = paddingBottom,
         end: Int = paddingEnd) {
     this.setPadding(
-            asDp(start, resources), asDp(top, resources), asDp(bottom, resources), asDp(end, resources)
+            asDp(start, resources), asDp(top, resources), asDp(end, resources), asDp(bottom, resources)
     )
 }
 

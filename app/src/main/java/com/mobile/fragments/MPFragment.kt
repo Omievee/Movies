@@ -15,13 +15,14 @@ import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import com.mobile.BackFragment
 import com.mobile.utils.*
 import com.moviepass.R
 
 open class MPFragment : Fragment(), BackFragment {
 
-    var fragmentContainer: FrameLayout? = null
+    var fragmentContainer: ViewGroup? = null
 
     open fun showFragment(fragment: Fragment) {
         showFragment(R.id.fragmentContainer, fragment)
@@ -66,11 +67,6 @@ open class MPFragment : Fragment(), BackFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        when (savedInstanceState) {
-            null -> {
-            }
-            else -> println("instance state restored")
-        }
 
         val vg = view as? ViewGroup ?: return
         val none = (0 until vg.childCount).none {
@@ -79,7 +75,7 @@ open class MPFragment : Fragment(), BackFragment {
         }
         when (none) {
             true -> {
-                fragmentContainer = FrameLayout(context).apply {
+                fragmentContainer = RelativeLayout(context).apply {
                     id = R.id.fragmentContainer
                     elevation = vg.highestElevation
                 }

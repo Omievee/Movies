@@ -22,7 +22,7 @@
     <string name="one_device_commit">Are you sure? </string>
     <string name="one_device_commit_message">This action cannot be undone.</string>
 
-    <!--Braze Data-->
+    <!--Braze SubscriptionData-->
     <string name="braze_api_key">a31807ec-c0f6-4d73-be31-0b3a249abcb5</string>
     <string name="braze_endpoint">moyo.iad-03.braze.com</string>
 
@@ -287,6 +287,8 @@
     <string name="address_invalid_city">Invalid City</string>
     <string name="address_invalid_state">Invalid State</string>
     <string name="address_invalid_zip">Invalid Zip</string>
+    <string name="address_invalid_first_name">Invalid First Name</string>
+    <string name="address_invalid_last_name">Invalid Last Name</string>
     <string name="address_empty_shipping_address">Enter your shipping address</string>
     <string name="address_empty_billing_address">Enter your billing address</string>
     <string name="address_empty_city">Enter your city</string>

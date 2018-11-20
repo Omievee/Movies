@@ -10,9 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.mobile.UserPreferences
 import com.mobile.adapters.BasicDiffCallback
-import com.mobile.billing.ChangeBillingAndPlanInfo
+import com.mobile.billing.ChangeBillingAndPlanInfoFragment
+import com.mobile.billing.Plan
+import com.mobile.billing.Subscription
 import com.mobile.fragments.MPFragment
 import com.mobile.network.Api
+import com.mobile.network.BillingApi
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.responses.UserInfoResponse
 import com.mobile.utils.navBarHeight
@@ -29,12 +32,15 @@ import javax.inject.Inject
 
 class AccountDetailsFragment : MPFragment() {
 
-    var planResponse: UserInfoResponse? = null
+    var planResponse: Subscription? = null
 
     var planSub: Disposable? = null
 
     @Inject
     lateinit var api: Api
+
+    @Inject
+    lateinit var billingApi: BillingApi
 
     val clickListener = object : ProfileClickListener {
         override fun onClick(pres: ProfilePresentation) {
@@ -42,7 +48,7 @@ class AccountDetailsFragment : MPFragment() {
                 Profile.ACCOUNT_INFORMATION -> showFragment(AccountInformation())
                 Profile.SHIPPING_ADDRESS -> showFragment(ChangeShippingAddress())
                 Profile.CHANGE_PASSWORD -> showFragment(ChangePassword())
-                Profile.PLAN_AND_BILLING -> showFragment(ChangeBillingAndPlanInfo())
+                Profile.PLAN_AND_BILLING -> showFragment(ChangeBillingAndPlanInfoFragment())
                 else -> {
                 }
             }
@@ -81,17 +87,15 @@ class AccountDetailsFragment : MPFragment() {
             return
         }
         planSub?.dispose()
-        planSub = api.getUserDataRx(UserPreferences.userId).subscribe(
+        planSub = billingApi.getSubscription().subscribe(
                 { t1 ->
                     t1?.let {
-                        UserPreferences.userInfo = it
-                        UserPreferences.user = it.user ?: return@subscribe
                         planResponse = it
                         adapter.data = data
                     }
                 },
                 {
-
+                    it.printStackTrace()
                 }
         )
     }

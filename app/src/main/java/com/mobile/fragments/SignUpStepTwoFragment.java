@@ -567,7 +567,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             if(signup2Zip.getText().toString().trim().isEmpty())
                 zipTextInputLayout.setError("Required");
             else
-                zipTextInputLayout.setError("Invalid zip code");
+                zipTextInputLayout.setError("Invalid postalCode code");
             return false;
         }
     }

@@ -30,8 +30,6 @@ class MoviesFragmentPresenter(val view: MoviesView, val movieManager: MoviesMana
                     view.hideProgress()
                 }
                 .subscribe { t1, t2 ->
-                    println(t1)
-                    println(t2)
                     t1 ?: return@subscribe
                     view.updateAdapter(t1)
                 }
@@ -41,6 +39,8 @@ class MoviesFragmentPresenter(val view: MoviesView, val movieManager: MoviesMana
                 .subscribe({ res ->
                     if (res.subscriptionActivationRequired) {
                         view.showSubscriptionActivationRequired()
+                    } else {
+                        view.hideSubscriptionActivationRequired()
                     }
                 }, {
                     it.printStackTrace()

@@ -2,6 +2,7 @@ package com.mobile.session
 
 import com.mobile.UserPreferences
 import com.mobile.network.Api
+import com.mobile.network.BillingApi
 import com.mobile.requests.AddressChangeRequest
 import com.mobile.requests.ChangeEmailRequest
 import com.mobile.requests.ChangePasswordRequest
@@ -12,7 +13,7 @@ import com.mobile.responses.UserInfoResponse
 import com.mobile.rx.Schedulers
 import io.reactivex.Single
 
-class UserManagerImpl(val api: Api) : UserManager {
+class UserManagerImpl(val api: Api, val billingApi: BillingApi) : UserManager {
 
 
     private var userInfo: UserInfoResponse? = null
@@ -34,13 +35,6 @@ class UserManagerImpl(val api: Api) : UserManager {
     override fun updateUserEmail(request: ChangeEmailRequest): Single<ChangeEmailResponse> {
         return api
                 .changeEmail(request)
-                .compose(Schedulers.singleDefault())
-    }
-
-
-    override fun updateBilling(userId: Int, request: CreditCardChangeRequest): Single<UserInfoResponse> {
-        return api
-                .updateBillingCard(userId, request)
                 .compose(Schedulers.singleDefault())
     }
 

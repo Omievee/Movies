@@ -30,6 +30,7 @@ android {
 
         buildConfigField "String", "baseUrl", '"https://staging.moviepass.com/"'
         buildConfigField "String", "STATIC_URL", '"https://a1.moviepass.com/staging/"'
+        buildConfigField "String", "ZUORA_URL", '"https://gw.moviepass.com/gw/"'
         buildConfigField "String", "registrationURL", '"https://registration-stg.herokuapp.com"'
         buildConfigField "String", "microServiceURL", '"https://authorization-service-stg.herokuapp.com/"'
         buildConfigField "String", "COGNITO_KEY", '"us-east-1:4b4b52ee-11c2-4c56-b109-b654a1d2ad37"'
@@ -72,6 +73,7 @@ android {
             buildConfigField "String", "ENVIRONMENT", '"staging"'
             buildConfigField "String", "BUCKET", '"mpcore.staging.tickets"'
             buildConfigField "String", "MOVIE_CALENDAR_URL", '"https://stg.moviepass.com/movies/?hideBottomNav=true"'
+            buildConfigField "String", "ZUORA_URL", '"https://gw-stg.moviepass.com/gw/"'
             buildConfigField "String", "TOKENIZATION_KEY", '"sandbox_snpbh3w8_2fj37y3ndsjstzxv"'
             resValue 'string', 'authority_file_provider', "\"${defaultConfig.applicationId}.debug.fileprovider\""
             resValue 'string', 'authority_file_provider_path', "\"Android/data/${defaultConfig.applicationId}.debug/files/Pictures\""

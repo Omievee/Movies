@@ -6,6 +6,8 @@ import android.support.v4.widget.TextViewCompat
 import android.util.AttributeSet
 import android.view.View
 import com.mobile.UserPreferences
+import com.mobile.billing.Plan
+import com.mobile.billing.Subscription
 import com.mobile.profile.ProfilePresentation
 import com.mobile.responses.UserInfoResponse
 import com.mobile.seats.MPBottomSheetFragment
@@ -34,10 +36,10 @@ class CappedPlanView(context: Context?, attrs: AttributeSet? = null) : PeakConta
             cap.isOverHardCap -> View.GONE
             else -> View.VISIBLE
         }
-        description2.visibility = when((pres.data as? UserInfoResponse)?.nextBillingDate!=null) {
+        description2.visibility = when((pres.data as? Subscription)?.data?.paidThroughDate!=null) {
             false->View.GONE
             true-> {
-                description2.text = resources.getString(R.string.cycle_renews_on, SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format((pres.data as UserInfoResponse).nextBillingDate))
+                description2.text = resources.getString(R.string.cycle_renews_on, SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format((pres.data as Subscription).data.paidThroughDate))
                 View.VISIBLE}
         }
         TextViewCompat.setTextAppearance(description, R.style.ContinueSeeingMovies)

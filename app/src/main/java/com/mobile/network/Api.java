@@ -1,19 +1,16 @@
 package com.mobile.network;
 
-import com.mobile.billing.BillingInfo;
 import com.mobile.history.response.ReservationHistoryResponse;
 import com.mobile.loyalty.TheaterChain;
 import com.mobile.model.Emails;
 import com.mobile.model.ProviderInfo;
 import com.mobile.model.User;
 import com.mobile.requests.AddressChangeRequest;
-import com.mobile.requests.CancellationRequest;
 import com.mobile.requests.CardActivationRequest;
 import com.mobile.requests.ChangeEmailRequest;
 import com.mobile.requests.ChangePasswordRequest;
 import com.mobile.requests.ChangedMindRequest;
 import com.mobile.requests.CredentialsRequest;
-import com.mobile.requests.CreditCardChangeRequest;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
 import com.mobile.requests.SignUpRequest;
@@ -23,7 +20,6 @@ import com.mobile.requests.VerificationRequest;
 import com.mobile.reservation.CurrentReservationV2;
 import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.AndroidIDVerificationResponse;
-import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ChangeEmailResponse;
 import com.mobile.responses.ChangePasswordResponse;
@@ -46,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Single;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -148,20 +143,20 @@ public interface Api {
     @GET("/rest/v3/theater/{id}/screenings/{segment}")
     Single<ScreeningsResponseV2> getScreeningsForTheaterV2(@Path("id") int id, @Path("segment") int segment);
 
-    /* user Data */
+    /* user SubscriptionData */
     @GET("/rest/v1/users/{userId}")
     Call<UserInfoResponse> getUserData(@Path("userId") int userId);
 
-    /* user Data */
+    /* user SubscriptionData */
     @GET("/rest/v1/users/{userId}")
     Single<UserInfoResponse> getUserRX(@Path("userId") int userId);
 
 
-    /* user Data */
+    /* user SubscriptionData */
     @GET("/rest/v1/users/{userId}")
     Single<UserInfoResponse> getUserDataV2(@Path("userId") int userId);
 
-    /* user Data */
+    /* user SubscriptionData */
     @GET("/rest/v1/users/{userId}")
     Single<UserInfoResponse> getUserDataRx(@Path("userId") int userId);
 
@@ -172,16 +167,6 @@ public interface Api {
     @PUT("/rest/v1/users/{userId}")
     Single<Object> updateAddress(@Path("userId") int userId, @Body AddressChangeRequest address);
 
-    /* Billing Update */
-    @PUT("/rest/v1/users/{userId}")
-    Single<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
-
-    @PUT("/rest/v1/users/{userId}")
-    Single<ResponseBody> updateBilling(@Path("userId") int userId, @Body BillingInfo info);
-
-    /* Cancel Subscription */
-    @POST("/rest/v1/subscription/cancellation")
-    Single<CancellationResponse> requestCancellation(@Body CancellationRequest request);
 
     /*ALL MOVIES FOR MAIN PAGE */
     @GET("/#env#/movies/current.json")

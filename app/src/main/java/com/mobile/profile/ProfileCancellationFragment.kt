@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.mobile.extensions.DropDownFields
 import com.mobile.extensions.CustomFlatDropDownClickListener
+import com.mobile.extensions.DropDownFields
 import com.mobile.fragments.MPFragment
 import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R

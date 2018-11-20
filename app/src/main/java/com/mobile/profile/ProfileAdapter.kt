@@ -68,7 +68,7 @@ class ProfileAdapter(
             val debugs = when (BuildConfig.DEBUG) {
                 true -> listOf(ProfilePresentation(
                         type = Profile.CLEAR_FLAGS,
-                        title = "Clear App Data"))
+                        title = "Clear App SubscriptionData"))
                 false -> emptyList()
             }
             val newData = mutableListOf(

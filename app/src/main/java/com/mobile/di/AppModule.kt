@@ -16,6 +16,7 @@ import com.mobile.location.LocationModule
 import com.mobile.movie.MoviesManager
 import com.mobile.movie.MoviesManagerImpl
 import com.mobile.network.Api
+import com.mobile.network.BillingApi
 import com.mobile.network.StaticApi
 import com.mobile.network.StaticApiModule
 import com.mobile.session.SessionManager
@@ -66,8 +67,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun userManager(api: Api): UserManager {
-        return UserManagerImpl(api)
+    fun userManager(api: Api, billingApi: BillingApi): UserManager {
+        return UserManagerImpl(api = api, billingApi = billingApi)
     }
 
     @Provides

@@ -74,6 +74,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+        //com.mobile.extensions.KeyboardUtil(this,window.findViewById(android.R.id.content))
         setContentView(R.layout.activity_home)
         bottomSpoof.visibility = View.VISIBLE
         bottomSheetNav.setDefaultBackgroundResource(R.color.bottomNav)

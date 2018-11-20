@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mobile.extensions.InsetRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/ReservationBackground"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clickable="true"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/header"
@@ -32,11 +30,11 @@
             app:layout_constraintEnd_toEndOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/header"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent"
+        android:layout_below="@id/header">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -47,7 +45,7 @@
                 android:id="@+id/billingDescriptionOne"
                 style="@style/BillingDescription"
                 android:text="@string/billing_description_one"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/billingDescriptionTwo"
@@ -64,18 +62,19 @@
                 android:id="@+id/creditCardLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_standard"
                 android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
                 android:hint="@string/credit_card_hint"
                 android:inputType="numberDecimal"
                 android:maxLength="19"
                 android:maxLines="1"
-                android:nextFocusDown="@+id/expirationDate"
-                android:nextFocusRight="@+id/expirationDate"
                 app:layout_constraintEnd_toStartOf="@id/cameraFL"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/paymentMethod"
-                app:mp_endOfString="true" />
+                app:mp_endOfString="true"
+                app:nextFocusDown="@+id/expirationDate"
+                app:nextFocusRight="@+id/expirationDate"
+                app:subId="@+id/creditCard" />
 
             <FrameLayout
                 android:id="@+id/cameraFL"
@@ -107,35 +106,37 @@
                 android:id="@+id/expirationDateLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_standard"
                 android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
                 android:hint="@string/expiration_date"
                 android:inputType="numberDecimal"
                 android:maxLength="5"
                 android:maxLines="1"
-                android:nextFocusDown="@+id/securityCode"
-                android:nextFocusRight="@+id/securityCode"
                 app:layout_constraintEnd_toStartOf="@id/middle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/creditCardLayout"
-                app:mp_endOfString="true" />
+                app:mp_endOfString="true"
+                app:nextFocusDown="@+id/securityCode"
+                app:nextFocusRight="@+id/securityCode"
+                app:subId="@+id/expirationDate" />
 
             <com.mobile.widgets.MPTextInputEditText
                 android:id="@+id/securityCodeLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_standard"
                 android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
                 android:hint="@string/security_code_hint"
                 android:inputType="numberDecimal"
                 android:maxLength="4"
                 android:maxLines="1"
-                android:nextFocusDown="@+id/streetAddress"
-                android:nextFocusRight="@+id/streetAddress"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/middle"
                 app:layout_constraintTop_toBottomOf="@id/creditCardLayout"
-                app:mp_endOfString="true" />
+                app:mp_endOfString="true"
+                app:nextFocusDown="@+id/firstName"
+                app:nextFocusRight="@+id/firstName"
+                app:subId="@+id/securityCode" />
 
             <TextView
                 android:id="@+id/billingAddress"
@@ -144,46 +145,84 @@
                 app:layout_constraintTop_toBottomOf="@id/expirationDateLayout" />
 
             <com.mobile.widgets.MPTextInputEditText
+                android:id="@+id/firstNameLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:hint="@string/first_name"
+                android:inputType="textPersonName|textCapWords"
+                android:maxLines="1"
+                app:layout_constraintEnd_toEndOf="@+id/middle"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/billingAddress"
+                app:mp_endOfString="true"
+                app:nextFocusDown="@+id/lastName"
+                app:nextFocusRight="@+id/lastName"
+                app:subId="@+id/firstName" />
+
+            <com.mobile.widgets.MPTextInputEditText
+                android:id="@+id/lastNameLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:hint="@string/last_name"
+                android:inputType="textCapWords|textPersonName"
+                android:maxLines="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/middle"
+                app:layout_constraintTop_toBottomOf="@id/billingAddress"
+                app:mp_endOfString="true"
+                app:nextFocusDown="@+id/streetAddress"
+                app:nextFocusRight="@+id/streetAddress"
+                app:subId="@+id/lastName" />
+
+            <com.mobile.widgets.MPTextInputEditText
                 android:id="@+id/streetAddressLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_standard"
                 android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
                 android:hint="@string/street_address_hint"
                 android:inputType="textPostalAddress"
                 android:maxLines="1"
-                android:nextFocusDown="@+id/streetAddress2"
-                android:nextFocusRight="@+id/streetAddress2"
-                app:layout_constraintTop_toBottomOf="@id/billingAddress"
-                app:mp_endOfString="true" />
+                app:layout_constraintTop_toBottomOf="@id/firstNameLayout"
+                app:mp_endOfString="true"
+                app:nextFocusDown="@+id/streetAddressLayout2"
+                app:nextFocusRight="@+id/streetAddressLayout2"
+                app:subId="@+id/streetAddress" />
 
             <com.mobile.widgets.MPTextInputEditText
                 android:id="@+id/streetAddressLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_standard"
                 android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
                 android:hint="@string/street_address2_hint"
                 android:inputType="textPostalAddress"
                 android:maxLines="1"
-                android:nextFocusDown="@+id/city"
-                android:nextFocusRight="@+id/city"
                 app:layout_constraintTop_toBottomOf="@id/streetAddressLayout"
-                app:mp_endOfString="true" />
+                app:mp_endOfString="true"
+                app:nextFocusDown="@+id/city"
+                app:nextFocusRight="@+id/city"
+                app:subId="@+id/streetAddress2" />
 
             <com.mobile.widgets.MPTextInputEditText
                 android:id="@+id/cityLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_standard"
                 android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
                 android:hint="@string/city_hint"
                 android:inputType="textPostalAddress"
                 android:maxLines="1"
-                android:nextFocusDown="@+id/state"
-                android:nextFocusRight="@+id/state"
                 app:layout_constraintTop_toBottomOf="@id/streetAddressLayout2"
-                app:mp_endOfString="true" />
+                app:mp_endOfString="true"
+                app:nextFocusDown="@+id/stateLayout"
+                app:nextFocusRight="@+id/stateLayout"
+                app:subId="@+id/city" />
 
 
             <android.support.constraint.Guideline
@@ -197,25 +236,26 @@
                 android:id="@+id/stateLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_standard"
                 android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
                 android:hint="@string/state_hint"
                 android:inputType="textCapCharacters"
                 android:maxLength="2"
                 android:maxLines="1"
-                android:nextFocusDown="@+id/zip"
-                android:nextFocusRight="@+id/zip"
                 app:layout_constraintEnd_toStartOf="@id/third"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cityLayout"
-                app:mp_endOfString="true" />
+                app:mp_endOfString="true"
+                app:nextFocusDown="@+id/zip"
+                app:nextFocusRight="@+id/zip"
+                app:subId="@+id/state" />
 
             <com.mobile.widgets.MPTextInputEditText
                 android:id="@+id/zipLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_standard"
                 android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
                 android:hint="@string/zip_hint"
                 android:imeOptions="actionSend"
                 android:inputType="number"
@@ -224,21 +264,26 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/third"
                 app:layout_constraintTop_toBottomOf="@id/cityLayout"
-                app:mp_endOfString="true" />
+                app:mp_endOfString="true"
+                app:subId="@+id/zip" />
 
-            <FrameLayout
+            <com.mobile.widgets.BottomSoftNavigationPlaceholder
+                android:id="@+id/softNav"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/margin_standard"
-                android:layout_marginBottom="@dimen/bottom_navigation_height"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/zipLayout" />
 
+            <View
+                android:id="@+id/keyboardSpoof"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/softNav" />
         </android.support.constraint.ConstraintLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
     <include
         android:id="@+id/progress"
         layout="@layout/view_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</com.mobile.extensions.InsetRelativeLayout>
+</RelativeLayout>

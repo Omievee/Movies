@@ -2,9 +2,8 @@ package com.mobile.billing
 
 import android.widget.EditText
 import com.mobile.ApiError
-import com.mobile.UserPreferences
 import com.mobile.network.Api
-import com.mobile.responses.UserInfoResponse
+import com.mobile.network.BillingApi
 import com.mobile.session.SessionManager
 import com.moviepass.R
 import io.reactivex.disposables.Disposable
@@ -12,7 +11,8 @@ import io.reactivex.disposables.Disposable
 class MissingBillingFragmentPresenter(
         val view: MissingBillingFragmentView,
         val sessionManager: SessionManager,
-        val api: Api) {
+        val api: Api,
+        val billingApi: BillingApi) {
 
     var saveSub: Disposable? = null
     var errorMessages: ErrorMessages? = null
@@ -42,11 +42,11 @@ class MissingBillingFragmentPresenter(
         if (!billingChange)
             data.billingAddress = null
         if (!creditCardChange)
-            data.paymentInfo = null
+            data.creditCardInfo = null
         saveSub?.dispose()
         view.showProgress()
-        saveSub = api
-                .updateBilling(sessionManager.getUser()?.id ?: 0,
+        saveSub = billingApi
+                .updateBilling(
                         data
                 ).doAfterTerminate {
                     view.hideProgress()
@@ -70,11 +70,11 @@ class MissingBillingFragmentPresenter(
         userBillingInfo?.dispose()
         view.showProgress()
 
-        userBillingInfo = api.getUserDataRx(UserPreferences.userId).doAfterTerminate {
+        userBillingInfo = billingApi.getSubscription().doAfterTerminate {
             view.hideProgress()
             view.setUpTextWatchers()
         }.subscribe({
-            showBillingInfo(getBillingInfo(it))
+            showBillingInfo(it.data.billingInfo)
         }, {
 
         })
@@ -84,11 +84,11 @@ class MissingBillingFragmentPresenter(
 
         billingChange = true
         creditCardChange = true
-        if (!billingInfo.billingAddress?.street.isNullOrEmpty()) {
+        if (!billingInfo.billingAddress?.address1.isNullOrEmpty()) {
             view.showBillingAddress(billingInfo)
             billingChange = false
         }
-        if (!billingInfo.paymentInfo?.number.isNullOrEmpty()) {
+        if (!billingInfo.creditCardInfo?.cardNumber.isNullOrEmpty()) {
             creditCardChange = false
             view.showBillingCreditCard(billingInfo)
         }
@@ -99,7 +99,7 @@ class MissingBillingFragmentPresenter(
         creditCardChange = true
     }
 
-    fun billingAddresChange() {
+    fun billingAddressChange() {
         view.showSaveAndCancel()
         billingChange = true
     }
@@ -110,25 +110,29 @@ class MissingBillingFragmentPresenter(
     private fun isValid(data: BillingInfo): BillingInfo? {
         val validated = BillingInfo()
         if (creditCardChange) {
-            validated.paymentInfo = PaymentInfo()
-            data.paymentInfo?.number = data.paymentInfo?.number?.removeSpaces()
-            validated.paymentInfo?.number = when (data.paymentInfo?.number.isNullOrEmpty()) {
+            validated.creditCardInfo = CreditCardInfo()
+            data.creditCardInfo?.cardNumber = data.creditCardInfo?.cardNumber?.removeSpaces()
+            validated.creditCardInfo?.cardNumber = when (data.creditCardInfo?.cardNumber.isNullOrEmpty()) {
                 true -> errorMessages?.emptyCreditCardNumber
-                false -> when (CreditCardUtils.isValid(data.paymentInfo?.number)) {
+                false -> when (CreditCardUtils.isValid(data.creditCardInfo?.cardNumber)) {
                     false -> errorMessages?.invalidCreditCardNumber
                     true -> null
                 }
             }
-            validated.paymentInfo?.expirationDate = when (data.paymentInfo?.expirationDate.isNullOrEmpty()) {
+            val expy = when (data.creditCardInfo?.expirationYear != null && data?.creditCardInfo?.expirationMonth != null) {
+                true -> "%s/%s".format(data.creditCardInfo?.expirationMonth, data.creditCardInfo?.expirationYear)
+                else -> null
+            }
+            validated.creditCardInfo?.expirationYear = when (expy.isNullOrEmpty()) {
                 true -> errorMessages?.emptyExpiration
-                false -> when (CreditCardUtils.isValidDate(data.paymentInfo?.expirationDate)) {
+                false -> when (CreditCardUtils.isValidDate(expy)) {
                     true -> null
                     false -> errorMessages?.invalidExpiration
                 }
             }
-            validated.paymentInfo?.cvv = when (data.paymentInfo?.cvv.isNullOrEmpty()) {
+            validated.creditCardInfo?.securityCode = when (data.creditCardInfo?.securityCode.isNullOrEmpty()) {
                 true -> errorMessages?.needSecurityCode
-                false -> when (CreditCardUtils.isValidSecurityCode(data.paymentInfo?.cvv)) {
+                false -> when (CreditCardUtils.isValidSecurityCode(data.creditCardInfo?.securityCode)) {
                     true -> null
                     false -> errorMessages?.needSecurityCode
                 }
@@ -136,7 +140,15 @@ class MissingBillingFragmentPresenter(
         }
         if (billingChange) {
             validated.billingAddress = BillingAddress()
-            validated.billingAddress?.street = when (data.billingAddress?.street.isNullOrEmpty()) {
+            validated.billingAddress?.firstName = when(data.billingAddress?.firstName.isNullOrEmpty()) {
+                true-> errorMessages?.needFirstName
+                false->null
+            }
+            validated.billingAddress?.lastName = when(data.billingAddress?.lastName.isNullOrEmpty()) {
+                true-> errorMessages?.needLastName
+                false->null
+            }
+            validated.billingAddress?.address1 = when (data.billingAddress?.address1.isNullOrEmpty()) {
                 true -> errorMessages?.needAddress
                 false -> null
             }
@@ -148,7 +160,7 @@ class MissingBillingFragmentPresenter(
                 true -> errorMessages?.needStateOrInvalid
                 false -> null
             }
-            validated.billingAddress?.zip = when (data.billingAddress?.zip?.isValidZip()) {
+            validated.billingAddress?.postalCode = when (data.billingAddress?.postalCode?.isValidZip()) {
                 true -> null
                 else -> errorMessages?.needsValidZip
             }
@@ -178,59 +190,59 @@ fun String.isValidZip(): Boolean {
     return size == 5 || size == 9
 }
 
-val BillingInfo.allFieldsNull: Boolean
-    get() {
-        val fields = arrayOf(
-                paymentInfo?.number,
-                paymentInfo?.expirationDate,
-                paymentInfo?.cvv,
-                billingAddress?.street,
-                billingAddress?.city,
-                billingAddress?.state,
-                billingAddress?.zip
-        )
-        return fields.count { it == null } == fields.size
-        return false
+private fun getBillingInfo(data:SubscriptionData): BillingInfo {
+    val billingAddress = data.billingInfo.billingAddress?.address1
+    val billingAddress2 = data.billingInfo.billingAddress?.address2
+    var city: String? = data.billingInfo.billingAddress?.city
+    var state: String? = data.billingInfo.billingAddress?.state
+    var zip: String? = data.billingInfo.billingAddress?.postalCode
+
+
+    val creditNumber = data.billingInfo.creditCardInfo?.cardNumber
+    var expiration: String? = when(data.billingInfo.creditCardInfo?.expirationYear) {
+        null->"##/####"
+        else-> "%s/%s".format(data.billingInfo.creditCardInfo?.expirationYear,data.billingInfo.creditCardInfo?.expirationMonth)
+    }
+    var cvv: String = when(data.billingInfo.creditCardInfo?.securityCode) {
+        null-> "###"
+        else-> data.billingInfo.creditCardInfo?.securityCode?:"###"
     }
 
-private fun getBillingInfo(user: UserInfoResponse): BillingInfo {
-    val billingAddress = user.billingAddressLine2
-    val billingAddressList = billingAddress?.split(",".toRegex(), 0)
-    var city: String? = null
-    var state: String? = null
-    var zip: String? = null
-
-    if (billingAddressList?.size ?: 0 >= 3) {
-        city = billingAddressList?.get(0)?.trim()
-        state = billingAddressList?.get(1)?.trim()
-        zip = billingAddressList?.get(2)?.trim()
-    }
-
-    val creditNumber = user.billingCard
-    var expiration: String? = null
-    var CVV: String? = null
-    if (!creditNumber.isNullOrEmpty()) {
-        expiration = "##/####"
-        CVV = "###"
-    }
-
-    return BillingInfo(null,
-            PaymentInfo(
+    return BillingInfo(
+            creditCardInfo = CreditCardInfo(
                     creditNumber,
-                    CVV,
+                    cvv,
                     expiration
             ),
-            BillingAddress(
-                    user.billingAddressLine1,
-                    null,
-                    city,
-                    state,
-                    zip
+            billingAddress = BillingAddress(
+                    address1 = billingAddress,
+                    address2 = billingAddress2,
+                    city = city,
+                    state = state,
+                    postalCode = zip
             ))
 }
 
+val BillingInfo.allFieldsNull: Boolean
+    get() {
+        val fields = arrayOf(
+                creditCardInfo?.cardNumber,
+                creditCardInfo?.expirationYear,
+                creditCardInfo?.expirationMonth,
+                creditCardInfo?.securityCode,
+                billingAddress?.firstName,
+                billingAddress?.lastName,
+                billingAddress?.address1,
+                billingAddress?.city,
+                billingAddress?.state,
+                billingAddress?.postalCode
+        )
+        return fields.count { it == null } == fields.size
+    }
 
 data class ErrorMessages(
+        val needFirstName:String,
+        val needLastName:String,
         val invalidCreditCardNumber: String,
         val emptyCreditCardNumber: String,
         val invalidExpiration: String,

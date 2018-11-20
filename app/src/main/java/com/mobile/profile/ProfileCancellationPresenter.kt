@@ -2,19 +2,19 @@ package com.mobile.profile
 
 import com.mobile.ApiError
 import com.mobile.UserPreferences
-import com.mobile.model.ParcelableDate
 import com.mobile.extensions.DropDownFields
 import com.mobile.network.Api
+import com.mobile.network.BillingApi
 import com.mobile.requests.CancellationRequest
 import com.moviepass.R
 import io.reactivex.disposables.Disposable
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ProfileCancellationPresenter(var api: Api, var view: ProfileCancellationView){
+class ProfileCancellationPresenter(val api: Api, val billingAPi: BillingApi, val view: ProfileCancellationView) {
 
-    var userInfo : Disposable ? = null
-    var profileCancellationDisposable: Disposable ? = null
+    var userInfo: Disposable? = null
+    var profileCancellationDisposable: Disposable? = null
     var billingDate: Date? = null
 
     private fun loadUserInfo() {
@@ -22,26 +22,26 @@ class ProfileCancellationPresenter(var api: Api, var view: ProfileCancellationVi
         val userId = UserPreferences.userId
         userInfo = api.getUserDataRx(userId).subscribe({
             billingDate = it.nextBillingDate
-        },{
+        }, {
 
         })
     }
 
-    fun onCreate(){
+    fun onCreate() {
         loadUserInfo()
         view.bindView()
     }
 
-    fun onResume(){
-        if(billingDate == null)
+    fun onResume() {
+        if (billingDate == null)
             loadUserInfo()
     }
 
-    fun onSubmitCancellation(reason: String){
-        if(reason == DropDownFields.UNKNOWN.type)
+    fun onSubmitCancellation(reason: String) {
+        if (reason == DropDownFields.UNKNOWN.type)
             view.showErrorDialog(R.string.cancellation_drop_drown_error)
         else {
-            view.showCancellationConfirmationDialog(reason, "",billingDate)
+            view.showCancellationConfirmationDialog(reason, "", billingDate)
         }
     }
 
@@ -53,25 +53,27 @@ class ProfileCancellationPresenter(var api: Api, var view: ProfileCancellationVi
 
         view.showProgress()
 
-        val request = CancellationRequest(requestDate, cancelSubscriptionReason,"")
+        val request = CancellationRequest(requestDate, cancelSubscriptionReason, "")
 
         profileCancellationDisposable?.dispose()
 
         profileCancellationDisposable =
-                api
+                billingAPi
                         .requestCancellation(request)
                         .doAfterTerminate { view.hideProgress() }
                         .subscribe({
-                            view.successfullCancellation(it.nextBillingDate)
+                            view.successfullCancellation(it?.nextBillingDate)
                         })
                         { error ->
-                            when(error) {
-                                is ApiError -> view.unccessfullCancellation(error.error.message)
+                            when (error) {
+                                is ApiError -> {
+                                    view.unccessfullCancellation(error.error.message)
+                                }
                             }
                         }
     }
 
-    fun onDestroy(){
+    fun onDestroy() {
         userInfo?.dispose()
         profileCancellationDisposable?.dispose()
     }

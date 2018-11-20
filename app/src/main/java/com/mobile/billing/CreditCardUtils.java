@@ -63,7 +63,7 @@ public class CreditCardUtils {
     }
 
     public static boolean isValidDate(String cardValidity) {
-        if (!TextUtils.isEmpty(cardValidity) && cardValidity.length() == 5)
+        if (!TextUtils.isEmpty(cardValidity) && cardValidity.length() == 7)
         {
             String month=cardValidity.substring(0,2);
             String year=cardValidity.substring(3,5);

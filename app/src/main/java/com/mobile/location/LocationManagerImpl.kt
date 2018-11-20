@@ -120,7 +120,6 @@ class LocationUpdates(val single: Boolean, val permission: Boolean, val fused: F
                 }
             }
         }
-        println("request location updates")
         fused.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 

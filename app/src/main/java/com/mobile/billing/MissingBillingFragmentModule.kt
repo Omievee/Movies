@@ -1,6 +1,7 @@
 package com.mobile.billing
 
 import com.mobile.network.Api
+import com.mobile.network.BillingApi
 import com.mobile.session.SessionManager
 import dagger.Module
 import dagger.Provides
@@ -9,8 +10,8 @@ import dagger.Provides
 class MissingBillingFragmentModule {
 
     @Provides
-    fun providePresenter(fragment: MissingBillingFragment, sessionManager: SessionManager, api: Api): MissingBillingFragmentPresenter {
-        return MissingBillingFragmentPresenter(fragment, sessionManager, api)
+    fun providePresenter(fragment: MissingBillingFragment, sessionManager: SessionManager, api: Api, billingApi:BillingApi): MissingBillingFragmentPresenter {
+        return MissingBillingFragmentPresenter(fragment, sessionManager, api, billingApi)
     }
 
 }

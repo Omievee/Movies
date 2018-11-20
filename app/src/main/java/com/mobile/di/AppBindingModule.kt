@@ -4,6 +4,7 @@ import com.mobile.activities.ActivateMoviePassCard
 import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
 import com.mobile.alertscreen.AlertScreenModule
+import com.mobile.billing.ChangeBillingAndPlanInfoFragment
 import com.mobile.profile.ChangeShippingAddress
 import com.mobile.billing.MissingBillingFragment
 import com.mobile.billing.MissingBillingFragmentModule
@@ -108,6 +109,10 @@ interface AppBindingModule {
     @ActivityScope
     @ContributesAndroidInjector
     fun activateMoviepassCardActivity(): ActivateMoviePassCard
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    fun changeBilling():ChangeBillingAndPlanInfoFragment
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [MissingBillingFragmentModule::class])
