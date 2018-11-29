@@ -9,13 +9,13 @@ import com.mobile.history.model.ReservationHistory
 interface ReservationDao {
 
     @Query("select * from ReservationHistory")
-    fun getHistory():List<ReservationHistory>
+    fun getHistory(): List<ReservationHistory>
 
     @Query("delete from ReservationHistory")
     fun deleteAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveAll(list:List<ReservationHistory>)
+    fun saveAll(list: List<ReservationHistory>)
 
     @Transaction
     fun replaceHistory(list: List<ReservationHistory>) {
@@ -25,5 +25,8 @@ interface ReservationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun update(history: ReservationHistory)
+
+    @Query("SELECT * FROM ReservationHistory WHERE id = :historyId")
+    fun getHistoryById(historyId: Int) : ReservationHistory
 
 }

@@ -21,7 +21,7 @@ import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
 import com.mobile.fragments.TicketVerificationV2
-import com.mobile.history.HistoryDetailsFragment
+import com.mobile.history.HistoryDetailsActivity
 import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
@@ -234,7 +234,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
     }
 
     override fun showHistoryRateScreen(reservationHistory: ReservationHistory) {
-        showFragment(HistoryDetailsFragment.newInstance(reservationHistory, true))
+        startActivity(HistoryDetailsActivity.newInstance(this, historyItem = reservationHistory))
     }
 
 

@@ -1,5 +1,6 @@
 package com.mobile.history
 
+import com.mobile.history.StarsRating.Rating
 import com.mobile.history.model.ReservationHistory
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -11,6 +12,6 @@ interface HistoryManager {
      */
     fun getHistory(): Observable<List<ReservationHistory>>
     fun fetchLastMovieWithoutRating(): Single<ReservationHistory>
-    fun submitRating(history:ReservationHistory, wasGood:Boolean): Single<ReservationHistory>
+    fun submitRatingV2(history:ReservationHistory, rating: Rating): Single<ReservationHistory>
 
 }

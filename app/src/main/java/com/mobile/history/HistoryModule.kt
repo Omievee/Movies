@@ -4,6 +4,7 @@ import com.mobile.db.AppDatabase
 import com.mobile.db.ReservationDao
 import com.mobile.network.Api
 import com.mobile.network.ApiModule
+import com.mobile.network.GwApi
 import com.mobile.session.SessionManager
 import com.mobile.theater.TheaterDao
 import dagger.Module
@@ -22,7 +23,7 @@ class HistoryModule {
 
     @Provides
     @Singleton
-    fun provideHistoryManager(provider: Provider<ReservationDao>, api: Api, sessionManager: SessionManager): HistoryManager {
+    fun provideHistoryManager(provider: Provider<ReservationDao>, api: GwApi, sessionManager: SessionManager): HistoryManager {
         return HistoryManagerImpl(
                 dao = provider,
                 api = api,

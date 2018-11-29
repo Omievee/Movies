@@ -26,6 +26,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/bottomSheetNav" />
 
+
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/bottomSheetNav"
         android:layout_width="match_parent"
@@ -51,4 +52,6 @@
         android:layout_height="0dp"
         android:elevation="@dimen/bottom_navigation_elevation"
         android:visibility="invisible" />
+
+
 </android.support.constraint.ConstraintLayout>

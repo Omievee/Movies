@@ -9,8 +9,6 @@ import com.mobile.profile.ChangeShippingAddress
 import com.mobile.billing.MissingBillingFragment
 import com.mobile.billing.MissingBillingFragmentModule
 import com.mobile.fragments.*
-import com.mobile.history.HistoryDetailsFragment
-import com.mobile.history.HistoryFragment
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
 import com.mobile.loyalty.EditLoyaltyProgramFragment
@@ -33,6 +31,7 @@ import com.mobile.ticketverification.OcrCaptureFragment
 import com.mobile.ticketverification.TicketVerificationBottomSheetDialogFragment
 import com.mobile.tv.ReservationActivityModule
 import dagger.Module
+import com.mobile.history.*
 import dagger.android.ContributesAndroidInjector
 
 @Module
@@ -60,7 +59,7 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun searchFragment(): SearchFragment
+    fun searchFragment():SearchFragment
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [TheatersFragmentModule::class])
@@ -82,17 +81,13 @@ interface AppBindingModule {
     @ContributesAndroidInjector
     fun pastReservationsFragment(): HistoryFragment
 
-    @FragmentScope
-    @ContributesAndroidInjector
-    fun historyDeatils(): HistoryDetailsFragment
-
     @TVScope
     @ContributesAndroidInjector(modules = [TicketVerificationBottomSheetModule::class])
     fun ticketVerificationBottomSheetDialogFragment(): TicketVerificationBottomSheetDialogFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun enableLocation(): EnableLocationFragment
+    fun enableLocation():EnableLocationFragment
 
     @TVScope
     @ContributesAndroidInjector()
@@ -153,7 +148,7 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun accountDetailsFragment(): AccountDetailsFragment
+    fun accountDetailsFragment():AccountDetailsFragment
 
     @FragmentScope
     @ContributesAndroidInjector
@@ -172,5 +167,8 @@ interface AppBindingModule {
     @ContributesAndroidInjector(modules = [AlertScreenModule::class])
     fun alertScreenFragment(): AlertScreenFragment
 
+    @ActivityScope
+    @ContributesAndroidInjector(modules = [HistoryDetailModule::class])
+    fun historyDetailActivity(): HistoryDetailsActivity
 
 }

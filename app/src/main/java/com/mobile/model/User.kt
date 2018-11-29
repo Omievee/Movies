@@ -8,5 +8,6 @@ data class User(
         var authToken: String? = null,
         var password: String? = null,
         var oneDeviceId: String? = null,
-        var androidID: String? = null
+        var androidID: String? = null,
+        var UUID : String? = null
 )

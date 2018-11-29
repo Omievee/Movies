@@ -60,4 +60,10 @@
         android:layout_marginBottom="@dimen/bottom_navigation_height"
         app:layout_constraintBottom_toBottomOf="parent" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:id="@+id/fragmentContainer"
+        android:elevation="100dp"
+        android:layout_height="match_parent" />
+
 </android.support.constraint.ConstraintLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:id="@+id/root"
+    android:padding="@dimen/margin_standard"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/starOne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_star_empty"
+        app:layout_constraintEnd_toStartOf="@id/starTwo"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/starTwo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:src="@drawable/ic_star_empty"
+        app:layout_constraintEnd_toStartOf="@id/starThree"
+        app:layout_constraintStart_toEndOf="@id/starOne" />
+
+    <ImageView
+        android:id="@+id/starThree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:src="@drawable/ic_star_empty"
+        app:layout_constraintEnd_toStartOf="@id/starFour"
+        app:layout_constraintStart_toEndOf="@id/starTwo" />
+
+    <ImageView
+        android:id="@+id/starFour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:src="@drawable/ic_star_empty"
+        app:layout_constraintEnd_toStartOf="@id/starFive"
+        app:layout_constraintStart_toEndOf="@id/starThree" />
+
+    <ImageView
+        android:id="@+id/starFive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_standard"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_star_empty"
+        app:layout_constraintStart_toEndOf="@id/starFour" />
+
+</android.support.constraint.ConstraintLayout>

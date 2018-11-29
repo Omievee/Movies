@@ -141,6 +141,19 @@ class ApiModule {
 
     @Provides
     @Singleton
+    fun provideGwApi(client: OkHttpClient.Builder, gson: Gson): GwApi {
+        return Retrofit.Builder()
+                .baseUrl(BuildConfig.GATEWAY)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(client.build())
+                .build()
+                .create(GwApi::class.java)
+    }
+
+
+    @Provides
+    @Singleton
     fun provideMicroApi(client: OkHttpClient.Builder, gson: Gson): MicroApi {
         return Retrofit.Builder()
                 .baseUrl(BuildConfig.microServiceURL)

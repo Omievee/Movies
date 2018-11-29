@@ -15,6 +15,7 @@ import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import android.os.Build
+import android.util.Log
 import android.view.View
 import com.mobile.UserPreferences
 import com.mobile.listeners.BonusMovieClickListener

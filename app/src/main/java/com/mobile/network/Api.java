@@ -13,6 +13,7 @@ import com.mobile.requests.ChangedMindRequest;
 import com.mobile.requests.CredentialsRequest;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
+import com.mobile.requests.RatingRequest;
 import com.mobile.requests.SignUpRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.requests.VerificationLostRequest;
@@ -189,6 +190,8 @@ public interface Api {
 
     @POST("/rest/v1/movies/{movieId}/rate")
     Single<HistoryResponse> submitRatingRx(@Path("movieId") int movieId, @Body HistoryResponse request);
+
+
 
     @GET("/rest/v1/sharing/messages")
     Single<ReferAFriendResponse> referAFriend();

@@ -4,9 +4,11 @@ import com.mobile.UserPreferences
 import com.mobile.UserPreferences.historyLoadedDate
 import com.mobile.db.ReservationDao
 import com.mobile.UserPreferences.saveHistoryLoadedDate
+import com.mobile.history.StarsRating.Rating
 import com.mobile.history.model.ReservationHistory
 import com.mobile.network.Api
-import com.mobile.responses.HistoryResponse
+import com.mobile.network.GwApi
+import com.mobile.requests.RatingRequest
 import com.mobile.rx.Schedulers
 import com.mobile.session.SessionManager
 import io.reactivex.Observable
@@ -16,7 +18,8 @@ import io.reactivex.disposables.Disposable
 import java.util.*
 import javax.inject.Provider
 
-class HistoryManagerImpl(@History val dao: Provider<ReservationDao>, val api: Api, val sessionManager: SessionManager) : HistoryManager {
+class HistoryManagerImpl(@History val dao: Provider<ReservationDao>, val api: GwApi, val sessionManager: SessionManager) : HistoryManager {
+
 
     var getHistoryFromApi: Disposable? = null
 
@@ -35,7 +38,7 @@ class HistoryManagerImpl(@History val dao: Provider<ReservationDao>, val api: Ap
         return Observable.create<List<ReservationHistory>> {
 
             if (!onlyFromWeb) {
-                val movies = dao.get().getHistory().sortedByDescending { v-> v.createdAt }
+                val movies = dao.get().getHistory().sortedByDescending { v-> v.created }
 
                 if (it.isDisposed) {
                     return@create
@@ -44,13 +47,13 @@ class HistoryManagerImpl(@History val dao: Provider<ReservationDao>, val api: Ap
                 it.onNext(movies)
             }
 
-            if (hasItBeenFourHoursSinceHistoryTimeStamp) {
+//            if (hasItBeenFourHoursSinceHistoryTimeStamp) {
                 getHistoryFromApi(it)
-            } else {
-                if (!it.isDisposed) {
-                    it.onComplete()
-                }
-            }
+//            } else {
+//                if (!it.isDisposed) {
+//                    it.onComplete()
+//                }
+            //}
         }.compose(Schedulers.observableDefault())
     }
 
@@ -70,31 +73,31 @@ class HistoryManagerImpl(@History val dao: Provider<ReservationDao>, val api: Ap
     private fun getHistoryFromApi(emitter: ObservableEmitter<List<ReservationHistory>>) {
         getHistoryFromApi?.dispose()
         getHistoryFromApi =
-                api.reservationHistory
+                api.getReservationHistory()
                         .compose(Schedulers.singleBackground())
                         .map { reservationHistoryResponse ->
 
                             Collections.sort<ReservationHistory>(reservationHistoryResponse.reservations) { o1, o2 ->
-                                val latestReservation = o2.createdAt ?: 0
-                                val oldestReservation = o1.createdAt ?: 0
+                                val latestReservation = o2.created
+                                val oldestReservation = o1.created
 
                                 latestReservation.compareTo(oldestReservation)
                             }
 
                             reservationHistoryResponse.reservations?.let {
-                                dao.get().replaceHistory(it)
+                                 dao.get().replaceHistory(it)
                                 saveHistoryLoadedDate()
                                 it
                             } ?: throw RuntimeException()
                         }.map {
                             val lastMovie = it.firstOrNull()
-                            lastMovie?.let {
+                            lastMovie?.let { reservation ->
                                 UserPreferences
-                                        .setLastMovieSeen(lastMovie)
+                                        .setLastMovieSeen(reservation)
                             }
                             UserPreferences
                                     .setTotalMoviesSeen(it.size)
-                            val count = it.count { it.created?.after(Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -30) }.time) == true }
+                            val count = it.count { it.showtimeDate?.after(Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -30) }.time) == true }
                             UserPreferences.setTotalMoviesSeenLast30Days(count)
                             it
                         }
@@ -114,18 +117,15 @@ class HistoryManagerImpl(@History val dao: Provider<ReservationDao>, val api: Ap
                         }
     }
 
-    override fun submitRating(history: ReservationHistory, wasGood: Boolean): Single<ReservationHistory> {
+    override fun submitRatingV2(history: ReservationHistory, rating: Rating): Single<ReservationHistory> {
         val id = history.id ?: 0
 
-        val rating = when (wasGood) {
-            true -> "GOOD"
-            false -> "BAD"
-        }
+        val userRating = rating.starRating
         return api
-                .submitRatingRx(id, HistoryResponse(rating))
+                .submitRatingV2(RatingRequest(id,userRating))
                 .compose(Schedulers.singleBackground())
                 .map { _ ->
-                    history.userRating = rating
+                    history.userRating = userRating
                     dao.get().update(history)
                     history
                 }

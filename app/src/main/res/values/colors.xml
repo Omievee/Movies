@@ -20,6 +20,12 @@
     <color name="white_40_opacity">#40FFFFFF</color>
     <color name="white_80_opacity">#80FFFFFF</color>
     <color name="white_transparent">#40ffffff</color>
+
+
+
+
+    <color name="gradient_top_reservation_history">#37424d</color>
+    <color name="gradient_bottom_reservation_history">#161d25</color>
     <color name="gun_metal_mask">#404c5863</color>
     <color name="charcoalGrey">#303a43</color>
     <color name="gun_metal">#4c5863</color>

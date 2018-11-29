@@ -30,6 +30,8 @@ class AuthenticatedRequestInterceptor(val sessionManager: SessionManager) : Inte
             requestBuilder.apply {
                 addHeader("user_id", it.id.toString())
                 addHeader("auth_token", it.authToken ?: "")
+                addHeader("M-Auth-Token", it.authToken ?: "")
+                addHeader("M-User-Id", UserPreferences.restrictions.userUuid ?: "")
             }
         }
         requestBuilder.apply {

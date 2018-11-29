@@ -132,4 +132,6 @@ public class Constants {
     public static final int ENDLESS_SCROLL_SIZE = Integer.MAX_VALUE;
     public static final int ENDLESS_HALF_START_POSITION = ENDLESS_SCROLL_SIZE/2;
 
+    public static final String DEFAULT_MOVIE_POSTER = "http://a1.moviepass.com/posters/portrait/default.png";
+
 }

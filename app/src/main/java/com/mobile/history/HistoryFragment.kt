@@ -12,14 +12,17 @@ import com.mobile.adapters.BaseViewHolder
 import com.mobile.featured.VerticalMoviePosterView
 import com.mobile.fragments.MPFragment
 import com.mobile.history.model.ReservationHistory
+import com.mobile.home.HomeActivity
 import com.mobile.model.Movie
 import com.mobile.recycler.decorator.HistoryView
 import com.mobile.screening.MoviePosterClickListener
 import com.mobile.utils.highestElevation
+import com.mobile.utils.showFragment
 import com.mobile.widgets.SoftNavigationPlaceholder
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.fr_historydetails.*
 import kotlinx.android.synthetic.main.fragment_history.*
 import javax.inject.Inject
 
@@ -29,11 +32,13 @@ import javax.inject.Inject
 
 class HistoryFragment : MPFragment(), MoviePosterClickListener {
     override fun onMoviePosterClick(movie: Movie) {
+        val context = context ?: return
         val history = historyAdapter.data?.find {
             movie.id == it.id
         } ?: return
 
-        showFragment(HistoryDetailsFragment.newInstance(history, false))
+        val position = historyAdapter.data?.indexOf(history)
+        startActivity(HistoryDetailsActivity.newInstance(context, position?: 0, size = historyAdapter.data?.size))
     }
 
     var historyAdapter: ResevationAdapter = ResevationAdapter(this)
@@ -65,7 +70,7 @@ class HistoryFragment : MPFragment(), MoviePosterClickListener {
         })
         historyReycler.elevation = headerBar.highestElevation
         progress.visibility = View.VISIBLE
-        backButton.setOnClickListener { activity?.onBackPressed() }
+        backButton.setOnClickListener { activity.onBackPressed() }
         loadData()
     }
 

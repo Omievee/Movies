@@ -5,6 +5,9 @@
     android:id="@+id/detailsBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/gradient_reservation_history"
+    android:elevation="50dp"
     android:fitsSystemWindows="false">
 
     <ImageView
@@ -19,7 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="false"
-        android:textColor="@color/white"
+        android:text="asdasd"
+        android:textColor="@color/almost_white"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/historyDate"
@@ -32,11 +36,12 @@
         android:id="@+id/historyDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_standard"
         android:layout_marginBottom="@dimen/margin_half"
-        android:layout_marginTop="@dimen/margin_half"
         android:clickable="false"
-        android:textColor="@color/white"
-        android:textSize="18sp"
+        android:text="asdasd"
+        android:textColor="@color/almost_white"
+        android:textSize="@dimen/text_size_16"
         app:layout_constraintBottom_toTopOf="@+id/historyLocal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,8 +53,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_standard"
         android:clickable="false"
-        android:textColor="@color/white"
-        android:textSize="18sp"
+        android:text="asdasd"
+        android:textColor="@color/almost_white"
+        android:textSize="@dimen/text_size_16"
         app:layout_constraintBottom_toTopOf="@+id/enlargedImageContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +66,9 @@
         android:id="@+id/enlargedImageContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/didYouLikeIt"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:layout_marginBottom="@dimen/double_margin_standard"
+        app:layout_constraintBottom_toTopOf="@+id/stars"
         app:layout_constraintDimensionRatio="W,2:3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -71,53 +79,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="false"
-            fresco:scaleType="fitXY"
-            android:transitionName="historyPoster" />
+            android:src="@drawable/default_poster"
+            android:transitionName="historyPoster"
+            fresco:scaleType="fitXY" />
     </FrameLayout>
 
 
-    <TextView
-        android:id="@+id/didYouLikeIt"
+    <com.mobile.history.StarsRating.StarsRatingView
+        android:id="@+id/stars"
+        layout="@layout/stars_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:text="Did you like it?"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/likeContainer"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:layout_marginBottom="@dimen/double_margin_standard"
+        android:animateLayoutChanges="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/enlargedImageContainer" />
 
-    <RelativeLayout
-        android:id="@+id/likeContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/softNav"
-        app:layout_constraintTop_toBottomOf="@id/didYouLikeIt">
-
-
-        <ImageView
-            android:id="@+id/like"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@drawable/thumbsup" />
-
-        <ImageView
-            android:id="@+id/dislike"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="@dimen/double_margin_standard"
-            android:layout_toEndOf="@id/like"
-            android:src="@drawable/thumbsdown" />
-
-    </RelativeLayout>
-
-    <com.mobile.widgets.BottomSoftNavigationPlaceholder
-        android:id="@+id/softNav"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

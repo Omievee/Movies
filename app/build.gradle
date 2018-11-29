@@ -23,8 +23,8 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 148
-        versionName "3.1.8"
+        versionCode 149
+        versionName "3.1.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -37,6 +37,7 @@ android {
         buildConfigField "String", "GO_WATCH_IT_URL", '"https://click.moviepass.com/"'
         buildConfigField "String", "REGISTRATION_URL", '"https://stg.moviepass.com"'
         buildConfigField "String", "DEFAULT_LOCATION", 'null'
+        buildConfigField "String", "GATEWAY", '"https://gw-stg.moviepass.com"'
         buildConfigField "String", "REACTIVATION_URL", '"https://stg.moviepass.com/reactivate"'
         buildConfigField "com.mobile.location.UserLocation", "USER_LOCATION", 'null'
     }
@@ -95,6 +96,7 @@ android {
             buildConfigField "String", "MOVIE_CALENDAR_URL", '"https://moviepass.com/movies/?hideBottomNav=true"'
             buildConfigField "String", "REGISTRATION_URL", '"https://www.moviepass.com"'
             buildConfigField "String", "REACTIVATION_URL", '"https://www.moviepass.com/reactivate"'
+            buildConfigField "String", "GATEWAY", '"https://gw.moviepass.com"'
             ext.betaDistributionGroupAliases = "moviepass-group"
             ext.betaDistributionReleaseNotesFilePath = "release-notes.txt"
         }

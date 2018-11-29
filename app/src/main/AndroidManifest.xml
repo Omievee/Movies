@@ -290,6 +290,8 @@
             android:resource="@mipmap/ic_launcher_round" />
 
 
+
+        <activity android:name="com.mobile.history.HistoryDetailsActivity"></activity>
     </application>
 
 

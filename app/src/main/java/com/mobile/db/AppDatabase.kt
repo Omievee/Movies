@@ -6,7 +6,7 @@ import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Theater
 import com.mobile.theater.TheaterDao
 
-@Database(entities = [Theater::class, ReservationHistory::class], version = 1)
+@Database(entities = [Theater::class, ReservationHistory::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
 
    abstract fun theaterDao(): TheaterDao
