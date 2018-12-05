@@ -6,58 +6,78 @@
     android:layout_height="match_parent"
     tools:parentTag="android.support.constraint.ConstraintLayout">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/topGuide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="@dimen/margin_standard" />
 
-    <TextView
-        android:id="@+id/header"
-        style="@style/ProfileHeader"
-        android:layout_width="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topGuide" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/clickSpace"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?selectableItemBackground">
 
-    <TextView
-        android:id="@+id/name"
-        style="@style/ProfileTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header" />
 
-    <TextView
-        android:id="@+id/subHeader"
-        style="@style/ProfileSubHeader"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header" />
+        <android.support.constraint.Guideline
+            android:id="@+id/topGuide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="@dimen/margin_standard" />
 
-    <View
-        android:id="@+id/bottomGuide"
-        android:layout_width="@dimen/margin_standard"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/name" />
+        <TextView
+            android:id="@+id/header"
+            style="@style/ProfileHeader"
+            android:layout_width="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topGuide" />
 
-    <View
-        android:id="@+id/divider"
-        style="@style/divider"
-        android:layout_width="0dp"
-        android:layout_height=".5dp"
-        android:layout_marginEnd="@dimen/margin_standard"
-        android:layout_marginStart="@dimen/margin_standard"
-        android:alpha=".2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent" />
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:backgroundTint="@color/new_red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header" />
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/ProfileTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Hello"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/icon"
+            app:layout_constraintTop_toBottomOf="@id/header" />
+
+        <ImageView
+            android:id="@+id/arrowImage"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:src="@drawable/arrowforward"
+            android:tint="@color/new_red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/header" />
+
+        <View
+            android:id="@+id/bottomGuide"
+            android:layout_width="@dimen/margin_standard"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/name" />
+
+        <View
+            android:id="@+id/divider"
+            style="@style/divider"
+            android:layout_width="0dp"
+            android:layout_height=".5dp"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:alpha=".2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
 </merge>

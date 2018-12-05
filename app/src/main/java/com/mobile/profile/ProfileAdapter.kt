@@ -2,12 +2,14 @@ package com.mobile.profile
 
 import android.content.res.Resources
 import android.support.v4.app.Fragment
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.mobile.UserPreferences
 import com.mobile.adapters.BaseViewHolder
 import com.mobile.adapters.BasicDiffCallback
+import com.mobile.billing.Subscription
 import com.mobile.fragments.CappedPlanView
 import com.mobile.fragments.PeakContainerView
 import com.moviepass.BuildConfig
@@ -63,7 +65,7 @@ class ProfileAdapter(
     }
 
     companion object {
-        fun createData(last: ProfileData?, r: Resources): ProfileData {
+        fun createData(last: ProfileData?, r: Resources, planResponse: Subscription?): ProfileData {
             val old = last?.data ?: emptyList()
             val debugs = when (BuildConfig.DEBUG) {
                 true -> listOf(ProfilePresentation(
@@ -72,35 +74,34 @@ class ProfileAdapter(
                 false -> emptyList()
             }
             val newData = mutableListOf(
+
                     ProfilePresentation(
                             type = Profile.ACCOUNT_DETAILS,
-                            header = r.getString(R.string.profile),
-                            subHeader = when (UserPreferences.hasNewPeakPass) {
-                                true -> r.getString(R.string.peak_pass_added)
-                                false -> null
-                            },
-                            title = r.getString(R.string.account_details)
-
+                            title = r.getString(R.string.account_details),
+                            icon = ResourcesCompat.getDrawable(r, R.drawable.red_person, null)
                     ),
                     ProfilePresentation(
                             type = Profile.CURRENT_RESERVATION,
-                            title = r.getString(R.string.current_reservation)
+                            title = r.getString(R.string.current_reservation),
+                            icon = ResourcesCompat.getDrawable(r, R.drawable.red_ticket, null)
                     ),
                     ProfilePresentation(
                             type = Profile.HISTORY,
-                            title = r.getString(R.string.history)
+                            title = r.getString(R.string.history),
+                            icon = ResourcesCompat.getDrawable(r, R.drawable.red_history, null)
                     ),
                     ProfilePresentation(
                             type = Profile.REFER_A_FRIEND,
-                            title = r.getString(R.string.refer_a_friend)
+                            title = r.getString(R.string.refer_a_friend),
+                            icon = ResourcesCompat.getDrawable(r, R.drawable.red_refer, null)
                     ),
                     ProfilePresentation(
                             type = Profile.LOYALTY_PROGRAMS,
-                            title = r.getString(R.string.loyalty_programs)
+                            title = r.getString(R.string.loyalty_programs),
+                            icon = ResourcesCompat.getDrawable(r, R.drawable.red_loyalty, null)
                     ),
                     ProfilePresentation(
                             type = Profile.HOW_TO_USE_MOVIEPASS,
-                            header = r.getString(R.string.help),
                             title = r.getString(R.string.how_to_use_moviepass)
                     ),
                     ProfilePresentation(
@@ -131,8 +132,17 @@ class ProfileAdapter(
                             type = Profile.VERSION,
                             title = "App Version: ${BuildConfig.VERSION_NAME} Build: ${BuildConfig.VERSION_CODE}"
                     )
+
             ).apply {
                 addAll(debugs)
+            }
+
+            when (UserPreferences.restrictions.cappedPlan) {
+                null -> {
+                }
+                else -> {
+                    newData.add(0, ProfilePresentation(type = Profile.CAPPED_PLAN, data = planResponse))
+                }
             }
             return ProfileData(newData, DiffUtil.calculateDiff(BasicDiffCallback(old, newData)))
         }

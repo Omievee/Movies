@@ -1,5 +1,6 @@
 package com.mobile.profile
 
+import android.graphics.drawable.Drawable
 import com.mobile.adapters.ItemSame
 
 data class ProfilePresentation(
@@ -7,9 +8,10 @@ data class ProfilePresentation(
         val header: String? = null,
         val title: String? = null,
         val subHeader: String? = null,
+        var icon: Drawable? = null,
         var toggled: Boolean = false,
-        val link:String? = null,
-        val data:Any? = null
+        val link: String? = null,
+        val data: Any? = null
 ) : ItemSame<ProfilePresentation> {
     override fun sameAs(same: ProfilePresentation): Boolean {
         return equals(same)

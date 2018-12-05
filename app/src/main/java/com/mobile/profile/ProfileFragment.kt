@@ -15,11 +15,13 @@ import com.mobile.UserPreferences
 import com.mobile.activities.ActivatedCardTutorialActivity
 import com.mobile.activities.LogInActivity
 import com.mobile.analytics.AnalyticsManager
+import com.mobile.billing.Subscription
 import com.mobile.fragments.MPFragment
 import com.mobile.helpshift.HelpshiftHelper
 import com.mobile.history.HistoryFragment
 import com.mobile.loyalty.LoyaltyProgramFragment
 import com.mobile.network.Api
+import com.mobile.network.BillingApi
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.referafriend.ReferAFriendFragment
 import com.mobile.reservation.ReservationActivity
@@ -28,6 +30,7 @@ import com.mobile.utils.startIntentIfResolves
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
 
@@ -36,6 +39,12 @@ class ProfileFragment : MPFragment(), Primary {
 
     @Inject
     lateinit var analyticsManager: AnalyticsManager
+
+    var planSub: Disposable? = null
+    var planResponse: Subscription? = null
+
+    @Inject
+    lateinit var billingApi: BillingApi
 
     private val clickListener: ProfileClickListener = object : ProfileClickListener {
         override fun onClick(pres: ProfilePresentation) {
@@ -71,10 +80,32 @@ class ProfileFragment : MPFragment(), Primary {
                 else -> {
                 }
             }
-            adapter.data = ProfileAdapter.createData(adapter.data, resources)
+            adapter.data = ProfileAdapter.createData(adapter.data, resources, planResponse)
         }
 
     }
+
+
+    private fun fetchUserInfo() {
+        if (planResponse != null) {
+            return
+        }
+        planSub?.dispose()
+        planSub = billingApi.getSubscription().subscribe(
+                { t1 ->
+                    t1?.let {
+                        planResponse = it
+                        adapter.data = ProfileAdapter.createData(adapter.data, resources, planResponse)
+                    }
+                    val plan = planResponse?.data?.plan ?: return@subscribe
+
+                },
+                {
+                    it.printStackTrace()
+                }
+        )
+    }
+
 
     @Inject
     lateinit var api: Api
@@ -98,6 +129,7 @@ class ProfileFragment : MPFragment(), Primary {
     override fun onDestroyView() {
         super.onDestroyView()
         compositeSub.dispose()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -106,7 +138,7 @@ class ProfileFragment : MPFragment(), Primary {
         recyclerView.adapter = adapter
         recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(SpaceDecorator(lastBottom = resources.getDimension(R.dimen.bottom_navigation_height).toInt()))
-        adapter.data = ProfileAdapter.createData(adapter.data, resources)
+        adapter.data = ProfileAdapter.createData(adapter.data, resources, planResponse)
     }
 
     private fun onHelpClicked() {
@@ -154,5 +186,13 @@ class ProfileFragment : MPFragment(), Primary {
         val intent = Intent(activity, LogInActivity::class.java)
         startActivity(intent)
         activity?.finishAffinity()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isOnline()) {
+            fetchUserInfo()
+        }
+
     }
 }

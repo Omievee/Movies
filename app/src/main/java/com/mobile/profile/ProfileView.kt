@@ -18,7 +18,7 @@ class ProfileView(context: Context?, attrs: AttributeSet? = null) : ConstraintLa
     init {
         inflate(context, R.layout.layout_profile_view, this)
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
-        name.setOnClickListener {
+        clickSpace.setOnClickListener {
             presentation?.let {
                 clickListener?.onClick(it)
             }
@@ -28,14 +28,27 @@ class ProfileView(context: Context?, attrs: AttributeSet? = null) : ConstraintLa
     fun bind(pres: ProfilePresentation, clickListener: ProfileClickListener? = null) {
         this.presentation = pres
         this.clickListener = clickListener
-        if(pres.type==Profile.DIVIDER) {
+        if (pres.type == Profile.DIVIDER) {
             arrayOf(
-                    name,header,subHeader
-            ).forEach { it.visibility=View.GONE }
-            divider.visibility=View.VISIBLE
-            topGuide.visibility=View.VISIBLE
+                    name, header, arrowImage
+            ).forEach { it.visibility = View.GONE }
+            divider.visibility = View.VISIBLE
+            topGuide.visibility = View.VISIBLE
             return
         }
+
+        icon.visibility = when (pres.icon) {
+            null -> {
+                name.setPadding(55, 0, 0, 0)
+                View.GONE
+            }
+            else -> {
+                icon.background = pres.icon
+                View.VISIBLE
+            }
+        }
+
+
         name.contentDescription = pres.title
         name.text = pres.title
         header.text = pres.header
@@ -43,17 +56,21 @@ class ProfileView(context: Context?, attrs: AttributeSet? = null) : ConstraintLa
             header.text.isEmpty() -> View.GONE
             else -> View.VISIBLE
         }
-        subHeader.text = pres.subHeader
-        subHeader.visibility = when {
-            subHeader.text.isEmpty()->View.GONE
-            else->View.VISIBLE
+
+
+        arrowImage.visibility = when {
+            pres.title == "How To Use MoviePass" ||
+                    pres.title == "Help" ->
+                View.VISIBLE
+
+            else -> View.GONE
         }
         TextViewCompat.setTextAppearance(name, when (pres.type) {
             Profile.VERSION -> R.style.ProfileVersion
             else -> R.style.ProfileTitle
         })
         divider.visibility = when {
-            pres.type == Profile.VERSION -> View.GONE
+            pres.type == Profile.VERSION || pres.type == Profile.HOW_TO_USE_MOVIEPASS || pres.type == Profile.HELP-> View.GONE
             else -> View.VISIBLE
         }
         topGuide.visibility = divider.visibility

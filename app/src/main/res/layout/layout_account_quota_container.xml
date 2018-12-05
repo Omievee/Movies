@@ -10,8 +10,8 @@
         style="@style/RedThinText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_standard"
         android:layout_marginStart="@dimen/margin_standard"
+        android:layout_marginEnd="@dimen/margin_standard"
         android:paddingTop="@dimen/margin_standard"
         android:text="@string/newpass"
         android:textSize="18sp"
@@ -23,18 +23,23 @@
         style="@style/PeakPassesRemaining"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_standard"
         android:layout_marginStart="@dimen/margin_standard"
-        android:paddingBottom="@dimen/margin_half"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:gravity="center_horizontal"
         android:paddingTop="@dimen/margin_standard"
+        android:paddingBottom="@dimen/margin_half"
+        android:text="header"
         app:layout_constraintTop_toBottomOf="@id/newKey" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/countContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_standard"
         android:layout_marginStart="@dimen/margin_standard"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header">
 
         <TextView
@@ -42,14 +47,17 @@
             style="@style/MPText_Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            style="@style/InfoIcon"
             android:id="@+id/infoIcon"
-            android:visibility="invisible"
+            style="@style/InfoIcon"
             android:layout_marginStart="@dimen/margin_quarter"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/amount"
             app:layout_constraintTop_toTopOf="parent" />
@@ -60,41 +68,43 @@
         android:id="@+id/description2"
         style="@style/MPText_Italic"
         android:layout_width="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_standard"
         android:layout_marginEnd="@dimen/margin_standard"
-        app:layout_constraintTop_toBottomOf="@id/countContainer"
+        android:gravity="center_horizontal"
+        android:paddingTop="@dimen/margin_half"
         android:paddingBottom="@dimen/margin_half"
-        android:paddingTop="@dimen/margin_half" />
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/countContainer" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/descriptionContainer"
-        android:layout_marginStart="@dimen/margin_standard"
-        android:layout_marginEnd="@dimen/margin_standard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:layout_marginEnd="@dimen/margin_standard"
         app:layout_constraintTop_toBottomOf="@id/description2">
 
         <TextView
             android:id="@+id/description"
             style="@style/MPText"
             android:layout_width="0dp"
-            app:layout_constraintEnd_toStartOf="@+id/infoIcon2"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="@dimen/margin_half"
             android:paddingBottom="@dimen/margin_half"
-            android:paddingTop="@dimen/margin_half" />
+            app:layout_constraintEnd_toStartOf="@+id/infoIcon2"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
-            style="@style/InfoIcon"
             android:id="@+id/infoIcon2"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/InfoIcon"
             android:layout_marginStart="@dimen/margin_quarter"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/description"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
