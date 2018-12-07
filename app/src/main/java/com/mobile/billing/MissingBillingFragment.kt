@@ -66,9 +66,11 @@ class MissingBillingFragment : MPFragment(), MissingBillingFragmentView {
         keyboardSpoof.layoutParams.height = (resources.displayMetrics.heightPixels*.45f).toInt()
         focusListener = ViewTreeObserver.OnGlobalFocusChangeListener dd@ { oldFocus, newFocus ->
             activity?: return@dd
+            newFocus?: return@dd
+            scrollView?: return@dd
             val r = Rect()
             newFocus.getLocalVisibleRect(r)
-            scrollView?: return@dd
+
             scrollView.smoothScrollTo(0, newFocus.bottom)
         }
         scrollView.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
