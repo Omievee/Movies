@@ -2,7 +2,6 @@ package com.mobile.profile
 
 import android.content.res.Resources
 import android.support.v4.app.Fragment
-import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
@@ -78,27 +77,27 @@ class ProfileAdapter(
                     ProfilePresentation(
                             type = Profile.ACCOUNT_DETAILS,
                             title = r.getString(R.string.account_details),
-                            icon = ResourcesCompat.getDrawable(r, R.drawable.red_person, null)
+                            icon = R.drawable.red_person
                     ),
                     ProfilePresentation(
                             type = Profile.CURRENT_RESERVATION,
                             title = r.getString(R.string.current_reservation),
-                            icon = ResourcesCompat.getDrawable(r, R.drawable.red_ticket, null)
+                            icon = R.drawable.red_ticket
                     ),
                     ProfilePresentation(
                             type = Profile.HISTORY,
                             title = r.getString(R.string.history),
-                            icon = ResourcesCompat.getDrawable(r, R.drawable.red_history, null)
+                            icon =R.drawable.red_history
                     ),
                     ProfilePresentation(
                             type = Profile.REFER_A_FRIEND,
                             title = r.getString(R.string.refer_a_friend),
-                            icon = ResourcesCompat.getDrawable(r, R.drawable.red_refer, null)
+                            icon = R.drawable.red_refer
                     ),
                     ProfilePresentation(
                             type = Profile.LOYALTY_PROGRAMS,
                             title = r.getString(R.string.loyalty_programs),
-                            icon = ResourcesCompat.getDrawable(r, R.drawable.red_loyalty, null)
+                            icon = R.drawable.red_loyalty
                     ),
                     ProfilePresentation(
                             type = Profile.HOW_TO_USE_MOVIEPASS,
@@ -134,15 +133,14 @@ class ProfileAdapter(
                     )
 
             ).apply {
+                when (UserPreferences.restrictions.cappedPlan) {
+                    null -> {
+                    }
+                    else -> {
+                        add(0, ProfilePresentation(type = Profile.CAPPED_PLAN, data = planResponse))
+                    }
+                }
                 addAll(debugs)
-            }
-
-            when (UserPreferences.restrictions.cappedPlan) {
-                null -> {
-                }
-                else -> {
-                    newData.add(0, ProfilePresentation(type = Profile.CAPPED_PLAN, data = planResponse))
-                }
             }
             return ProfileData(newData, DiffUtil.calculateDiff(BasicDiffCallback(old, newData)))
         }

@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mobile.UserPreferences
 import com.mobile.adapters.BasicDiffCallback
 import com.mobile.billing.ChangeBillingAndPlanInfoFragment
 import com.mobile.billing.Subscription
@@ -116,18 +115,6 @@ class AccountDetailsFragment : MPFragment() {
                             title = getString(R.string.plan_and_billing_info)
                     )
             )
-
-            when (UserPreferences.restrictions.peakPassInfo.enabled) {
-                true -> {
-                    if (newData.any { it.type == Profile.CAPPED_PLAN }) {
-                        newData.add(ProfilePresentation(type = Profile.DIVIDER))
-                    }
-                    newData.add(ProfilePresentation(
-                            type = Profile.PEAK_PASS
-                    )
-                    )
-                }
-            }
             return ProfileData(newData, DiffUtil.calculateDiff(BasicDiffCallback(old, newData)))
         }
 

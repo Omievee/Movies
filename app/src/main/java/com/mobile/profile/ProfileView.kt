@@ -2,6 +2,7 @@ package com.mobile.profile
 
 import android.content.Context
 import android.support.constraint.ConstraintLayout
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.widget.TextViewCompat
 import android.util.AttributeSet
 import android.view.View
@@ -43,14 +44,14 @@ class ProfileView(context: Context?, attrs: AttributeSet? = null) : ConstraintLa
                 View.GONE
             }
             else -> {
-                icon.background = pres.icon
+                icon.background = ResourcesCompat.getDrawable(resources, pres.icon ?: return, null)
                 View.VISIBLE
             }
         }
 
 
-        name.contentDescription = pres.title
-        name.text = pres.title
+        name.contentDescription = pres.title.toString()
+        name.text = pres.title.toString()
         header.text = pres.header
         header.visibility = when {
             header.text.isEmpty() -> View.GONE
@@ -59,8 +60,8 @@ class ProfileView(context: Context?, attrs: AttributeSet? = null) : ConstraintLa
 
 
         arrowImage.visibility = when {
-            pres.title == "How To Use MoviePass" ||
-                    pres.title == "Help" ->
+            pres.title == resources.getString(R.string.how_to_use_moviepass) ||
+                    pres.title == resources.getString(R.string.help) ->
                 View.VISIBLE
 
             else -> View.GONE
@@ -70,7 +71,7 @@ class ProfileView(context: Context?, attrs: AttributeSet? = null) : ConstraintLa
             else -> R.style.ProfileTitle
         })
         divider.visibility = when {
-            pres.type == Profile.VERSION || pres.type == Profile.HOW_TO_USE_MOVIEPASS || pres.type == Profile.HELP-> View.GONE
+            pres.type == Profile.VERSION || pres.type == Profile.HOW_TO_USE_MOVIEPASS || pres.type == Profile.HELP -> View.GONE
             else -> View.VISIBLE
         }
         topGuide.visibility = divider.visibility

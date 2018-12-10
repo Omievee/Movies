@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.mobile.ApiError
 import com.mobile.Primary
 import com.mobile.UserPreferences
@@ -33,6 +33,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
+
 
 class ProfileFragment : MPFragment(), Primary {
 
@@ -138,6 +139,7 @@ class ProfileFragment : MPFragment(), Primary {
         recyclerView.adapter = adapter
         recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(SpaceDecorator(lastBottom = resources.getDimension(R.dimen.bottom_navigation_height).toInt()))
+        recyclerView.smoothScrollToPosition(0)
         adapter.data = ProfileAdapter.createData(adapter.data, resources, planResponse)
     }
 
@@ -160,7 +162,7 @@ class ProfileFragment : MPFragment(), Primary {
                                 r != null -> startActivity(ReservationActivity.newInstance(
                                         activity, r, true
                                 ))
-                                e != null -> showSnackbar(e)
+                                e != null -> showToast(e)
                             }
                         }
         )
@@ -170,15 +172,16 @@ class ProfileFragment : MPFragment(), Primary {
         UserPreferences.showPeakPassBadge = true
     }
 
-    fun showSnackbar(e: Throwable) {
-        val view = view ?: return
+    fun showToast(e: Throwable) {
+
         val context = activity ?: return
-        val snack = Snackbar.make(view, when {
+
+        Toast.makeText(context, when {
             e is ApiError && e.httpErrorCode == 404 -> context.getString(R.string.reservation_not_found)
             e is ApiError -> e.error.message
             else -> context.getString(R.string.error)
-        }, Snackbar.LENGTH_SHORT)
-        snack.show()
+        }, Toast.LENGTH_SHORT).show()
+
     }
 
     private fun onLogout() {

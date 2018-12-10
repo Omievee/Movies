@@ -94,8 +94,7 @@ open class MPFragment : Fragment(), BackFragment {
 
     fun isOnline(): Boolean {
         val cm = activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val netInfo = cm.activeNetworkInfo
-        return netInfo != null && netInfo.isConnectedOrConnecting
+        return cm?.activeNetworkInfo?.isConnectedOrConnecting ?: false
     }
 
     fun fadeIn(view: View) {

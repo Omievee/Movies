@@ -1,6 +1,6 @@
 package com.mobile.profile
 
-import android.graphics.drawable.Drawable
+import android.support.annotation.DrawableRes
 import com.mobile.adapters.ItemSame
 
 data class ProfilePresentation(
@@ -8,7 +8,7 @@ data class ProfilePresentation(
         val header: String? = null,
         val title: String? = null,
         val subHeader: String? = null,
-        var icon: Drawable? = null,
+        @DrawableRes var icon: Int? = null,
         var toggled: Boolean = false,
         val link: String? = null,
         val data: Any? = null
@@ -20,5 +20,6 @@ data class ProfilePresentation(
     override fun contentsSameAs(same: ProfilePresentation): Boolean {
         return hashCode() == same.hashCode()
     }
-
 }
+
+
