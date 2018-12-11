@@ -7,9 +7,7 @@ import android.support.v4.app.FragmentManager
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnticipateInterpolator
-import android.view.animation.AnticipateOvershootInterpolator
 import com.mobile.BackFragment
 import com.mobile.seats.MPBottomSheetFragment
 import com.mobile.seats.SheetData
@@ -56,6 +54,11 @@ fun Fragment.showFragmentExtension(id:Int, fragment: Fragment? = null) {
     val fl = view.findViewById<ViewGroup>(id)
     val fragmentExisting = childFragmentManager.findFragmentById(id)
     if(fragmentExisting!=null) {
+
+
+
+
+
         return replaceFragmentExtension(id, fragment)
     }
     TransitionManager.endTransitions(fl)

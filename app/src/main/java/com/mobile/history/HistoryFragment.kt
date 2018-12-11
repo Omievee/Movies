@@ -12,17 +12,15 @@ import com.mobile.adapters.BaseViewHolder
 import com.mobile.featured.VerticalMoviePosterView
 import com.mobile.fragments.MPFragment
 import com.mobile.history.model.ReservationHistory
-import com.mobile.home.HomeActivity
 import com.mobile.model.Movie
+import com.mobile.model.Screening
 import com.mobile.recycler.decorator.HistoryView
 import com.mobile.screening.MoviePosterClickListener
 import com.mobile.utils.highestElevation
-import com.mobile.utils.showFragment
 import com.mobile.widgets.SoftNavigationPlaceholder
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fr_historydetails.*
 import kotlinx.android.synthetic.main.fragment_history.*
 import javax.inject.Inject
 
@@ -31,14 +29,15 @@ import javax.inject.Inject
  */
 
 class HistoryFragment : MPFragment(), MoviePosterClickListener {
-    override fun onMoviePosterClick(movie: Movie) {
+    override fun onMoviePosterClick(movie: Movie?, screening: Screening?) {
         val context = context ?: return
         val history = historyAdapter.data?.find {
-            movie.id == it.id
+            movie?.id == it.id
         } ?: return
 
         val position = historyAdapter.data?.indexOf(history)
-        startActivity(HistoryDetailsActivity.newInstance(context, position?: 0, size = historyAdapter.data?.size))
+        startActivity(HistoryDetailsActivity.newInstance(context, position
+                ?: 0, size = historyAdapter.data?.size))
     }
 
     var historyAdapter: ResevationAdapter = ResevationAdapter(this)
@@ -122,19 +121,19 @@ class HistoryFragment : MPFragment(), MoviePosterClickListener {
 class ResevationAdapter(val moviePosterClickListener: MoviePosterClickListener) : RecyclerView.Adapter<BaseViewHolder>() {
 
     var data: List<ReservationHistory>? = null
-    set(value) {
-        field = value
-        notifyDataSetChanged()
-    }
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     var totalWidth: Int? = null
-    var colSpan:Int?=null
+    var colSpan: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType == 0) {
             true -> return BaseViewHolder(HistoryView(parent.context).apply {
-                val newWIdth = (totalWidth!!/colSpan!!.toFloat()).toInt()
-                val height = newWIdth*3/2
+                val newWIdth = (totalWidth!! / colSpan!!.toFloat()).toInt()
+                val height = newWIdth * 3 / 2
                 layoutParams = ViewGroup.MarginLayoutParams(newWIdth, height)
             })
             else -> return BaseViewHolder(SoftNavigationPlaceholder(parent.context).apply {
@@ -170,7 +169,7 @@ class ResevationAdapter(val moviePosterClickListener: MoviePosterClickListener) 
         }
     }
 
-    fun onMeasuredHeight(totalWidth: Int, colSpan:Int) {
+    fun onMeasuredHeight(totalWidth: Int, colSpan: Int) {
         this.totalWidth = totalWidth
         this.colSpan = colSpan
         notifyDataSetChanged()

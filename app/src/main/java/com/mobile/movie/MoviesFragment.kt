@@ -21,6 +21,7 @@ import com.mobile.adapters.ItemSame
 import com.mobile.fragments.*
 import com.mobile.listeners.BonusMovieClickListener
 import com.mobile.model.Movie
+import com.mobile.model.Screening
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.responses.CurrentMoviesResponse
 import com.mobile.screening.MoviePosterClickListener
@@ -38,10 +39,11 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
 
 
     val movieClickListener = object : MoviePosterClickListener {
-        override fun onMoviePosterClick(movie: Movie) {
+        override fun onMoviePosterClick(movie: Movie?, screening: Screening?) {
             showFragment(ScreeningsFragment.newInstance(ScreeningsData(
                     movie = movie
             )))
+
         }
     }
 

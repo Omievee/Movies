@@ -76,7 +76,6 @@ class HistoryManagerImpl(@History val dao: Provider<ReservationDao>, val api: Gw
                 api.getReservationHistory()
                         .compose(Schedulers.singleBackground())
                         .map { reservationHistoryResponse ->
-
                             Collections.sort<ReservationHistory>(reservationHistoryResponse.reservations) { o1, o2 ->
                                 val latestReservation = o2.created
                                 val oldestReservation = o1.created

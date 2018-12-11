@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/THEATERS_LISTITEM"
+    android:id="@+id/theatersItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
@@ -25,10 +25,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/margin_half"
                 android:layout_marginTop="@dimen/margin_standard"
-                android:layout_marginBottom="@dimen/margin_standard"
-                >
+                android:layout_marginEnd="@dimen/margin_half"
+                android:layout_marginBottom="@dimen/margin_standard">
 
                 <ImageView
                     android:id="@+id/iconTicket"
@@ -43,16 +42,16 @@
                     android:id="@+id/iconSeat"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:tint="@color/white"
                     android:layout_marginStart="@dimen/margin_half"
                     android:src="@drawable/icon_seat_copy"
-                    android:textAlignment="viewEnd" />
+                    android:textAlignment="viewEnd"
+                    android:tint="@color/white" />
 
             </RelativeLayout>
 
 
             <TextView
-                android:id="@+id/THEATER_NAME_LISTITEM"
+                android:id="@+id/theaterName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_standard"
@@ -64,10 +63,10 @@
 
 
             <TextView
-                android:id="@+id/THEATER_ADDRESS2_LISTITEM"
+                android:id="@+id/theaterAddress2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/THEATER_NAME_LISTITEM"
+                android:layout_below="@id/theaterName"
                 android:layout_marginLeft="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_half"
                 android:text="[ADDRESS]"
@@ -79,14 +78,13 @@
                 android:id="@+id/Last"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/THEATER_ADDRESS2_LISTITEM"
-                android:layout_marginLeft="@dimen/margin_standard"
-                android:layout_marginTop="@dimen/margin_half"
-                android:orientation="horizontal">
+                android:layout_below="@id/theaterAddress2"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginTop="@dimen/margin_half">
 
 
                 <TextView
-                    android:id="@+id/THEATER_ADDRESS_LISTITEM"
+                    android:id="@+id/theaterAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -94,25 +92,32 @@
                     android:textColor="@color/almost_white"
                     android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/THEATER_DISTANCE_LISTITEM"
+                <RelativeLayout
+                    android:id="@+id/distanceLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="@dimen/double_margin_standard"
-                    android:layout_marginTop="3dp"
-                    android:text="[DISTANCE]"
-                    android:textColor="@color/almost_white"
-                    android:textSize="12sp" />
+                    android:layout_alignParentEnd="true">
 
-                <ImageView
-                    android:id="@+id/pinIcon"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentEnd="true"
-                    android:paddingEnd="@dimen/margin_half"
-                    android:src="@drawable/locationiconsmallred"
-                    android:tint="@color/new_red" />
+
+                    <TextView
+                        android:id="@+id/theaterDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="[DISTANCE]"
+                        android:textColor="@color/almost_white"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:id="@+id/pinIcon"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_toEndOf="@id/theaterDistance"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:paddingBottom="6dp"
+                        android:src="@drawable/locationiconsmallred"
+                        android:tint="@color/new_red" />
+                </RelativeLayout>
 
 
             </RelativeLayout>
