@@ -1,5 +1,7 @@
 package com.mobile.fragments
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.transition.Slide
 import android.support.transition.TransitionManager
@@ -14,7 +16,6 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.DecelerateInterpolator
-import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import com.mobile.BackFragment
 import com.mobile.utils.*
@@ -89,6 +90,11 @@ open class MPFragment : Fragment(), BackFragment {
             null -> View.INVISIBLE
             else -> View.VISIBLE
         }
+    }
+
+    fun isOnline(): Boolean {
+        val cm = activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return cm?.activeNetworkInfo?.isConnectedOrConnecting ?: false
     }
 
     fun fadeIn(view: View) {

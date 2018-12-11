@@ -659,7 +659,7 @@
     <string name="ticket_verification_info_text">After you have purchased your ticket with your MoviePass card please take a picture of your ticket stub. You will not be able to proceed in the app or see another movie with MoviePass until doing so.</string>
     <string name="ticket_verification_warning_text">DO NOT TAKE A PICTURE OF YOUR RECEIPT</string>
     <string name="ticket_verification_no_stub_button">Don’t have your ticket stub?</string>
-    <string name="help">Help and Chat Support</string>
+    <string name="help">Help &amp; Chat Support</string>
     <string name="ticket_verification_camera_dialog_title">This feature requires camera access.</string>
     <string name="not_now">Not Now</string>
     <string name="try_again">Try Again</string>
@@ -763,7 +763,7 @@
     <string name="discounted_ticket_price">Discounted Ticket Price</string>
     <string name="discounted_ticket_price_descriptiopn">MoviePass receives the ticket price for this showtime after the transaction has gone through.\n\nPlease check your theater for the price of this ticket. You will be charged the theater’s ticket price minus the MoviePass discount.</string>
     <string name="billing_card_on_file_eticket">Your billing card on file will be charged the theater’s listed ticket price for this showtime, minus the above MoviePass discount. A receipt will be emailed to you as a record for this transaction.</string>
-    <string name="cycle_renews_on">Cycle renews on %1$s</string>
+    <string name="cycle_renews_on">Your cycle renews on %1$s</string>
     <string name="guests_chance_go_free">Guests have a chance to go FREE!</string>
     <string name="log_in">Log In</string>
     <string name="not_a_member_join_today">Not a member? Join today!</string>

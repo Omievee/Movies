@@ -19,5 +19,6 @@ enum class Profile {
     SHIPPING_ADDRESS,
     VERSION,
     CLEAR_FLAGS,
+    WATCH_LIST,
     DIVIDER
 }

@@ -23,5 +23,6 @@ class ProfileCheckBox(context: Context?, attrs: AttributeSet? = null) : Constrai
             presentation.toggled = isChecked
             checkListener?.onToggle(presentation)
         }
+
     }
 }

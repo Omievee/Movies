@@ -6,10 +6,8 @@ import android.support.v4.widget.TextViewCompat
 import android.util.AttributeSet
 import android.view.View
 import com.mobile.UserPreferences
-import com.mobile.billing.Plan
 import com.mobile.billing.Subscription
 import com.mobile.profile.ProfilePresentation
-import com.mobile.responses.UserInfoResponse
 import com.mobile.seats.MPBottomSheetFragment
 import com.mobile.seats.SheetData
 import com.moviepass.R

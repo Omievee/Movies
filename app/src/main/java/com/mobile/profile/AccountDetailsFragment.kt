@@ -1,23 +1,19 @@
 package com.mobile.profile
 
 import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mobile.UserPreferences
 import com.mobile.adapters.BasicDiffCallback
 import com.mobile.billing.ChangeBillingAndPlanInfoFragment
-import com.mobile.billing.Plan
 import com.mobile.billing.Subscription
 import com.mobile.fragments.MPFragment
 import com.mobile.network.Api
 import com.mobile.network.BillingApi
 import com.mobile.recycler.decorator.SpaceDecorator
-import com.mobile.responses.UserInfoResponse
 import com.mobile.utils.navBarHeight
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
@@ -76,12 +72,6 @@ class AccountDetailsFragment : MPFragment() {
 
     }
 
-    fun isOnline(): Boolean {
-        val cm = activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val netInfo = cm.activeNetworkInfo
-        return netInfo != null && netInfo.isConnectedOrConnecting
-    }
-
     private fun fetchUserInfo() {
         if (planResponse != null) {
             return
@@ -90,7 +80,6 @@ class AccountDetailsFragment : MPFragment() {
         planSub = billingApi.getSubscription().subscribe(
                 { t1 ->
                     t1?.let {
-                        planResponse = it
                         adapter.data = data
                     }
                 },
@@ -126,22 +115,6 @@ class AccountDetailsFragment : MPFragment() {
                             title = getString(R.string.plan_and_billing_info)
                     )
             )
-            when (UserPreferences.restrictions.cappedPlan) {
-                null -> {
-                }
-                else -> newData.add(ProfilePresentation(type = Profile.CAPPED_PLAN, data = planResponse))
-            }
-            when (UserPreferences.restrictions.peakPassInfo.enabled) {
-                true -> {
-                    if (newData.any { it.type == Profile.CAPPED_PLAN }) {
-                        newData.add(ProfilePresentation(type = Profile.DIVIDER))
-                    }
-                    newData.add(ProfilePresentation(
-                            type = Profile.PEAK_PASS
-                    )
-                    )
-                }
-            }
             return ProfileData(newData, DiffUtil.calculateDiff(BasicDiffCallback(old, newData)))
         }
 
