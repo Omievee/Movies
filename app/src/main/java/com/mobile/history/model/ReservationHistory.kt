@@ -7,6 +7,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.mobile.history.StarsRating.Rating
 import com.mobile.model.Movie
+import com.mobile.model.ParcelableDate
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import java.text.ParseException
@@ -29,6 +30,9 @@ open class ReservationHistory(
         var createdAt: String? = null
 
 ) : Parcelable {
+
+    object DATE_FORMAT : SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'", Locale.US)
+
     @IgnoredOnParcel
     val
             rating: Rating
@@ -47,9 +51,8 @@ open class ReservationHistory(
             else -> {
                 var createdTime: Date? = null
 
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
                 try {
-                    createdTime = dateFormat.parse(date)
+                    createdTime = DATE_FORMAT.parse(date)
                 } catch (e: ParseException) {
                     e.printStackTrace()
                 }
@@ -62,20 +65,15 @@ open class ReservationHistory(
     @IgnoredOnParcel
     val showtimeDate: Date? by lazy {
         val date: String? = createdAt
-        when (date) {
-            null -> null
-            else -> {
-                var createdTime: Date? = null
+        date ?: return@lazy null
+        var createdTime: Date? = null
 
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                try {
-                    createdTime = dateFormat.parse(date)
-                } catch (e: ParseException) {
-                    e.printStackTrace()
-                }
-                createdTime
-            }
+        try {
+            createdTime = DATE_FORMAT.parse(date)
+        } catch (e: ParseException) {
+            e.printStackTrace()
         }
+        createdTime
     }
 
 
