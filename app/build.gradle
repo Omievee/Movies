@@ -146,6 +146,7 @@ repositories {
     google()
 }
 
+
 ext {
     dagger_version = '2.16'
     play_services_version = '16.0.0'
@@ -179,6 +180,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-places:$play_services_version"
     implementation "com.google.android.gms:play-services-vision:16.2.0"
     implementation("com.google.android.gms:play-services-gcm:$play_services_version")
+    implementation "com.google.android.gms:play-services-ads:$play_services_version"
 
     //Support Libraries
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'

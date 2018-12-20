@@ -109,6 +109,7 @@ class MissingBillingFragmentPresenter(
      */
     private fun isValid(data: BillingInfo): BillingInfo? {
         val validated = BillingInfo()
+
         if (creditCardChange) {
             validated.creditCardInfo = CreditCardInfo()
             data.creditCardInfo?.cardNumber = data.creditCardInfo?.cardNumber?.removeSpaces()

@@ -13,31 +13,45 @@ import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_featured_container.view.*
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest
+import com.google.android.gms.ads.formats.NativeCustomTemplateAd
 import com.mobile.Constants
+import com.mobile.UserPreferences
 import com.mobile.featured.FeaturedMovieAdapter
 import com.mobile.featured.IndicatorsRecyclerViewItemDecoration
+import com.mobile.location.LocationManager
 import com.mobile.model.Movie
 
 class FeaturedView(context: Context?, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
-
+    lateinit var moviePosterClickListener: MoviePosterClickListener
+    lateinit var presentation: MoviesPresentation
     var adapter: FeaturedMovieAdapter? = null
     var currentView: View? = null
     var linearLayout: LinearLayoutManager? = null
-    var snapHelper:  PagerSnapHelper ? = null
+    var snapHelper: PagerSnapHelper? = null
 
     init {
         View.inflate(context, R.layout.layout_featured_container, this)
     }
 
     fun bind(presentation: MoviesPresentation, moviePosterClickListener: MoviePosterClickListener) {
+        this.moviePosterClickListener = moviePosterClickListener
+        this.presentation = presentation
+
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
         linearLayout = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         trailerView.layoutManager = linearLayout
         snapHelper = PagerSnapHelper()
+        trailerView.onFlingListener = null;
         snapHelper?.attachToRecyclerView(trailerView)
-        setUpAdapter(presentation, moviePosterClickListener)
-        trailerView.adapter = adapter
 
+        when (presentation.ad) {
+            null -> adapter = FeaturedMovieAdapter(featured = presentation.data.second, featuredAd = null, moviePosterClickListener = moviePosterClickListener)
+            else -> adapter = FeaturedMovieAdapter(featured = presentation.data.second, featuredAd = presentation.ad, moviePosterClickListener = moviePosterClickListener)
+        }
+        trailerView.adapter = adapter
         val endlessScrollSize = presentation.data.second.size
         when (endlessScrollSize > 1) {
             true -> {
@@ -53,6 +67,7 @@ class FeaturedView(context: Context?, attrs: AttributeSet? = null) : ConstraintL
             }
         }
     }
+
 
     private fun setUpScrollListener() {
         trailerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -85,11 +100,6 @@ class FeaturedView(context: Context?, attrs: AttributeSet? = null) : ConstraintL
 
     private fun onScrollFinished() {
         adapter?.onScrollFinished(currentView)
-    }
-
-    private fun setUpAdapter(presentation: MoviesPresentation, moviePosterClickListener: MoviePosterClickListener) {
-        adapter = FeaturedMovieAdapter(presentation.data.second, moviePosterClickListener)
-
     }
 
 }

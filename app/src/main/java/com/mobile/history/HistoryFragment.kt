@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import com.google.android.gms.ads.formats.NativeCustomTemplateAd
 import com.mobile.adapters.BaseViewHolder
 import com.mobile.featured.VerticalMoviePosterView
 import com.mobile.fragments.MPFragment
@@ -29,6 +30,10 @@ import javax.inject.Inject
  */
 
 class HistoryFragment : MPFragment(), MoviePosterClickListener {
+    override fun onAdPosterClick(adId: String) {
+
+    }
+
     override fun onMoviePosterClick(movie: Movie?, screening: Screening?) {
         val context = context ?: return
         val history = historyAdapter.data?.find {

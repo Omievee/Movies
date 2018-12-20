@@ -53,7 +53,7 @@ class DeepLinksManagerImpl(val context: Application, val moviesManager: MoviesMa
     }
 
 
-    private fun findCorrespondingMovie(movieId: Int) {
+    fun findCorrespondingMovie(movieId: Int) {
         moviesSub?.dispose()
         moviesSub = moviesManager
                 .getAllMovies()
@@ -61,6 +61,7 @@ class DeepLinksManagerImpl(val context: Application, val moviesManager: MoviesMa
                     m.find {
                         it.id == movieId
                     }
+
                 }
                 .subscribe({
                     subject.onNext(DeepLinkCategory(it, null))

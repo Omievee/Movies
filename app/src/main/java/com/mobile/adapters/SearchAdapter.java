@@ -21,6 +21,7 @@ import com.mobile.search.AfterSearchListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -48,6 +49,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Suggestion
     @Override
     public void onBindViewHolder(SuggestionHolder holder, int position) {
         Movie suggestion = moviesArrayList.get(holder.getAdapterPosition());
+
         holder.title.setText(suggestion.getTitle());
         holder.rating.setText("Rated " + suggestion.getRating());
         int t = suggestion.getRunningTime();

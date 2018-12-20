@@ -10,8 +10,8 @@ import com.mobile.screening.MoviePosterClickListener
 
 class MoviesAdapter(
         val movieCLickListener: MoviePosterClickListener,
-        val bonusClickListener: BonusMovieClickListener?=null
-        ) : RecyclerView.Adapter<BaseViewHolder>() {
+        val bonusClickListener: BonusMovieClickListener? = null
+) : RecyclerView.Adapter<BaseViewHolder>() {
 
     var data: Data? = null
         set(value) {
@@ -31,6 +31,7 @@ class MoviesAdapter(
         return pres.type.ordinal
     }
 
+
     override fun getItemCount(): Int {
         return data?.list?.size ?: 0
     }
@@ -38,10 +39,13 @@ class MoviesAdapter(
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val view = holder.itemView
-        val pres = data!!.list[position]
+        val pres = data?.list?.get(position)
         when (view) {
-            is FeaturedView -> view.bind(pres, movieCLickListener)
-            is CategoryView -> view.bind(position = data!!.positionForCateogry(position), cat = pres.data, moviePosterClickListener = movieCLickListener, bonusMovieClickListener = bonusClickListener)
+            is FeaturedView -> pres?.let {
+                view.bind(presentation = it, moviePosterClickListener = movieCLickListener)
+            }
+            is CategoryView -> view.bind(position = data?.positionForCateogry(position)
+                    ?: return, cat = pres?.data!!, moviePosterClickListener = movieCLickListener, bonusMovieClickListener = bonusClickListener)
         }
     }
 

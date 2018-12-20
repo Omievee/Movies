@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import com.google.android.gms.ads.formats.NativeCustomTemplateAd
 import com.mobile.Primary
 import com.mobile.activities.ActivateMoviePassCard
 import com.mobile.adapters.BasicDiffCallback
@@ -39,11 +40,14 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
 
 
     val movieClickListener = object : MoviePosterClickListener {
+        override fun onAdPosterClick(adId: String) {
+            presenter.onAdIdFound(adId = Integer.valueOf(adId))
+        }
+
         override fun onMoviePosterClick(movie: Movie?, screening: Screening?) {
             showFragment(ScreeningsFragment.newInstance(ScreeningsData(
                     movie = movie
             )))
-
         }
     }
 
@@ -90,7 +94,7 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         activity ?: return
         activateMPCardView.visibility = View.GONE
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -98,11 +102,10 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         recyclerView.addItemDecoration(SpaceDecorator(
                 lastBottom =
                 resources.getDimension(R.dimen.bottom_navigation_height).toInt()
-                +
-                resources.getDimension(R.dimen.margin_half).toInt()
+                        +
+                        resources.getDimension(R.dimen.margin_half).toInt()
         ))
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
             var scrolled: Float = 0f
             val constraintSet = ConstraintSet().apply {
                 clone(toolbar)
@@ -138,14 +141,18 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         activateMPCardView.setOnClickListener {
             startActivity(Intent(context, ActivateMoviePassCard::class.java))
         }
+
         presenter.onViewCreated()
     }
 
-    override fun updateAdapter(t1: CurrentMoviesResponse) {
+    override fun updateAdapter(t1: CurrentMoviesResponse, native: NativeCustomTemplateAd?) {
         val old = adapter.data?.list ?: emptyList()
         val newD = mutableListOf<MoviesPresentation>()
         if (!t1.featured.isEmpty()) {
-            newD.add(MoviesPresentation(type = MovieAdapterType.FEATURED, data = Pair("Featured", t1.featured)))
+            when (native) {
+                null -> newD.add(MoviesPresentation(type = MovieAdapterType.FEATURED, data = Pair("Featured", t1.featured)))
+                else -> newD.add(MoviesPresentation(type = MovieAdapterType.FEATURED, data = Pair("Featured", t1.featured), ad = native))
+            }
         }
         t1.categorizedMovies.forEach {
             newD.add(MoviesPresentation(type = MovieAdapterType.CATEGORY, data = it))
@@ -162,8 +169,6 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
 
     override fun onResume() {
         super.onResume()
-
-
         presenter.onResume()
     }
 
@@ -171,23 +176,22 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         super.onDestroyView()
         presenter.onDestroy()
     }
-
 }
 
 class Data(val list: List<MoviesPresentation>, val diffResult: DiffUtil.DiffResult) {
     val hasFeatured by lazy {
-        list.firstOrNull()?.type==MovieAdapterType.FEATURED
+        list.firstOrNull()?.type == MovieAdapterType.FEATURED
     }
 
-    fun positionForCateogry(currPosition:Int):Int {
-        if(hasFeatured) {
-            return currPosition-1
+    fun positionForCateogry(currPosition: Int): Int {
+        if (hasFeatured) {
+            return currPosition - 1
         }
         return currPosition
     }
 }
 
-data class MoviesPresentation(val type: MovieAdapterType, val data: Pair<String, List<com.mobile.model.Movie>>) : ItemSame<MoviesPresentation> {
+data class MoviesPresentation(val type: MovieAdapterType, val data: Pair<String, List<Movie>>, val ad: NativeCustomTemplateAd? = null) : ItemSame<MoviesPresentation> {
     override fun sameAs(same: MoviesPresentation): Boolean {
         return equals(same)
     }
@@ -195,7 +199,6 @@ data class MoviesPresentation(val type: MovieAdapterType, val data: Pair<String,
     override fun contentsSameAs(same: MoviesPresentation): Boolean {
         return hashCode() == same.hashCode()
     }
-
 }
 
 enum class MovieAdapterType {
