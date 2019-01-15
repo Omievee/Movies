@@ -145,7 +145,8 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         presenter.onViewCreated()
     }
 
-    override fun updateAdapter(t1: CurrentMoviesResponse, native: NativeCustomTemplateAd?) {
+    override fun updateAdapter(t1: CurrentMoviesResponse?, native: NativeCustomTemplateAd?) {
+        t1?:return
         val old = adapter.data?.list ?: emptyList()
         val newD = mutableListOf<MoviesPresentation>()
         if (!t1.featured.isEmpty()) {

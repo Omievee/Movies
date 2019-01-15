@@ -23,7 +23,7 @@ class MoviesFragmentPresenter(val context: Application, val view: MoviesView, va
     var deeplinksDisposable: Disposable? = null
     var locationDisposable: Disposable? = null
     var ad: NativeCustomTemplateAd? = null
-    lateinit var t1: CurrentMoviesResponse
+    var t1: CurrentMoviesResponse? = null
     var currentLocation: Location? = null
     fun onViewCreated() {
         determineMovieFromDeepLink()

@@ -7,7 +7,7 @@ import com.mobile.responses.CurrentMoviesResponse
 interface MoviesView {
     fun hideProgress()
     fun showProgress()
-    fun updateAdapter(t1: CurrentMoviesResponse, native:NativeCustomTemplateAd?)
+    fun updateAdapter(t1: CurrentMoviesResponse?, native:NativeCustomTemplateAd?)
     fun showSubscriptionActivationRequired()
     fun showDeepLinkMovie(movie: Movie?)
     fun hideSubscriptionActivationRequired()

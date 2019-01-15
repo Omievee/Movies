@@ -51,7 +51,7 @@ import javax.inject.Inject
 
 class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, MissingCheckinListener, ScreeningsFragmentView, BonusMovieClickListener, TheaterClickListener, MoviePosterClickListener {
     override fun onAdPosterClick(adId:String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     @Inject
@@ -95,7 +95,7 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
 
     val synopsislistener = object : MoviePosterClickListener {
         override fun onAdPosterClick(adId:String) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
         }
 
         override fun onMoviePosterClick(movie: Movie?, screning: Screening?) {
