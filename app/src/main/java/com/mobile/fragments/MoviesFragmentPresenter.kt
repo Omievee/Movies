@@ -92,8 +92,8 @@ class MoviesFragmentPresenter(val context: Application, val view: MoviesView, va
         val adLoader = AdLoader.Builder(context, context.getString(R.string.ad_manager_hero_unit))
                 .withAdListener(object : AdListener() {
                     override fun onAdFailedToLoad(errorCode: Int) {
-                        view.updateAdapter(t1, null)
                         ad = null
+                        view.updateAdapter(t1, null)
                     }
                 })
                 .forCustomTemplateAd(context.getString(R.string.ad_manager_native_template_id), {
