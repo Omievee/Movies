@@ -150,10 +150,7 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         val old = adapter.data?.list ?: emptyList()
         val newD = mutableListOf<MoviesPresentation>()
         if (!t1.featured.isEmpty()) {
-            when (native) {
-                null -> newD.add(MoviesPresentation(type = MovieAdapterType.FEATURED, data = Pair("Featured", t1.featured)))
-                else -> newD.add(MoviesPresentation(type = MovieAdapterType.FEATURED, data = Pair("Featured", t1.featured), ad = native))
-            }
+            newD.add(MoviesPresentation(type = MovieAdapterType.FEATURED, data = Pair("Featured", t1.featured), ad = native))
         }
         t1.categorizedMovies.forEach {
             newD.add(MoviesPresentation(type = MovieAdapterType.CATEGORY, data = it))

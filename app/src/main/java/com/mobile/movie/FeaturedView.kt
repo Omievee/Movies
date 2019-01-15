@@ -47,10 +47,7 @@ class FeaturedView(context: Context?, attrs: AttributeSet? = null) : ConstraintL
         trailerView.onFlingListener = null;
         snapHelper?.attachToRecyclerView(trailerView)
 
-        when (presentation.ad) {
-            null -> adapter = FeaturedMovieAdapter(featured = presentation.data.second, featuredAd = null, moviePosterClickListener = moviePosterClickListener)
-            else -> adapter = FeaturedMovieAdapter(featured = presentation.data.second, featuredAd = presentation.ad, moviePosterClickListener = moviePosterClickListener)
-        }
+        adapter = FeaturedMovieAdapter(featured = presentation.data.second, featuredAd = presentation.ad, moviePosterClickListener = moviePosterClickListener)
         trailerView.adapter = adapter
         val endlessScrollSize = presentation.data.second.size
         when (endlessScrollSize > 1) {
