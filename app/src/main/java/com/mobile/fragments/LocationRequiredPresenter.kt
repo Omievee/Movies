@@ -1,6 +1,5 @@
 package com.mobile.fragments
 
-import com.mobile.analytics.AnalyticsManager
 import com.mobile.location.LocationManager
 import com.mobile.location.UserLocation
 import com.mobile.rx.Schedulers

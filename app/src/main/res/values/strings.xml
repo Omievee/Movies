@@ -9,7 +9,7 @@
 
     <!-- Android Manifest -->
     <string name="title_activity_main">MainActivity</string>
-
+    <string name="app_ad_id">ca-app-pub-8502614652488669~7788092580</string>
     <string name="menu_bottom_navigation_main_profile">Account</string>
     <string name="menu_bottom_navigation_main_reservations">Reservations</string>
     <string name="menu_bottom_navigation_main_movies">Movies</string>
@@ -781,5 +781,12 @@
     <string name="profile_password_change">Password change successful</string>
     <string name="profile_password_mismatch">Current password does not match</string>
     <string name="profile_shipping_update">Address update successful</string>
+    <string name="adUnit_id">ca-app-pub-8502614652488669/4090011413</string>
+    <string name="ad_manager_hero_unit_staging">/21771951721/uat_hero_main</string>
+    <string name="ad_manager_hero_unit">/21771951721/hero_main</string>
+    <string name="ad_manager_movie_id">movie_ID</string>
+    <string name="ad_manager_movie_title">movie_Title</string>
+    <string name="ad_manager_poster">Poster</string>
+    <string name="ad_manager_native_template_id">11816867</string>
 
 </resources>

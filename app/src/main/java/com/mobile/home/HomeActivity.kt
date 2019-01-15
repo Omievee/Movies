@@ -11,6 +11,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest
+import com.google.android.gms.ads.formats.NativeCustomTemplateAd
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.mobile.BackFragment
@@ -78,6 +84,8 @@ class HomeActivity : MPActivty(), HomeActivityView {
         setContentView(R.layout.activity_home)
         bottomSpoof.visibility = View.VISIBLE
         bottomSheetNav.setDefaultBackgroundResource(R.color.bottomNav)
+
+        MobileAds.initialize(this, getString(R.string.app_ad_id))
         adapter = HomeViewPager(supportFragmentManager)
         bottomSheetNav.setNotificationTextColorResource(R.color.drawer_item)
         val tabs = arrayOf(
@@ -97,7 +105,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
         val activity = this
         var idsSet = false
         bottomSheetNav.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            if(idsSet) {
+            if (idsSet) {
                 return@addOnLayoutChangeListener
             }
             val group = bottomSheetNav.children { index, view ->
@@ -192,6 +200,8 @@ class HomeActivity : MPActivty(), HomeActivityView {
                     finishAffinity()
                 }.show()
     }
+
+
 
     override fun onBackPressed() {
         if (onBackExtension()) {

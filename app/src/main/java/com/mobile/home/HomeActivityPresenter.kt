@@ -1,11 +1,16 @@
 package com.mobile.home
 
 import android.os.Build
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest
+import com.google.android.gms.ads.formats.NativeCustomTemplateAd
 import com.mobile.ApiError
 import com.mobile.Change
 import com.mobile.UserPreferences
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.deeplinks.DeepLinksManager
+import com.mobile.featured.FeaturedMovieAdapter
 import com.mobile.history.HistoryManager
 import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
@@ -20,7 +25,9 @@ import com.mobile.responses.RestrictionsResponse
 import com.mobile.responses.SubscriptionStatus
 import com.mobile.session.SessionManager
 import com.mobile.session.UserManager
+import com.moviepass.R
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.layout_featured_container.view.*
 import java.util.concurrent.TimeUnit
 
 

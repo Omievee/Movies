@@ -5,12 +5,14 @@ import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import com.google.gson.internal.bind.util.ISO8601Utils
 import com.mobile.history.StarsRating.Rating
 import com.mobile.model.Movie
 import com.mobile.model.ParcelableDate
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import java.text.ParseException
+import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,8 +33,6 @@ open class ReservationHistory(
 
 ) : Parcelable {
 
-    object DATE_FORMAT : SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'", Locale.US)
-
     @IgnoredOnParcel
     val
             rating: Rating
@@ -52,7 +52,7 @@ open class ReservationHistory(
                 var createdTime: Date? = null
 
                 try {
-                    createdTime = DATE_FORMAT.parse(date)
+                    createdTime = ISO8601Utils.parse(date, ParsePosition(0))
                 } catch (e: ParseException) {
                     e.printStackTrace()
                 }
@@ -69,7 +69,7 @@ open class ReservationHistory(
         var createdTime: Date? = null
 
         try {
-            createdTime = DATE_FORMAT.parse(date)
+            createdTime = ISO8601Utils.parse(date, ParsePosition(0))
         } catch (e: ParseException) {
             e.printStackTrace()
         }
@@ -85,4 +85,3 @@ open class ReservationHistory(
         )
     }
 }
-

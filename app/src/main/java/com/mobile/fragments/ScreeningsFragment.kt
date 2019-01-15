@@ -12,6 +12,7 @@ import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.ads.formats.NativeCustomTemplateAd
 import com.mobile.ApiError
 import com.mobile.Constants
 import com.mobile.Error
@@ -49,6 +50,9 @@ import javax.inject.Inject
 
 
 class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, MissingCheckinListener, ScreeningsFragmentView, BonusMovieClickListener, TheaterClickListener, MoviePosterClickListener {
+    override fun onAdPosterClick(adId:String) {
+
+    }
 
     @Inject
     lateinit var presenter: ScreeningsFragmentPresenter
@@ -90,6 +94,10 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     val adapter: ScreeningsAdapter = ScreeningsAdapter(this, this, this, this, this)
 
     val synopsislistener = object : MoviePosterClickListener {
+        override fun onAdPosterClick(adId:String) {
+
+        }
+
         override fun onMoviePosterClick(movie: Movie?, screning: Screening?) {
             movie?.let { showSynopsis(it) }
         }
