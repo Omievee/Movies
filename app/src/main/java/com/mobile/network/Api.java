@@ -79,9 +79,7 @@ public interface Api {
     @POST("rest/v1/passwordChange")
     Single<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
 
-    /**
-     * Change Email
-     */
+    /*Change Email*/
     @POST("rest/v1/emailChange")
     Single<ChangeEmailResponse> changeEmail(@Body ChangeEmailRequest request);
 
@@ -190,7 +188,6 @@ public interface Api {
 
     @POST("/rest/v1/movies/{movieId}/rate")
     Single<HistoryResponse> submitRatingRx(@Path("movieId") int movieId, @Body HistoryResponse request);
-
 
 
     @GET("/rest/v1/sharing/messages")

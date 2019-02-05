@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.mobile.fragments.MPFragment
 import com.mobile.network.BillingApi
+import com.mobile.plans.ChangePlansFragment
 import com.mobile.profile.ProfileCancellationFragment
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
@@ -33,10 +34,6 @@ class ChangeBillingAndPlanInfoFragment : MPFragment() {
         super.onAttach(context)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         subscriptionSub?.dispose()
@@ -45,8 +42,8 @@ class ChangeBillingAndPlanInfoFragment : MPFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        cancelPlan.setOnClickListener {
-            showFragment(ProfileCancellationFragment())
+        changeCancelPlan.setOnClickListener {
+            showFragment(ChangePlansFragment())
         }
         billingChange.setOnClickListener {
             showFragment(MissingBillingFragment())

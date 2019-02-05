@@ -19,6 +19,8 @@ import com.mobile.network.Api
 import com.mobile.network.BillingApi
 import com.mobile.network.StaticApi
 import com.mobile.network.StaticApiModule
+import com.mobile.plans.PlansManager
+import com.mobile.plans.PlansManagerImpl
 import com.mobile.session.SessionManager
 import com.mobile.session.SessionManagerImpl
 import com.mobile.session.UserManager
@@ -47,6 +49,13 @@ class AppModule {
     fun provideDeepLinkManager(context: Application, moviesManager: MoviesManager, theatersManager: TheaterManager): DeepLinksManager {
         return DeepLinksManagerImpl(context, moviesManager, theatersManager)
     }
+
+    @Provides
+    @Singleton
+    fun providePlansManager(api:Api, billingApi: BillingApi): PlansManager {
+        return PlansManagerImpl(api, billingApi)
+    }
+
 
     @Provides
     @Singleton

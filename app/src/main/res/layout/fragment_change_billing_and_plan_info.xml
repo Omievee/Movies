@@ -82,14 +82,15 @@
                     android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/cancelPlan"
+                    android:id="@+id/changeCancelPlan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="8dp"
-                    android:text="Cancel"
+                    android:text="@string/profile_change_cancel"
                     android:textColor="@color/new_red"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/text_size_14"
+                    android:textStyle="bold" />
 
                 <View
                     android:id="@+id/view"
@@ -142,6 +143,7 @@
                         android:text="@string/edit"
                         android:textColor="@color/new_red"
                         android:textSize="@dimen/text_size_14"
+                        android:textStyle="bold"
                         android:visibility="visible" />
 
                     <View

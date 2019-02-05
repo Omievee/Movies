@@ -788,5 +788,10 @@
     <string name="ad_manager_movie_title">movie_Title</string>
     <string name="ad_manager_poster">Poster</string>
     <string name="ad_manager_native_template_id">11816867</string>
+    <string name="profile_change_cancel">Change / Cancel</string>
+    <string name="change_plans_header">Plans</string>
+    <string name="change_plan_text_choose">Choose the plan you want to switch to.</string>
+    <string name="change_plans_cancel">Cancel Membership</string>
+    <string name="change_plans_current_plan">Current Plan: </string>
 
 </resources>

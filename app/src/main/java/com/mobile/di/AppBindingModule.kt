@@ -32,6 +32,8 @@ import com.mobile.ticketverification.TicketVerificationBottomSheetDialogFragment
 import com.mobile.tv.ReservationActivityModule
 import dagger.Module
 import com.mobile.history.*
+import com.mobile.plans.ChangePlansFragment
+import com.mobile.plans.ChangePlansModule
 import dagger.android.ContributesAndroidInjector
 
 @Module
@@ -59,7 +61,7 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun searchFragment():SearchFragment
+    fun searchFragment(): SearchFragment
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [TheatersFragmentModule::class])
@@ -87,7 +89,7 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun enableLocation():EnableLocationFragment
+    fun enableLocation(): EnableLocationFragment
 
     @TVScope
     @ContributesAndroidInjector()
@@ -107,7 +109,7 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun changeBilling():ChangeBillingAndPlanInfoFragment
+    fun changeBilling(): ChangeBillingAndPlanInfoFragment
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [MissingBillingFragmentModule::class])
@@ -148,7 +150,7 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun accountDetailsFragment():AccountDetailsFragment
+    fun accountDetailsFragment(): AccountDetailsFragment
 
     @FragmentScope
     @ContributesAndroidInjector
@@ -171,4 +173,8 @@ interface AppBindingModule {
     @ContributesAndroidInjector(modules = [HistoryDetailModule::class])
     fun historyDetailActivity(): HistoryDetailsActivity
 
+
+    @FragmentScope
+    @ContributesAndroidInjector(modules = [ChangePlansModule::class])
+    fun changePlansFragment(): ChangePlansFragment
 }
