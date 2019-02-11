@@ -1,6 +1,7 @@
 package com.mobile.plans
 
-interface ChangePlansInt{
+interface ChangePlansInt {
+    fun displayCancellationFragment()
 
 
 }

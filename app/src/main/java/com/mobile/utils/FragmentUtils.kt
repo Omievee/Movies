@@ -55,10 +55,6 @@ fun Fragment.showFragmentExtension(id:Int, fragment: Fragment? = null) {
     val fragmentExisting = childFragmentManager.findFragmentById(id)
     if(fragmentExisting!=null) {
 
-
-
-
-
         return replaceFragmentExtension(id, fragment)
     }
     TransitionManager.endTransitions(fl)

@@ -8,7 +8,6 @@ import dagger.Provides;
 @Module
 public abstract class ChangePlansModule {
 
-
     @Provides
     @FragmentScope
     static ChangePlansPresenter providePresenter(ChangePlansFragment fragment, PlansManager plansManager) {

@@ -20,4 +20,8 @@ class ChangePlansPresenter(val view: ChangePlansInt, val plansManager: PlansMana
     fun changePlan() {
 
     }
+
+    fun cancelClicked() {
+        view.displayCancellationFragment()
+    }
 }
