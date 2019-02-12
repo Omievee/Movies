@@ -17,6 +17,14 @@ import javax.inject.Inject
 
 
 class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener {
+
+
+    @Inject
+    lateinit var presenter: ChangePlansPresenter
+
+    var plansAdapter: PlansAdapter? = null
+
+
     override fun displayCancellationFragment() {
         showFragment(ProfileCancellationFragment())
     }
@@ -29,11 +37,6 @@ class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener {
         }
     }
 
-
-    @Inject
-    lateinit var presenter: ChangePlansPresenter
-
-    var plansAdapter: PlansAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_change_plans, container, false)
@@ -53,7 +56,32 @@ class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener {
         cancelMembership.setOnClickListener(this)
         backButton.setOnClickListener(this)
 
-        //  plansRecycler.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        presenter.onCreate()
+        plansRecycler.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        plansAdapter = PlansAdapter()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.onCreate()
+    }
+
+
+    override fun updateAdapter(plans: Array<PlanObject>?) {
+        val p = plans
+        if (p.isNullOrEmpty()) {
+            plansRecycler.visibility = View.GONE
+            noPlans.visibility = View.VISIBLE
+        }
+
+        plansAdapter?.data = plans?.toList()
+        plansRecycler.adapter = plansAdapter
+
+    }
+
+    override fun displayError() {
+
     }
 
 }

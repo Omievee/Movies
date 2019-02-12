@@ -3,8 +3,8 @@ package com.mobile.plans
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ChangePlansResponse(val currentPlan: AvailablePlans?,
+class ChangePlansResponse(val currentPlan: PlanObject,
                           val nextBillingDate: Date?,
-                          val availablePlans: ArrayList<AvailablePlans>?
+                          val availablePlans: Array<PlanObject>
 ) {
 }

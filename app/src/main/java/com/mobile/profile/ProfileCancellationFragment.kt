@@ -98,8 +98,6 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, Custo
 
     override fun showCancellationConfirmationDialog(reason: String, comment: String, billingDate: Date?) {
 
-
-
         var message: String = getString(R.string.profile_cancel_remain_active, when (billingDate) {
             null -> ""
             else -> SimpleDateFormat("M/d/yy").format(billingDate)
@@ -119,7 +117,7 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, Custo
 
         var message: String? = when (billingDate) {
             null -> getString(R.string.profile_cancel_membership_message)
-            else -> getString(R.string.profile_cancel_membership_message) + " " + billingDate
+            else -> """${getString(R.string.profile_cancel_membership_message)} $billingDate"""
         }
         val context = context ?: return
         MPAlertDialog(context)

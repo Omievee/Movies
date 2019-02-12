@@ -50,6 +50,20 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/choosePlans" />
 
+    <TextView
+        android:id="@+id/noPlans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_standard"
+        android:text="@string/change_plans_no_plans"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/space" />
+
     <com.mobile.widgets.MPProgressButton
         android:id="@+id/changePlansButton"
         android:layout_width="wrap_content"
@@ -63,9 +77,9 @@
         android:id="@+id/cancelMembership"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/margin_standard"
         android:text="@string/change_plans_cancel"
         android:textSize="15sp"
-        android:paddingTop="@dimen/margin_standard"
         app:layout_constraintBottom_toTopOf="@id/ph"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

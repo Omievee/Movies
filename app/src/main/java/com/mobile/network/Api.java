@@ -5,6 +5,7 @@ import com.mobile.loyalty.TheaterChain;
 import com.mobile.model.Emails;
 import com.mobile.model.ProviderInfo;
 import com.mobile.model.User;
+import com.mobile.plans.ChangePlansResponse;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CardActivationRequest;
 import com.mobile.requests.ChangeEmailRequest;
@@ -116,19 +117,10 @@ public interface Api {
     @PUT("/rest/v1/reservations")
     Single<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
 
-    /* History  */
-    @GET("/rest/v1/reservations/history")
-    Call<HistoryResponse> getReservations();
-
-    @GET("/rest/v1/reservations/history")
-    Single<ReservationHistoryResponse> getReservationHistory();
 
     @GET("/rest/v2/seats")
     Single<SeatingsInfoResponse> getSeats(@Query("tribuneTheaterId") int tribuneTheaterId, @Query("theater") String theater, @Query("performanceId") String performanceId);
 
-    /* Verify Ticket Photo */
-    @POST("/rest/v1/reservations/{reservationId}/verification")
-    Call<VerificationResponse> verifyTicket(@Path("reservationId") int reservationId, @Body VerificationRequest request);
 
     /* Verify Ticket Photo */
     @POST("/rest/v1/reservations/{reservationId}/verification")
@@ -142,18 +134,6 @@ public interface Api {
     @GET("/rest/v3/theater/{id}/screenings/{segment}")
     Single<ScreeningsResponseV2> getScreeningsForTheaterV2(@Path("id") int id, @Path("segment") int segment);
 
-    /* user SubscriptionData */
-    @GET("/rest/v1/users/{userId}")
-    Call<UserInfoResponse> getUserData(@Path("userId") int userId);
-
-    /* user SubscriptionData */
-    @GET("/rest/v1/users/{userId}")
-    Single<UserInfoResponse> getUserRX(@Path("userId") int userId);
-
-
-    /* user SubscriptionData */
-    @GET("/rest/v1/users/{userId}")
-    Single<UserInfoResponse> getUserDataV2(@Path("userId") int userId);
 
     /* user SubscriptionData */
     @GET("/rest/v1/users/{userId}")
@@ -166,29 +146,9 @@ public interface Api {
     @PUT("/rest/v1/users/{userId}")
     Single<Object> updateAddress(@Path("userId") int userId, @Body AddressChangeRequest address);
 
-
-    /*ALL MOVIES FOR MAIN PAGE */
-    @GET("/#env#/movies/current.json")
-    Call<CurrentMoviesResponse> getAllCurrentMovies();
-
-
-    /* ALL MOVIES FOR SEARCH */
-    @GET("/#env#/movies/all.json")
-    Call<List<AllMoviesResponse>> getAllMovies();
-
-
-    /* ALL THEATERS */
-    @GET("/theaters/all.json")
-    Call<TheatersResponse> getAllMoviePassTheaters();
-
-
     //NEW RESTRICTIONS
     @GET("auth/v1/session/{userId}")
     Call<RestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
-
-    @POST("/rest/v1/movies/{movieId}/rate")
-    Single<HistoryResponse> submitRatingRx(@Path("movieId") int movieId, @Body HistoryResponse request);
-
 
     @GET("/rest/v1/sharing/messages")
     Single<ReferAFriendResponse> referAFriend();
@@ -208,4 +168,12 @@ public interface Api {
 
     @HTTP(method = "DELETE", path = "/rest/v1/loyalty/{chain}/remove", hasBody = true)
     Single<Map<String, Object>> theaterChainRemove(@Path("chain") String chain, @Body Map<String, String> chainData);
+
+
+    @GET("/subscriptions/v1/available-plans")
+    Single<ChangePlansResponse> getAvailablePlans();
+
+    @PUT("/subscriptions/v1/change-plan/")
+    Single<ChangePlansResponse> updateCurrentPlan(@Body String planUUID);
+
 }
