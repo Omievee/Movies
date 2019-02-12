@@ -793,5 +793,6 @@
     <string name="change_plan_text_choose">Choose the plan you want to switch to.</string>
     <string name="change_plans_cancel">Cancel Membership</string>
     <string name="change_plans_current_plan">Current Plan: </string>
+    <string name="change_plans_no_plans">There are currently no other plans on offer to change to.</string>
 
 </resources>

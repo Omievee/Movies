@@ -17,16 +17,7 @@ import javax.inject.Inject
 
 
 class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener {
-    override fun displayCancellationFragment() {
-        showFragment(ProfileCancellationFragment())
-    }
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.changePlansButton -> presenter.changePlan()
-            R.id.backButton -> activity?.onBackPressed()
-            R.id.cancelMembership -> presenter.cancelClicked()
-        }
+    override fun planUpdateSuccess() {
     }
 
 
@@ -34,6 +25,20 @@ class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener {
     lateinit var presenter: ChangePlansPresenter
 
     var plansAdapter: PlansAdapter? = null
+    var newPlanUUID: String? = null
+
+    override fun displayCancellationFragment() {
+        showFragment(ProfileCancellationFragment())
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.changePlansButton -> presenter.changePlan(newPlanUUID ?: "")
+            R.id.backButton -> activity?.onBackPressed()
+            R.id.cancelMembership -> presenter.cancelClicked()
+        }
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_change_plans, container, false)
@@ -49,11 +54,44 @@ class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.onCreate()
+
         changePlansButton.setOnClickListener(this)
         cancelMembership.setOnClickListener(this)
         backButton.setOnClickListener(this)
 
-        //  plansRecycler.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        presenter.onCreate()
+        plansRecycler.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        plansAdapter = PlansAdapter()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.onCreate()
+    }
+
+
+    override fun updateAdapter(plans: Array<PlanObject>?) {
+        val p = plans
+
+        if (p.isNullOrEmpty()) {
+            plansRecycler.visibility = View.GONE
+            noPlans.visibility = View.VISIBLE
+        }
+
+        plansAdapter?.data = plans?.toList()
+        plansRecycler.adapter = plansAdapter
+
+    }
+
+    override fun displayError() {
+
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroyEverything()
     }
 
 }

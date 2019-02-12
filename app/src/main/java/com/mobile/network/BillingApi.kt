@@ -2,6 +2,7 @@ package com.mobile.network
 
 import com.mobile.billing.BillingInfo
 import com.mobile.billing.Subscription
+import com.mobile.plans.ChangePlansResponse
 import com.mobile.requests.CancellationRequest
 import com.mobile.responses.CancellationResponse
 import io.reactivex.Single
@@ -21,5 +22,7 @@ interface BillingApi {
 
     @GET("subscriptions/v1/user")
     fun getSubscription(): Single<Subscription>
+
+
 
 }
