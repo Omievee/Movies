@@ -30,11 +30,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
-        buildConfigField "String", "baseUrl", '"https://staging.moviepass.com/"'
+        buildConfigField "String", "baseUrl", '"https://gw-stg.moviepass.com/"'
         buildConfigField "String", "STATIC_URL", '"https://a1.moviepass.com/staging/"'
         buildConfigField "String", "ZUORA_URL", '"https://gw.moviepass.com/gw/"'
-        buildConfigField "String", "registrationURL", '"https://registration-stg.herokuapp.com"'
-        buildConfigField "String", "microServiceURL", '"https://authorization-service-stg.herokuapp.com/"'
+        buildConfigField "String", "registrationURL", '"https://auth-stg.moviepass.com"'
+        buildConfigField "String", "microServiceURL", '"https://auth-stg.moviepass.com/"'
         buildConfigField "String", "COGNITO_KEY", '"us-east-1:4b4b52ee-11c2-4c56-b109-b654a1d2ad37"'
         buildConfigField "String", "GO_WATCH_IT_URL", '"https://click.moviepass.com/"'
         buildConfigField "String", "REGISTRATION_URL", '"https://stg.moviepass.com"'

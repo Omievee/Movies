@@ -1,11 +1,10 @@
 package com.mobile.network;
 
-import com.mobile.history.response.ReservationHistoryResponse;
 import com.mobile.loyalty.TheaterChain;
 import com.mobile.model.Emails;
 import com.mobile.model.ProviderInfo;
 import com.mobile.model.User;
-import com.mobile.plans.ChangePlansResponse;
+import com.mobile.plans.ChangePlanResponse;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CardActivationRequest;
 import com.mobile.requests.ChangeEmailRequest;
@@ -14,20 +13,16 @@ import com.mobile.requests.ChangedMindRequest;
 import com.mobile.requests.CredentialsRequest;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
-import com.mobile.requests.RatingRequest;
 import com.mobile.requests.SignUpRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.reservation.CurrentReservationV2;
-import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ChangeEmailResponse;
 import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.ChangedMindResponse;
-import com.mobile.responses.CurrentMoviesResponse;
-import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.PlanResponse;
 import com.mobile.responses.ReferAFriendResponse;
 import com.mobile.responses.ReservationResponse;
@@ -35,13 +30,13 @@ import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.ScreeningsResponseV2;
 import com.mobile.responses.SeatingsInfoResponse;
 import com.mobile.responses.SignUpResponse;
-import com.mobile.responses.TheatersResponse;
 import com.mobile.responses.UserInfoResponse;
 import com.mobile.responses.VerificationLostResponse;
 import com.mobile.responses.VerificationResponse;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import io.reactivex.Single;
 import retrofit2.Call;
@@ -169,11 +164,9 @@ public interface Api {
     @HTTP(method = "DELETE", path = "/rest/v1/loyalty/{chain}/remove", hasBody = true)
     Single<Map<String, Object>> theaterChainRemove(@Path("chain") String chain, @Body Map<String, String> chainData);
 
+    @GET("/gw/subscriptions/v1/available-plans")
+    Single<ChangePlanResponse> getAvailablePlans(@Header(USER_ID) String userId);
 
-    @GET("/subscriptions/v1/available-plans")
-    Single<ChangePlansResponse> getAvailablePlans();
-
-    @PUT("/subscriptions/v1/change-plan/")
-    Single<ChangePlansResponse> updateCurrentPlan(@Body String planUUID);
-
+    @POST("/gw/subscriptions/v1/change-plan/user")
+    Single<ChangePlanResponse> updateCurrentPlan(@Header(USER_ID) String userId, @Body String plan_id);
 }
