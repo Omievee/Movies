@@ -8,7 +8,5 @@ import com.mobile.model.Theater
  */
 
 interface ShowtimeClickListener {
-
     fun onShowtimeClick(theater: Theater?, screening: Screening, showtime: String)
-
 }

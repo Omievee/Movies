@@ -107,7 +107,6 @@ object UserPreferences {
                 } catch (e: java.lang.Exception) {
                     field = UserInfoResponse()
                 }
-
             }
             return field
         }

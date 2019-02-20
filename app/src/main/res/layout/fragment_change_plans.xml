@@ -38,6 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/change_plan_text_choose"
+        android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,6 +49,10 @@
         android:id="@+id/plansRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/choosePlans" />
 
     <TextView
@@ -77,17 +82,11 @@
         android:id="@+id/cancelMembership"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/margin_standard"
+        android:layout_marginBottom="90dp"
+        android:paddingBottom="@dimen/margin_half"
+        android:paddingTop="@dimen/margin_half"
         android:text="@string/change_plans_cancel"
         android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@id/ph"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.mobile.widgets.BottomSoftNavigationPlaceholder
-        android:id="@+id/ph"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

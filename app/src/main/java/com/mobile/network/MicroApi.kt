@@ -9,5 +9,4 @@ interface MicroApi {
 
     @GET("auth/v1/session/{userId}")
     fun getSession(@Path("userId") userId: Int): Single<RestrictionsResponse>
-
 }

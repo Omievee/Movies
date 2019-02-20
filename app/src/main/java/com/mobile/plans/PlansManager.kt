@@ -3,9 +3,7 @@ package com.mobile.plans
 import io.reactivex.Single
 
 interface PlansManager {
-
-    fun getAvailablePlans(): Single<ChangePlansResponse>
-    fun updateCurrentPlan(request:String):Single<ChangePlansResponse>
-    fun checkCurrentBilling()
+    fun getAvailablePlans(): Single<ChangePlanResponse>
+    fun updateCurrentPlan(request:UpdatePlan):Single<Any>
 }
 

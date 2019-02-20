@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/planObj"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/margin_standard">
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/margin_standard"
+    android:paddingTop="@dimen/margin_standard"
+    android:paddingEnd="@dimen/margin_standard">
 
 
     <TextView
@@ -13,6 +16,7 @@
         android:paddingBottom="@dimen/margin_half"
         android:text="@string/change_plans_current_plan"
         android:textSize="13sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/planTitle"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -20,8 +24,6 @@
         android:id="@+id/planTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MoviePass Select"
-        android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,25 +35,44 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/margin_half"
-        android:text="$9.95"
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/planTitle" />
 
-    <ImageView
-        android:id="@+id/planIcon"
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/unchecked_plan"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/currentPlan" />
+        app:layout_constraintTop_toBottomOf="@id/currentPlan">
+
+        <RadioButton
+            android:id="@+id/planIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/plans_radio_button" />
+    </RadioGroup>
+
+    <!--<ImageButton-->
+    <!--android:id="@+id/planIcon"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@drawable/plans_radio_button"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/currentPlan" />-->
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/plansDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_half"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/margin_half"
+        android:paddingTop="@dimen/margin_minimum"
+        android:paddingEnd="@dimen/margin_half"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/planPrice">

@@ -75,6 +75,7 @@ class HomeActivityPresenter(val view: HomeActivityView,
         }
         setProfileTabBadge()
         subscribeToBadgeChange()
+        println("user data: " + UserPreferences.user.UUID)
 
         if (UserPreferences.loadUserData) {
             retrieveUserData()
@@ -165,6 +166,8 @@ class HomeActivityPresenter(val view: HomeActivityView,
                     determineOverSoftCap(it)
                     determineTicketVerification(it)
                     determineAlertScreen(it.alert)
+                    UserPreferences.user.UUID = it.userUuid
+                    println("user data uuuid " + it.userUuid)
                     analyticsManager.onBrazeDataSetUp(UserPreferences.user)
                 }, {
                     it.printStackTrace()
@@ -179,12 +182,19 @@ class HomeActivityPresenter(val view: HomeActivityView,
                 .map {
                     UserPreferences.userInfo = it
                     UserPreferences.user = it.user ?: return@map
+
+
                 }
                 .subscribe({
                 }, {
                     it.printStackTrace()
                 })
+
+
+
     }
+
+
 
     private fun determineShowWhiteListFragment(it: RestrictionsResponse?) {
         val restrictions = it ?: return

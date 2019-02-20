@@ -397,7 +397,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
 
 
     public void checkRestrictions(User user) {
-
         RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(user.getId()).enqueue(new Callback<RestrictionsResponse>() {
             @Override
             public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {

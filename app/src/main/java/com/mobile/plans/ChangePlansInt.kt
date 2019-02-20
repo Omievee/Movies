@@ -2,7 +2,8 @@ package com.mobile.plans
 
 interface ChangePlansInt {
     fun displayCancellationFragment()
-    fun updateAdapter(plans: Array<PlanObject>?)
-    fun displayError()
-
+    fun updateAdapter(current: PlanObject, plans: List<PlanObject>?)
+    fun displayError(err:String)
+    fun planUpdateSuccess(msg:String)
+    fun displayBottomSheetFragment(selectedPlan:PlanObject)
 }
