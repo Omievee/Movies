@@ -8,10 +8,17 @@ class ChangePlansPresenter(val view: ChangePlansInt, val plansManager: PlansMana
 
     var plansDisposable: Disposable? = null
     var updateDisp: Disposable? = null
-    var availablePlans: Array<PlanObject>? = null
+    var availablePlans: List<PlanObject>? = null
+    var planToUse:PlanObject? = null
+    var currentPlan:PlanObject?=null
 
     fun onCreate() {
         getPlans()
+    }
+
+    fun onPlanSelected(plan:PlanObject) {
+        planToUse=plan
+        view.updateAdapter(currentPlan!!,planToUse!!,availablePlans!!)
     }
 
     private fun getPlans() {
@@ -20,16 +27,17 @@ class ChangePlansPresenter(val view: ChangePlansInt, val plansManager: PlansMana
                 .getAvailablePlans()
                 .subscribe({
                     availablePlans = it.data.availablePlans
-                    view.updateAdapter(it.data.currentPlan, availablePlans?.toList())
+                    currentPlan = it.data.currentPlan
+                    view.updateAdapter(currentPlan!!, currentPlan!!, availablePlans!!)
                 }, {
                     it.printStackTrace()
                 })
     }
 
 
-    fun changePlan(currentId:String?, plansUUID: String?) {
-        val planId = UpdatePlan(plansUUID)
-        if (planId.newPlanId == "" || plansUUID.equals(currentId)) {
+    fun changePlan() {
+        val planId = UpdatePlan(planToUse?.id?:return)
+        if (planId.newPlanId == "" || currentPlan?.id==planToUse?.id) {
             view.displayError("Select a new Plan")
             return
         }
@@ -62,7 +70,7 @@ class ChangePlansPresenter(val view: ChangePlansInt, val plansManager: PlansMana
         getPlans()
     }
 
-    fun displayBottomFragment(selected: PlanObject) {
-        view.displayBottomSheetFragment(selected)
+    fun onChangePlansClicked() {
+        view.displayBottomSheetFragment(planToUse!!)
     }
 }

@@ -37,7 +37,7 @@ class MoviesManagerImpl(val application: Application, val gson: Gson, val api: S
                 movieSub = api.getAllCurrentMovies()
                         .map {
                             val writer = OutputStreamWriter(
-                                    application.openFileOutput("current.json", Context.MODE_PRIVATE)
+                                    application.openFileOutput("currentSelected.json", Context.MODE_PRIVATE)
                             )
                             gson
                                     .toJson(it,
@@ -60,7 +60,7 @@ class MoviesManagerImpl(val application: Application, val gson: Gson, val api: S
                         }
             } else {
                 try {
-                    val response = gson.fromJson(InputStreamReader(application.openFileInput("current.json")), CurrentMoviesResponse::class.java)
+                    val response = gson.fromJson(InputStreamReader(application.openFileInput("currentSelected.json")), CurrentMoviesResponse::class.java)
                     if (emitter.isDisposed) {
                         return@create
                     }

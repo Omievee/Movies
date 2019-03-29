@@ -11,42 +11,39 @@ import android.text.style.SuperscriptSpan
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import com.moviepass.R
-import kotlinx.android.synthetic.main.fragment_change_plans_bottom_sheet.view.*
 import kotlinx.android.synthetic.main.list_item_plan_details.view.*
-import kotlinx.android.synthetic.main.list_item_plans.view.*
+import kotlinx.android.synthetic.main.list_item_plan.view.*
 
 
-class PlansView(context: Context?, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs), View.OnClickListener {
+class PlanView(context: Context?, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs), View.OnClickListener {
     override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.planIcon -> plansInterface?.onPlanSelected(plans ?: return)
-        }
+        plansInterface?.onPlanSelected(plan ?: return)
     }
     var plansInterface: PlansInterface? = null
-    var plans: PlanObject? = null
+    var plan: PlanObject? = null
     var adapter: PlansDetailAdapter? = null
 
     init {
-        View.inflate(context, com.moviepass.R.layout.list_item_plans, this)
+        View.inflate(context, com.moviepass.R.layout.list_item_plan, this)
         layoutParams = MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        planIcon.setOnClickListener(this)
+        setOnClickListener(this)
     }
 
+    fun bind(plans: PlansPresentation) {
+        val plan = plans.data ?: return
+        this.plan = plan
+        planTitle.text = "MoviePass ${plan.name}"
 
-    fun bind(plans: PlanObject?) {
-        this.plans = plans ?: return
-        planTitle.text = plans.name
-
-        setUpFeaturesAdapter(plans.features)
+        setUpFeaturesAdapter(plan.features)
 
         val span = SpannableStringBuilder()
-        span.append(plans.asDollars).setSpan(RelativeSizeSpan(1.4f), 0, plans.installmentAmount.toString().length + 1, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+        span.append(plan.asDollars).setSpan(RelativeSizeSpan(1.1f), 0, plan.installmentAmount.toString().length + 1, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
         val s = SpannableStringBuilder()
-        s.append("$".superscript).setSpan(RelativeSizeSpan(.8f), 0, 1, SpannableString.SPAN_INCLUSIVE_EXCLUSIVE)
+        s.append("$ ".superscript).setSpan(RelativeSizeSpan(.6f), 0, 1, SpannableString.SPAN_INCLUSIVE_EXCLUSIVE)
         s.append(span)
         s.append(" /MO".rel)
         planPrice.text = s
+        planIcon.isSelected = plans.selected
     }
 
     private fun setUpFeaturesAdapter(plans: Array<String>) {
@@ -67,7 +64,7 @@ private val String.superscript: SpannableString
 private val String.rel: SpannableString
     get() {
         val spanstr = SpannableString(this)
-        spanstr.setSpan(RelativeSizeSpan(.7f), 0, length, SpannableString.SPAN_INCLUSIVE_EXCLUSIVE)
+        spanstr.setSpan(RelativeSizeSpan(.6f), 0, length, SpannableString.SPAN_INCLUSIVE_EXCLUSIVE)
         return spanstr
     }
 

@@ -12,12 +12,13 @@ class PlansManagerImpl(val api: Api, val billingApi: BillingApi) : PlansManager 
 
     override fun getAvailablePlans(): Single<ChangePlanResponse> {
         return when (planInfo) {
-            null ->
+            null -> {
                 api
-                        .getAvailablePlans(UserPreferences.user.UUID)
+                        .getAvailablePlans()
                         .doOnSuccess {
                             planInfo = it
                         }
+            }
 
             else -> Single
                     .just(planInfo)
@@ -30,12 +31,12 @@ class PlansManagerImpl(val api: Api, val billingApi: BillingApi) : PlansManager 
 
     override fun updateCurrentPlan(request: UpdatePlan): Single<Any> {
         return api
-                .updateCurrentPlan(UserPreferences.user.UUID, request)
+                .updateCurrentPlan(request)
                 .doOnError {
                     it.printStackTrace()
                 }
                 .doOnSuccess {
-                    println("success")
+                    //println("success")
                 }
                 .compose(Schedulers.singleDefault())
     }

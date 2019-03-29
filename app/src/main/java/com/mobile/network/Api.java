@@ -93,7 +93,7 @@ public interface Api {
     @POST("mobile/check/email")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
 
-    @GET("/register/plans")
+    @GET("/register/plan")
     Call<PlanResponse> getPlans();
 
     /* SignUp */
@@ -167,8 +167,8 @@ public interface Api {
     Single<Map<String, Object>> theaterChainRemove(@Path("chain") String chain, @Body Map<String, String> chainData);
 
     @GET("/gw/subscriptions/v1/available-plans")
-    Single<ChangePlanResponse> getAvailablePlans(@Header(USER_ID) String userId);
+    Single<ChangePlanResponse> getAvailablePlans();
 
     @POST("/gw/subscriptions/v1/change-plan/user")
-    Single<UpdatePlanResponse> updateCurrentPlan(@Header(USER_ID) String userId, @Body UpdatePlan newPlanId);
+    Single<UpdatePlanResponse> updateCurrentPlan(@Body UpdatePlan newPlanId);
 }

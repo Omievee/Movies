@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import com.mobile.adapters.BaseViewHolder
-import kotlinx.android.synthetic.main.list_item_plans.view.*
+import kotlinx.android.synthetic.main.list_item_plan.view.*
 
 
 class PlansAdapter(
@@ -13,7 +13,6 @@ class PlansAdapter(
         val plansInterface: PlansInterface
 
 ) : RecyclerView.Adapter<BaseViewHolder>() {
-    private var lastCheckedRB: RadioButton? = null
 
     var data: PlanData? = null
         set(value) {
@@ -22,7 +21,7 @@ class PlansAdapter(
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        return BaseViewHolder(PlansView(parent.context))
+        return BaseViewHolder(PlanView(parent.context))
     }
 
     override fun getItemCount(): Int {
@@ -30,23 +29,9 @@ class PlansAdapter(
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        val pres = data?.pres?.get(position)
-        (holder.itemView as PlansView).plansInterface = plansInterface
+        val pres = data?.pres?.get(position)?:return
+        (holder.itemView as PlanView).plansInterface = plansInterface
 
-        holder.itemView.bind(plans = pres?.availableList)
-        if (pres?.current?.id == pres?.availableList?.id) {
-            holder.itemView.planIcon.isChecked = true
-            holder.itemView.currentPlan.visibility = View.VISIBLE
-            lastCheckedRB = holder.itemView.planIcon
-        }
-
-        holder.itemView.radioGroup.setOnCheckedChangeListener { group, checkedId ->
-            val s = group.findViewById(checkedId) as RadioButton
-            if (lastCheckedRB?.isChecked!!) {
-                lastCheckedRB?.isChecked = false
-                s.isChecked = true
-            }
-            lastCheckedRB = s
-        }
+        holder.itemView.bind(pres)
     }
 }

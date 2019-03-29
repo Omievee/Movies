@@ -8,7 +8,7 @@ import retrofit2.http.GET
 
 interface StaticApi {
     /*ALL MOVIES FOR MAIN PAGE */
-    @GET("movies/current.json")
+    @GET("movies/currentSelected.json")
     fun getAllCurrentMovies(): Single<CurrentMoviesResponse>
 
 

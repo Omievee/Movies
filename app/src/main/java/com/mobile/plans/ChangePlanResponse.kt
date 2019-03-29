@@ -8,23 +8,15 @@ data class ChangePlanResponse(val data: ChangePlanData)
 
 class ChangePlanData(val newPlanId: String,
                      val currentPlan: PlanObject,
-                     val availablePlans: Array<PlanObject> = emptyArray()
+                     val availablePlans: List<PlanObject> = emptyList()
 )
 
 
 @Parcelize
 class PlanObject(val id: String,
                  val name: String,
-                 val lengthMonths: Int,
                  val installmentAmount: Int,
-                 val signUpFee: Int?,
-                 val cap: Int,
-                 val shouldRenew: Boolean,
-                 val zone: Int?,
-                 val features: Array<String> = emptyArray(),
-                 val currentPlan: PlanObject,
-
-                 val availablePlans: Array<PlanObject> = emptyArray()
+                 val features: Array<String> = emptyArray()
 
 ) : Parcelable {
     val asDollars: String

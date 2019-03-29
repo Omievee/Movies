@@ -28,9 +28,6 @@ class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener, 
     lateinit var presenter: ChangePlansPresenter
 
     var plansAdapter: PlansAdapter? = null
-    var newPlanUUID: String? = null
-    var selectedPlan: PlanObject? = null
-    var currentPlan: PlanObject? = null
 
     override fun displayBottomSheetFragment(selectedPlan: PlanObject) {
         val dialog = BottomSheetDialog(context ?: return)
@@ -40,7 +37,7 @@ class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener, 
         sheetView?.findViewById<TextView>(R.id.planText)?.text = """${getString(R.string.change_plan_to)} $planName """
         sheetView?.findViewById<TextView>(R.id.disclaimer)?.text = resources.getString(R.string.change_plan_upgrade, ((selectedPlan?.asDollars)))
         sheetView?.findViewById<MPProgressButton>(R.id.submit)?.setOnClickListener {
-            presenter.changePlan(currentId = currentPlan?.id, plansUUID = selectedPlan.id)
+            presenter.changePlan()
         }
 
         dialog.setContentView(sheetView)
@@ -48,7 +45,7 @@ class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener, 
     }
 
     override fun onPlanSelected(selectedPlan: PlanObject) {
-        this.selectedPlan = selectedPlan
+        presenter.onPlanSelected(selectedPlan)
     }
 
 
@@ -64,7 +61,7 @@ class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener, 
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.changePlansButton -> selectedPlan?.let { presenter.displayBottomFragment(it) }
+            R.id.changePlansButton -> presenter.onChangePlansClicked()
             R.id.backButton -> activity?.onBackPressed()
             R.id.cancelMembership -> presenter.cancelClicked()
         }
@@ -100,13 +97,12 @@ class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener, 
     }
 
 
-    override fun updateAdapter(current: PlanObject, plans: List<PlanObject>?) {
-        this.currentPlan = current
+    override fun updateAdapter(current: PlanObject, planToUse:PlanObject, plans: List<PlanObject>) {
         val old = plansAdapter?.data?.pres ?: emptyList()
         val newD = mutableListOf<PlansPresentation>()
         if (!plans.isNullOrEmpty()) {
             plans.forEach {
-                newD.add(PlansPresentation(availableList = it, current = current))
+                newD.add(PlansPresentation(data = it, currentSelected = current,selected=it==planToUse))
             }
         } else {
             plansRecycler.visibility = View.GONE
@@ -129,7 +125,7 @@ class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener, 
 
 class PlanData(val pres: List<PlansPresentation>, val diffResult: DiffUtil.DiffResult)
 
-data class PlansPresentation(val availableList: PlanObject, val current: PlanObject) : ItemSame<PlansPresentation> {
+data class PlansPresentation(val data: PlanObject, val currentSelected: PlanObject, val selected:Boolean) : ItemSame<PlansPresentation> {
     override fun sameAs(same: PlansPresentation): Boolean {
         return equals(same)
     }

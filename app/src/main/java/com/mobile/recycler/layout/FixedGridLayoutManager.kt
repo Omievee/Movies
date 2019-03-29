@@ -213,7 +213,7 @@ class FixedGridLayoutManager : RecyclerView.LayoutManager() {
         } else { //BringAFriendPagerAdapter data set changes
             /*
              * Keep the existing initial position, and save off
-             * the current scrolled offset.
+             * the currentSelected scrolled offset.
              */
             val topChild = getChildAt(0)
             childLeft = getDecoratedLeft(topChild)
@@ -221,7 +221,7 @@ class FixedGridLayoutManager : RecyclerView.LayoutManager() {
 
             /*
              * When data set is too small to scroll vertically, adjust vertical offset
-             * and shift position to the first row, preserving current column
+             * and shift position to the first row, preserving currentSelected column
              */
             if (!state.isPreLayout && verticalSpace > totalRowCount * mDecoratedChildHeight) {
                 mFirstVisiblePosition = mFirstVisiblePosition % totalColumnCount
@@ -401,7 +401,7 @@ class FixedGridLayoutManager : RecyclerView.LayoutManager() {
              * When a removal happens out of bounds, the pre-layout positions of items
              * after the removal are shifted to their final positions ahead of schedule.
              * We have to track off-screen removals and shift those positions back
-             * so we can properly lay out all current (and appearing) views in their
+             * so we can properly lay out all currentSelected (and appearing) views in their
              * initial locations.
              */
             var offsetPositionDelta = 0
@@ -528,7 +528,7 @@ class FixedGridLayoutManager : RecyclerView.LayoutManager() {
         val scroller = object : LinearSmoothScroller(recyclerView.context) {
             /*
              * LinearSmoothScroller, at a minimum, just need to know the vector
-             * (x/y distance) to travel in order to get from the current positioning
+             * (x/y distance) to travel in order to get from the currentSelected positioning
              * to the target.
              */
             override fun computeScrollVectorForPosition(targetPosition: Int): PointF {
