@@ -107,7 +107,6 @@ object UserPreferences {
                 } catch (e: java.lang.Exception) {
                     field = UserInfoResponse()
                 }
-
             }
             return field
         }
@@ -231,7 +230,7 @@ object UserPreferences {
 
     val location: Location
         get() {
-            val location = Location("current")
+            val location = Location("currentSelected")
             location.latitude = latitude
             location.longitude = longitude
             return location

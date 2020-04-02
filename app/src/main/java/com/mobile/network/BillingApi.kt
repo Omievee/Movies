@@ -1,15 +1,13 @@
 package com.mobile.network
 
+import com.google.gson.JsonObject
 import com.mobile.billing.BillingInfo
 import com.mobile.billing.Subscription
 import com.mobile.requests.CancellationRequest
 import com.mobile.responses.CancellationResponse
 import io.reactivex.Single
 import okhttp3.ResponseBody
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.*
 
 interface BillingApi {
 

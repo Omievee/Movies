@@ -23,18 +23,18 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 27
-
         versionCode 150
-
         versionName "3.1.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
         buildConfigField "String", "baseUrl", '"https://gw-stg.moviepass.com/"'
         buildConfigField "String", "STATIC_URL", '"https://a1.moviepass.com/staging/"'
+        buildConfigField "String", "STATIC_URL_EXHIBITOR_SERVICE", '"https://a1.moviepass.com/exhibitor-service/staging/"'
         buildConfigField "String", "ZUORA_URL", '"https://gw.moviepass.com/gw/"'
-        buildConfigField "String", "registrationURL", '"https://auth-stg.moviepass.com"'
-        buildConfigField "String", "microServiceURL", '"https://auth-stg.moviepass.com/"'
+        buildConfigField "String", "STATIC_URL_EXHIBITOR_SERVICE", '"https://a1.moviepass.com/exhibitor-service/staging/"'
+        buildConfigField "String", "registrationURL", '"https://registration-stg.moviepass.com"'
+        buildConfigField "String", "microServiceURL", '"https://auth-stg.moviepass.com"'
         buildConfigField "String", "COGNITO_KEY", '"us-east-1:4b4b52ee-11c2-4c56-b109-b654a1d2ad37"'
         buildConfigField "String", "GO_WATCH_IT_URL", '"https://click.moviepass.com/"'
         buildConfigField "String", "REGISTRATION_URL", '"https://stg.moviepass.com"'
@@ -69,7 +69,6 @@ android {
     flavorDimensions 'env'
 
     productFlavors {
-
         staging {
             dimension 'env'
             applicationIdSuffix '.staging'
@@ -147,7 +146,6 @@ repositories {
     maven { url "https://github.com/taplytics/Taplytics-Android-SDK/raw/master/AndroidStudio/" }
     google()
 }
-
 
 ext {
     dagger_version = '2.16'

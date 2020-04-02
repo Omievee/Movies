@@ -1,5 +1,6 @@
 package com.mobile.loyalty
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.util.DiffUtil
 import android.support.v7.util.DiffUtil.calculateDiff
@@ -47,6 +48,7 @@ class RegisteredLoyaltyAdapter(val theaterChainClickListener: TheaterChainClickL
     }
 }
 
+@SuppressLint("ViewConstructor")
 class TheaterChainView(context: Context, val theaterChainClickListener: TheaterChainClickListener) : MaterialSpinnerSpinnerView(context) {
     var theater: TheaterChain? = null
 

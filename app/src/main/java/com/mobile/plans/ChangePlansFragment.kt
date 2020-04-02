@@ -2,42 +2,68 @@ package com.mobile.plans
 
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.BottomSheetDialog
+import android.support.v7.util.DiffUtil
+import android.support.v7.util.DiffUtil.calculateDiff
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import com.mobile.adapters.BasicDiffCallback
+import com.mobile.adapters.ItemSame
 import com.mobile.fragments.MPFragment
 import com.mobile.profile.ProfileCancellationFragment
+import com.mobile.widgets.MPProgressButton
+import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_change_plans.*
 import javax.inject.Inject
 
 
 class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener, PlansInterface {
-    override fun onPlanClicked(planUUID: String) {
-        newPlanUUID = planUUID
-    }
-
-    override fun planUpdateSuccess() {
-
-    }
-
 
     @Inject
     lateinit var presenter: ChangePlansPresenter
 
     var plansAdapter: PlansAdapter? = null
-    var newPlanUUID: String? = null
 
+    override fun displayBottomSheetFragment(selectedPlan: PlanObject) {
+        val dialog = BottomSheetDialog(context ?: return)
+        val sheetView = activity?.layoutInflater?.inflate(R.layout.fragment_change_plans_bottom_sheet, null)
+        val planName = selectedPlan.name
+
+        sheetView?.findViewById<TextView>(R.id.planText)?.text = """${getString(R.string.change_plan_to)} $planName """
+        sheetView?.findViewById<TextView>(R.id.disclaimer)?.text = resources.getString(R.string.change_plan_upgrade, ((selectedPlan?.asDollars)))
+        sheetView?.findViewById<MPProgressButton>(R.id.submit)?.setOnClickListener {
+            presenter.changePlan()
+        }
+
+        dialog.setContentView(sheetView)
+        dialog.show()
+    }
+
+    override fun onPlanSelected(selectedPlan: PlanObject) {
+        presenter.onPlanSelected(selectedPlan)
+    }
+
+
+    override fun planUpdateSuccess(msg: String) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        activity?.onBackPressed()
+    }
+
+ 
     override fun displayCancellationFragment() {
         showFragment(ProfileCancellationFragment())
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            com.moviepass.R.id.changePlansButton -> presenter.changePlan(newPlanUUID ?: "")
-            com.moviepass.R.id.backButton -> activity?.onBackPressed()
-            com.moviepass.R.id.cancelMembership -> presenter.cancelClicked()
+            R.id.changePlansButton -> presenter.onChangePlansClicked()
+            R.id.backButton -> activity?.onBackPressed()
+            R.id.cancelMembership -> presenter.cancelClicked()
         }
     }
 
@@ -71,44 +97,44 @@ class ChangePlansFragment : MPFragment(), ChangePlansInt, View.OnClickListener, 
     }
 
 
-    override fun updateAdapter(current: PlanObject, plans: Array<PlanObject>?) {
-        if (plans.isNullOrEmpty()) {
+    override fun updateAdapter(current: PlanObject, planToUse:PlanObject, plans: List<PlanObject>) {
+        val old = plansAdapter?.data?.pres ?: emptyList()
+        val newD = mutableListOf<PlansPresentation>()
+        if (!plans.isNullOrEmpty()) {
+            plans.forEach {
+                newD.add(PlansPresentation(data = it, currentSelected = current,selected=it==planToUse))
+            }
+        } else {
             plansRecycler.visibility = View.GONE
             noPlans.visibility = View.VISIBLE
         }
-        val newL = mutableListOf<PlanObject>()
-        current.let {
-            current.current = true
-            newL.add(it)
-        }
-
-        if (!plans.isNullOrEmpty()) {
-            plans.forEach {
-                it.current = false
-                newL.add(it)
-            }
-        }
-        newL.sortBy {
-            it.installmentAmount
-        }
-        plansAdapter?.data = PlansPresentation(newL)
+        plansAdapter?.data = PlanData(pres = newD, diffResult = calculateDiff(BasicDiffCallback<PlansPresentation>(old, newD)))
         plansRecycler.adapter = plansAdapter
-
     }
 
-    override fun displayError() {
-
+    override fun displayError(err: String) {
+        Toast.makeText(context, err, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.destroyEverything()
+        presenter.onDestroy()
     }
 
 }
 
-interface PlansInterface {
-    fun onPlanClicked(planUUID: String)
+class PlanData(val pres: List<PlansPresentation>, val diffResult: DiffUtil.DiffResult)
+
+data class PlansPresentation(val data: PlanObject, val currentSelected: PlanObject, val selected:Boolean) : ItemSame<PlansPresentation> {
+    override fun sameAs(same: PlansPresentation): Boolean {
+        return equals(same)
+    }
+
+    override fun contentsSameAs(same: PlansPresentation): Boolean {
+        return hashCode() == same.hashCode()
+    }
 }
 
-class PlansPresentation(val list: List<PlanObject>)
+interface PlansInterface {
+    fun onPlanSelected(selectedPlan: PlanObject)
+}

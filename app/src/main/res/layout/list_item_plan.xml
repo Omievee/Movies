@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/margin_half"
         android:text="@string/change_plans_current_plan"
+        app:fontFamily="@font/roboto_thin"
         android:textSize="13sp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/planTitle"
@@ -24,10 +25,10 @@
         android:id="@+id/planTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MoviePass Select"
+        android:textSize="20sp"
         android:textColor="@color/white"
-        android:textSize="16sp"
         android:textStyle="bold"
+        app:fontFamily="@font/roboto_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/currentPlan" />
 
@@ -37,20 +38,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/margin_half"
-        android:text="$9.95"
         android:textColor="@color/white"
+        app:fontFamily="@font/roboto_thin"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/planTitle" />
 
 
-    <ImageView
-        android:id="@+id/planIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/plans_radio_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/currentPlan" />
+        <ImageView
+            android:id="@+id/planIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/currentPlan"
+            android:src="@drawable/plans_radio_button" />
+
+    <!--<ImageButton-->
+    <!--android:id="@+id/planIcon"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@drawable/plans_radio_button"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/currentPlan" />-->
 
 
     <android.support.v7.widget.RecyclerView
@@ -59,7 +68,7 @@
         android:layout_height="wrap_content"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:padding="@dimen/margin_half"
+        android:paddingTop="@dimen/margin_minimum"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/planPrice">

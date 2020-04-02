@@ -507,9 +507,9 @@ private constructor() {
     }
 
     /**
-     * Gets the current focus mode setting.
+     * Gets the currentSelected focus mode setting.
      *
-     * @return current focus mode. This value is null if the camera is not yet created.
+     * @return currentSelected focus mode. This value is null if the camera is not yet created.
      * Applications should call [.autoFocus] to start the focus if focus
      * mode is FOCUS_MODE_AUTO or FOCUS_MODE_MACRO.
      * @see Camera.Parameters.FOCUS_MODE_AUTO
@@ -555,9 +555,9 @@ private constructor() {
     }
 
     /**
-     * Gets the current flash mode setting.
+     * Gets the currentSelected flash mode setting.
      *
-     * @return current flash mode. null if flash mode setting is not
+     * @return currentSelected flash mode. null if flash mode setting is not
      * supported or the camera is not yet created.
      * @see Camera.Parameters.FLASH_MODE_OFF
      *
@@ -613,7 +613,7 @@ private constructor() {
      *
      *
      *
-     * If the current flash mode is not
+     * If the currentSelected flash mode is not
      * [Camera.Parameters.FLASH_MODE_OFF], flash may be
      * fired during auto-focus, depending on the driver and camera hardware.
      *
@@ -909,7 +909,7 @@ private constructor() {
      * Creates one buffer for the camera preview callback.  The size of the buffer is based off of
      * the camera preview size and the format of the camera image.
      *
-     * @return a new preview buffer of the appropriate size for the current camera settings
+     * @return a new preview buffer of the appropriate size for the currentSelected camera settings
      */
     private fun createPreviewBuffer(previewSize: Size): ByteArray {
         val bitsPerPixel = ImageFormat.getBitsPerPixel(ImageFormat.NV21)
@@ -1084,7 +1084,7 @@ private constructor() {
                 }
 
                 // The code below needs to run outside of synchronization, because this will allow
-                // the camera to add pending frame(s) while we are running detection on the current
+                // the camera to add pending frame(s) while we are running detection on the currentSelected
                 // frame.
 
                 try {

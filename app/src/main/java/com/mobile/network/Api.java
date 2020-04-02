@@ -1,10 +1,13 @@
 package com.mobile.network;
 
+import com.google.gson.JsonObject;
 import com.mobile.loyalty.TheaterChain;
 import com.mobile.model.Emails;
 import com.mobile.model.ProviderInfo;
 import com.mobile.model.User;
 import com.mobile.plans.ChangePlanResponse;
+import com.mobile.plans.UpdatePlan;
+import com.mobile.plans.UpdatePlanResponse;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CardActivationRequest;
 import com.mobile.requests.ChangeEmailRequest;
@@ -36,7 +39,6 @@ import com.mobile.responses.VerificationResponse;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import io.reactivex.Single;
 import retrofit2.Call;
@@ -91,7 +93,7 @@ public interface Api {
     @POST("mobile/check/email")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
 
-    @GET("/register/plans")
+    @GET("/register/plan")
     Call<PlanResponse> getPlans();
 
     /* SignUp */
@@ -165,8 +167,8 @@ public interface Api {
     Single<Map<String, Object>> theaterChainRemove(@Path("chain") String chain, @Body Map<String, String> chainData);
 
     @GET("/gw/subscriptions/v1/available-plans")
-    Single<ChangePlanResponse> getAvailablePlans(@Header(USER_ID) String userId);
+    Single<ChangePlanResponse> getAvailablePlans();
 
     @POST("/gw/subscriptions/v1/change-plan/user")
-    Single<ChangePlanResponse> updateCurrentPlan(@Header(USER_ID) String userId, @Body String plan_id);
+    Single<UpdatePlanResponse> updateCurrentPlan(@Body UpdatePlan newPlanId);
 }

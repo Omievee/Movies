@@ -794,5 +794,7 @@
     <string name="change_plans_cancel">Cancel Membership</string>
     <string name="change_plans_current_plan">Current Plan: </string>
     <string name="change_plans_no_plans">There are currently no other plans on offer to change to.</string>
+    <string name="change_plan_to">Change Plan To</string>
+    <string name="change_plan_upgrade">You will be charged $%1$s today and your new plan will go into effect immediately.</string>
 
 </resources>

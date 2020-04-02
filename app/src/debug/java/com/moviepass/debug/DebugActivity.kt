@@ -20,6 +20,7 @@ class DebugActivity : MPActivty(), SeatPreviewListener {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_debug)
+
         showFragment(ChangePlansFragment())
     }
 }

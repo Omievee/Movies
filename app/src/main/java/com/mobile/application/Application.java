@@ -118,10 +118,12 @@ public class Application extends android.app.Application implements HasActivityI
             }
         } catch (InstallException e) {
         }
+
+
     }
 
     protected void inject() {
-        DaggerAppComponent
+        DagagerAppComponent
                 .builder()
                 .application(this)
                 .build()

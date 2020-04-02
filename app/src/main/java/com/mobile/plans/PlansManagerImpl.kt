@@ -11,42 +11,35 @@ class PlansManagerImpl(val api: Api, val billingApi: BillingApi) : PlansManager 
     private var planInfo: ChangePlanResponse? = null
 
     override fun getAvailablePlans(): Single<ChangePlanResponse> {
-        println(">>>>>>>>>>>>>>>>>>>>>>> START GET OF PLANS")
-        return api
-                .getAvailablePlans(UserPreferences.user.UUID)
-                .doOnSuccess {
-                    println(">>>>>>>>>>>>>>>>>>>>>>>${it.data.currentPlan.name}")
-                    planInfo = it
-                }
-                .doOnError {
-                    println("Error is bullshit" + it.message)
-                }
+        return when (planInfo) {
+            null -> {
+                api
+                        .getAvailablePlans()
+                        .doOnSuccess {
+                            planInfo = it
+                        }
+            }
 
-//        return when (planInfo) {
-//            null ->
-//
-//
-//            else -> Single
-//                    .just(planInfo)
-//        }
-//                .compose(
-//                        Schedulers
-//                                .singleDefault()
-//                )
-    }
-
-    override fun updateCurrentPlan(request: String): Single<ChangePlanResponse> {
-        return api
-                .updateCurrentPlan("user", request)
+            else -> Single
+                    .just(planInfo)
+        }
                 .compose(
                         Schedulers
-                                .singleBackground()
+                                .singleDefault()
                 )
     }
 
-
-
-    override fun checkCurrentBilling() {
-
+    override fun updateCurrentPlan(request: UpdatePlan): Single<Any> {
+        return api
+                .updateCurrentPlan(request)
+                .doOnError {
+                    it.printStackTrace()
+                }
+                .doOnSuccess {
+                    //println("success")
+                }
+                .compose(Schedulers.singleDefault())
     }
+
+
 }
