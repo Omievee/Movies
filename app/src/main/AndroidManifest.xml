@@ -43,7 +43,7 @@
         android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBBbJ-Zgn3TALaEwxqV5Q6pjyKtFmhH9YQ" />
+            android:value="" />
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
             android:value="true"
@@ -219,7 +219,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="817d4d68505df552813b127d4149583ade2132e1" />
+            android:value="" />
 
         <activity android:name="com.mobile.activities.ActivateMoviePassCard" />
         <activity
